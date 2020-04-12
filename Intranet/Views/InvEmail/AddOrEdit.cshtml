@@ -1,0 +1,35 @@
+﻿@model Intranet.Models.InvEmail
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
+    ViewData["Title"] = "Add Email";
+}
+
+<h4 class="display-4">Email Form</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddOrEdit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="InvEmailId" />
+            <input type="hidden" asp-for="UserName" value="@ViewBag.DisplayName" />
+            <input type="hidden" asp-for="UserIP" value="@HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString()" />
+            <input type="hidden" asp-for="UserDate" value="@DateTime.Now.ToString("MM/dd/yyyy")" />
+            <div class="form-group">
+                <label asp-for="InvEmailAddress" class="control-label small font-weight-bold"></label>
+                <input asp-for="InvEmailAddress" class=" form-control form-control-sm" />
+                <span asp-validation-for="InvEmailAddress" class="text-danger small">@ViewBag.Exist</span>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <input type="submit" value="Submit" class="btn btn-primary btn-block form-control form-control-sm" />
+                </div>
+                <div class="form-group col-md-6">
+                    <a id="btn-1" asp-action="Index" class="btn btn-secondary btn-block form-control form-control-sm">
+                        <i class="fa fa-table"></i> Back to List
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

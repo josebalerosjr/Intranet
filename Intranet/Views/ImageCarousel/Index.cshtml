@@ -1,0 +1,78 @@
+﻿@model IEnumerable<Intranet.Models.ImageCarousel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h4>Image Links</h4>
+<br />
+<table id="cool-table" class="table table-hover small table-sm compact border" style="display: block; overflow-x: auto; white-space: nowrap; width:100%;">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ImageName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ImageLink)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.isActive)
+            </th>
+            <th>
+                <a asp-action="AddOrEdit" class="btn btn-outline-success small">
+                    <i class="far fa-plus-square small"></i> &nbsp; Image
+                </a>
+            </th>
+        </tr>
+    </thead>
+    <tbody id="myTable">
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ImageName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ImageLink)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.isActive)
+            </td>
+            <td>
+                <a asp-action="AddOrEdit" asp-route-id="@item.Id"><i class="fa fa-marker fa-lg"></i></a>
+                <a asp-action="Delete" asp-route-id="@item.Id"
+                   class="text-danger ml-1"
+                   onclick="return confirm('Are you sure to delete this record?')">
+                    <i class="fa fa-trash-alt fa-lg"></i>
+                </a>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $('#cool-table').DataTable({
+                "displayLength": 10,
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
+                //dom: 'Bfrtip'
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $("#myInput").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#myTable tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
+    <style type="text/css">
+        ::-webkit-input-placeholder {
+            font-style: italic;
+        }
+    </style>
+}

@@ -1,0 +1,61 @@
+﻿@model IEnumerable<Intranet.Models.Suggestion>
+
+@{
+    ViewData["Title"] = "Suggestion";
+}
+
+<h1 class="display-4">Suggestions List</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table id="cool-table" class="table table-hover table-sm small boder">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.SuggName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SuggEmail)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SuggSubject)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SuggMessage)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SuggName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SuggEmail)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SuggSubject)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SuggMessage)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('#cool-table').DataTable({
+                "displayLength": 10,
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
+                //dom: 'Bfrtip'
+            });
+        });
+    </script>
+
+}

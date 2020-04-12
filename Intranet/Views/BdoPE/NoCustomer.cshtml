@@ -1,0 +1,14 @@
+﻿@{
+    ViewData["Title"] = "NoCustomer";
+}
+
+<h1>No record on Database</h1>
+
+<br />
+
+@foreach (string customNum in ViewBag.NoCustomerNum)
+{
+    <p>
+        The Customer Number <b> @customNum </b> is not on the database yet.
+    </p>
+}

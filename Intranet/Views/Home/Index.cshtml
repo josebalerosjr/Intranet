@@ -1,0 +1,140 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+@model List<ImageCarousel>
+
+<p>
+    @ViewBag.CheckVersion
+</p>
+
+<div class="row-fluid">
+    <div class="row">
+        <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+            <ol class="carousel-indicators">
+                @{
+                    int i = 0;
+                    var actives = i == 1 ? "class=active" : "";
+                    foreach (var item in Model)
+                    {
+                        <li data-target="#carouselExampleIndicators" data-slide-to="@i" @actives></li>
+                    }
+                }
+            </ol>
+            <div class="carousel-inner">
+                @{
+                    foreach (var item in Model)
+                    {
+                        i++;
+                        var active = i == 1 ? "active" : "";
+                        <div class="carousel-item @active">
+                            <img class="d-block w-100"
+                                 src="@Html.DisplayFor(modelItem => item.ImageLink)">
+                        </div>
+                    }
+                }
+            </div>
+            <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+    </div>
+</div>
+<div class="row-fluid">
+    <br />
+    <div class="row">
+        <div class="col-sm-7">
+            <div class="row">
+                <div class="col-sm-3 text-center">
+                    <img src="@ViewBag.mission" alt="Alternate Text" />
+                </div>
+                <div class="col-sm-9">
+                    <h3 id="about-content" class="wow bounceInLeft">VISION</h3>
+                    <h6 id="about-inside">To be the top brand in the oil industry in the Philippines.</h6>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-sm-3 text-center">
+                    <img id="VGMword" class="wow bounceInUp" src="@ViewBag.goal">
+                </div>
+                <div class="col-sm-9">
+                    <h3 id="about-content">GOAL</h3>
+                    <h6 id="about-inside">To be recognized as a Major Oil Company and be ranked as one of the Top 5 in the oil industry in the Philippines by 2020.</h6>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-sm-3 text-center">
+                    <img id="VGMword" class="wow bounceInUp" src="@ViewBag.mission">
+                </div>
+                <div class="col-sm-9">
+                    <h3 id="about-content">MISSION</h3>
+                    <h6 id="about-inside">To conduct a complete line downstream oil business in the Philippines.</h6>
+                    <ul class="vision-list">
+                        <li>
+                            <h6>Retail Expansion</h6>
+                            <h6>Operation Excellence</h6>
+                            <h6>Superior Retail Standard</h6>
+                            <h6>Secured Supply</h6>
+                            <h6>Corporate Social Responsibility</h6>
+                            <h6>Enhanced Non-oil</h6>
+                            <h6>Lubricant Market Penetration</h6>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+</div>
+
+@*@section scripts {
+        <style type="text/css">
+            #VGMword {
+                width: 100px;
+            }
+
+            #about-content {
+                font-weight: 700;
+                color: #006394;
+                font-family: open sans,sans-serif;
+                font-size: 28px;
+            }
+
+            #about-inside {
+                color: #474747;
+                font-size: 16px;
+                font-weight: 400;
+            }
+
+            h6 {
+                color: #474747;
+                font-size: 14px;
+                font-weight: 400;
+            }
+
+            ul {
+                list-style: none;
+            }
+
+            tr {
+            }
+
+            #myIframe {
+                height: 100vh;
+                /*overflow: auto;*/
+                /*-webkit-overflow-scrolling: touch;*/
+                /*border: solid black 1px;*/
+            }
+
+                #myIframe iframe {
+                    top: 0;
+                    left: 0;
+                }
+        </style>
+    }*@

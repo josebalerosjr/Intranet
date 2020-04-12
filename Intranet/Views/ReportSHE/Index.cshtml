@@ -1,0 +1,121 @@
+﻿@model IEnumerable<Intranet.Models.ItemRegSHE>
+
+@{
+    ViewData["Title"] = "Report SHE";
+}
+
+<h1 class="display-4">Report SHE</h1>
+<br />
+<table id="cool-table" class="table table-hover small table-sm compact border">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ItemName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ItemDesc)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ManufName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AsstSerial)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PartNum)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TypeName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CalDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Qty)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CritLevel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UnitName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Remarks)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LocName)
+            </th>
+            @*<th>
+                    @Html.DisplayNameFor(model => model.UserName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.UserIP)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.UserDate)
+                </th>
+                <th></th>*@
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ItemName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ItemDesc)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ManufName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AsstSerial)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PartNum)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TypeName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CalDate)
+                </td>
+                @if (item.CritLevel > item.Qty)
+                {
+                    <td width="30px" class="bg-danger">
+                        @Html.DisplayFor(modelItem => item.Qty)
+                    </td>
+                }
+                else
+                {
+                    <td width="30px" class="bg-success">
+                        @Html.DisplayFor(modelItem => item.Qty)
+                    </td>
+                }
+                <td>
+                    @Html.DisplayFor(modelItem => item.CritLevel)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UnitName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Remarks)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LocName)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script>
+        $(document).ready(function () {
+            $('#cool-table').DataTable({
+                "displayLength": 10,
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                dom: 'Bfrtip'
+            });
+        });
+</script>

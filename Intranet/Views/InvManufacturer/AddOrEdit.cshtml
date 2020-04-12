@@ -1,0 +1,40 @@
+﻿@model Intranet.Models.InvManufacturer
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
+    ViewData["Title"] = "Add Manufacturer";
+}
+
+<h1 class="display-4">Manufacturer form</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddOrEdit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="MakerId" />
+            <input type="hidden" asp-for="UserName" value="@ViewBag.DisplayName" />
+            <input type="hidden" asp-for="UserIP" value="@HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString()" />
+            <input type="hidden" asp-for="UserDate" value="@DateTime.Now.ToString("MM/dd/yyyy")" />
+            <div class="form-group">
+                <label asp-for="MakerName" class="control-label small font-weight-bold"></label>
+                <input asp-for="MakerName" class="form-control form-control-sm" />
+                <span asp-validation-for="MakerName" class="text-danger">@ViewBag.Exist</span>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <input type="submit" value="Submit" class="btn btn-primary btn-block form-control form-control-sm" />
+                </div>
+                <div class="form-group col-md-6">
+                    <a asp-action="Index" class="btn btn-secondary btn-block form-control form-control-sm">
+                        <i class="fa fa-table"></i> Back to List
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

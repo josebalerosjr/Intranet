@@ -1,0 +1,42 @@
+﻿@model Intranet.Models.ImageCarousel
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h4>Add Image in Carousel</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddOrEdit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="UserName" value="@ViewBag.DisplayName" />
+            <input type="hidden" asp-for="UserIP" value="@HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString()" />
+            <input type="hidden" asp-for="UserDate" value="@DateTime.Now.ToString("MM/dd/yyyy")" />
+            <div class="form-group">
+                <label asp-for="ImageName" class="control-label small font-weight-bold"></label>
+                <input asp-for="ImageName" class=" form-control form-control-sm" />
+                <span asp-validation-for="ImageName" class="text-danger small"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ImageLink" class="control-label small font-weight-bold"></label>
+                <input asp-for="ImageLink" class=" form-control form-control-sm" />
+                <span asp-validation-for="ImageLink" class="text-danger small"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="isActive" /> @Html.DisplayNameFor(model => model.isActive)
+                </label>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <input type="submit" value="Submit" class="btn btn-primary btn-block form-control form-control-sm" />
+                </div>
+                <div class="form-group col-md-6">
+                    <a id="btn-1" asp-action="Index" class="btn btn-secondary btn-block form-control form-control-sm"><i class="fa fa-table"></i> Back to List</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

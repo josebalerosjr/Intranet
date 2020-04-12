@@ -1,0 +1,52 @@
+﻿@model IEnumerable<Intranet.Models.InvUnit>
+
+@{
+    ViewData["Title"] = "Unit";
+}
+
+<h4 class="display-4">Unit Register</h4>
+<br />
+<table id="cool-table" class="table table-hover small table-sm compact border">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.UnitName)
+            </th>
+            <th width="81px">
+                <a asp-action="AddOrEdit" class="btn btn-outline-success small">
+                    <i class="far fa-plus-square small"></i> Unit
+                </a>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td width="300px">
+                    @Html.DisplayFor(modelItem => item.UnitName)
+                </td>
+                <td>
+                    <a asp-action="AddOrEdit" asp-route-id="@item.UnitId"><i class="fa fa-marker fa-lg"></i></a>
+                    <a asp-action="Delete" asp-route-id="@item.UnitId"
+                       class="text-danger ml-1"
+                       onclick="return confirm('Are you sure to delete this record?')">
+                        <i class="fa fa-trash-alt fa-lg"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('#cool-table').DataTable({
+                "displayLength": 10,
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
+                //dom: 'Bfrtip'
+            });
+        });
+    </script>
+}

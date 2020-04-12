@@ -1,0 +1,778 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Intranet</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-primary border-bottom box-shadow mb-3">
+            <div class="container">
+                <div class="row-fluid">
+                    <!--PTT Logo Home page-->
+                    <!--<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                        <img src="~/img/logo.png" />
+                    </a>-->
+
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                        @{
+                            /**
+                             * ********************************************************************************
+                             * *                            START OF TOP MENU                                 *
+                             * ********************************************************************************
+                             * START OF TOP MENU
+                             * This menu is located at the top most of the Intranet (Webpage).
+                             * This covers from Home link going to the left side execpt the user information link.
+                             */
+                        }
+                        <!--User Details Tab-->
+                        @*<ul class="navbar-nav float-lg-right">
+                                <li class="nav-item dropleft">
+                                    <span class="nav-link" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user"></i> <i class="fas fa-chevron-circle-down"></i></span>
+                                    @{
+                                        User Details
+                                        /**
+                                         * ********************************************************************************
+                                         * *                            START OF USER DETAIL                              *
+                                         * ********************************************************************************
+                                         * START OF USER DETAIL LINK
+                                         */
+                                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                            <li><a class="dropdown-item small" asp-controller="ItemReg" asp-action="Index">User: <strong>@ViewBag.DisplayName</strong>  <br /> Dept: <strong>@ViewBag.Department</strong></a></li>
+                                        </ul>
+                                        /**
+                                         * ********************************************************************************
+                                         * *                            END OF USER DETAIL                                *
+                                         * ********************************************************************************
+                                         */
+                                    }
+                                </li>
+                            </ul>*@
+
+                        <!--Navigation Bar-->
+                        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                            <!--PTT Logo Home page-->
+                            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                                <img src="~/img/logo.png" />
+                            </a>
+                            <ul class="navbar-nav">
+
+                                <!--Email Tab-->
+                                @{
+                                    /**
+                                     * ********************************************************************************
+                                     * *                            START OF EMAIL                                    *
+                                     * ********************************************************************************
+                                     * START OF EMAIL LINK
+                                     * [if (User.Identity.IsAuthenticated)]
+                                     *      --  this line of code checks if the user is Authenticated.
+                                     *      --  User must join the AD (Active Directory) to user the Intranet.
+                                     * [if (User.IsInRole("Office of the Chief Information Officer"))]
+                                     *      --  This line of code checks if the Authenticated user is in the set role.
+                                     *      --  If the user is in the set role the Email link can be viewed.
+                                     *      --  else it is hidden.
+                                     */
+                                    if (User.Identity.IsAuthenticated)
+                                    {
+                                        if (User.IsInRole("Office of the Chief Information Officers"))
+                                        {
+                                            <li class="nav-item">
+                                                <a class="nav-link" asp-area="" asp-controller="Email" asp-action="Index">
+                                                    <i class="fas fa-envelope"></i> Emails
+                                                </a>
+                                            </li>
+                                        }
+                                    }
+                                    /**
+                                     * ********************************************************************************
+                                     * *                            END OF EMAIL                                      *
+                                     * ********************************************************************************
+                                     */
+                                }
+
+                                <!--Suggestion Tab-->
+                                @{
+                                    /**
+                                     * ********************************************************************************
+                                     * *                            START OF SUGGESTION                               *
+                                     * ********************************************************************************
+                                     * START OF SUGGESTION LINK
+                                     * This link is open to all users
+                                     */
+                                    if (User.Identity.IsAuthenticated)
+                                    {
+                                        if (User.IsInRole("Office of the Chief Information Officers"))
+                                        {
+                                            <li class="nav-item">
+                                                <a class="nav-link" asp-area="" asp-controller="Suggestion" asp-action="Create">
+                                                    <i class="fas fa-lightbulb"></i> Suggestions
+                                                </a>
+                                            </li>
+                                        }
+                                    }
+                                    /**
+                                     * ********************************************************************************
+                                     * *                            END OF SUGGESTION                                 *
+                                     * ********************************************************************************
+                                     */
+                                }
+
+                                <!--General Tab-->
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-clinic-medical"></i> General
+                                    </a>
+
+                                    <!--Primary Sub-menu-->
+                                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                        <li class="dropdown-submenu small">
+
+                                            <!--Office 365 link-->
+                                            <a class="dropdown-item" target="_blank" href="https://www.office.com/">
+                                                Office 365
+                                            </a>
+
+                                            <!--DxCare Link-->
+                                            <a class="dropdown-item" target="_blank" href="https://dxcare.pttdigital.com/">
+                                                DxCare
+                                            </a>
+
+                                            <!--
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item small float-md-left" asp-controller="ItemReg" asp-action="Index">Quality</a></li>
+                                            </ul>
+                                            -->
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <!--MIS/ICT Tab-->
+                                @{
+                                    /**
+                                     * ********************************************************************************
+                                     * *                            START OF MIS/ICT                               *
+                                     * ********************************************************************************
+                                     * START OF SUGGESTION LINK
+                                     * This link is open to all users
+                                     */
+                                    if (User.Identity.IsAuthenticated)
+                                    {
+                                        if (User.IsInRole("Office of the Chief Information Officer") || User.IsInRole("MIS Intranet") || User.IsInRole("ICT Intranet") || User.IsInRole("SAP Consultant Intranet"))
+                                        {
+                                            <li class="nav-item dropdown">
+                                                <a class="nav-link" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="fas fa-tv"></i> MIS/ICT
+                                                </a>
+
+                                                <!--MIS Primary Sub-menu-->
+                                                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                                    @if (User.IsInRole("Office of the Chief Information Officer") || User.IsInRole("MIS Intranet"))
+                                                    {
+                                                        <li class="dropdown-submenu small">
+                                                            <a class="dropdown-item" href="#">
+                                                                MIS <i class="fas fa-chevron-circle-right float-right"></i>
+                                                            </a>
+
+                                                            <!-- Secondary Sub-menu -->
+                                                            <ul class="dropdown-menu">
+                                                                <li>
+                                                                    <a class="dropdown-item small float-md-left" href="https://pttadmin.sharepoint.com/sites/mis-ict-ticket/Lists/MIS%20Ticket%202019/AllItems.aspx">
+                                                                        MIS Ticketing
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+                                                        </li>
+                                                    }
+                                                    <!--ICT Primary Sub-menu-->
+                                                    @if (User.IsInRole("Office of the Chief Information Officer") || User.IsInRole("ICT Intranet"))
+                                                    {
+                                                        <li class="dropdown-submenu small">
+                                                            <a class="dropdown-item" target="_blank" href="@ViewBag.ChangeRequestLog">
+                                                                ICT <i class="fas fa-chevron-circle-right float-right"></i>
+                                                            </a>
+
+                                                            <!--Seondary Sub-menu-->
+                                                            <ul class="dropdown-menu">
+                                                                <li>
+                                                                    <a class="dropdown-item small float-md-left" href="https://pttadmin.sharepoint.com/sites/mis-ict-ticket/ict/SitePages/Home.aspx">
+                                                                        ICT Ticketing
+                                                                    </a>
+                                                                </li>
+
+                                                                <!--Mobile Refresh menu-->
+                                                                <li>
+                                                                    <a class="dropdown-item small float-md-left" href="https://pttadmin.sharepoint.com/sites/mis-ict-ticket/ict/Lists/PTT%20Mobile%20Phone%20Refresh%20Monitoring/AllItems.aspx?viewpath=%2Fsites%2Fmis-ict-ticket%2Fict%2FLists%2FPTT%20Mobile%20Phone%20Refresh%20Monitoring%2FAllItems.aspx">
+                                                                        PTT Mobile Phone Refresh Monitoring
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+                                                        </li>
+                                                    }
+
+                                                    <!--Primary Document Monitoring-->
+                                                    <li class="dropdown-submenu small">
+                                                        <a class="dropdown-item" target="_blank" href="https://pttadmin.sharepoint.com/:x:/r/MIS-ICT/_layouts/15/Doc.aspx?sourcedoc=%7BB22F3651-FDA7-402E-9441-DD583A428A6A%7D&file=MIS%20ICT%20Document%20Monitoring%20Schedule%20Updated.xlsx&action=default&mobileredirect=true&cid=6df4a096-9dd6-45df-98f0-c02b37ed0a22">
+                                                            Document Monitoring
+                                                        </a>
+                                                    </li>
+
+                                                    <!--Change Request Log-->
+                                                    <li class="dropdown-submenu small">
+                                                        <a class="dropdown-item" target="_blank" href="https://pttadmin.sharepoint.com/:x:/r/MIS-ICT/_layouts/15/Doc.aspx?sourcedoc=%7BCF17F927-7CC5-4F98-8196-6F534A8D56BC%7D&file=Change%20Request%20Log.Request%20Number.2014.xlsx&action=default&mobileredirect=true&cid=a7069a15-c2b7-4f0a-8352-2fde6e0765cf">
+                                                            Change Request Log
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        }
+                                    }
+                                    /**
+                                     * ********************************************************************************
+                                     * *                            END OF SUGGESTION                                 *
+                                     * ********************************************************************************
+                                     */
+                                }
+
+                                <!--QSHE Tab-->
+                                @{
+                                    /**
+                                     * ********************************************************************************
+                                     * *                            START OF QSHE                                     *
+                                     * ********************************************************************************
+                                     * START OF QSHE DROPDOWN LINK
+                                     * if (User.IsInRole("Office of the Chief Information Officer") || User.IsInRole("QSHE Intranet"))
+                                     *      --  This line on codes allows only all users in the set role.
+                                     *      --  else the link is hidden.
+                                     */
+                                    if (User.Identity.IsAuthenticated)
+                                    {
+                                        if (User.IsInRole("Office of the Chief Information Officer") ||
+                                            User.IsInRole("QSHE Intranet"))
+                                        {
+                                            <li class="nav-item dropdown">
+                                                <a class="nav-link" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="fas fa-plus-square"></i> QSHE
+                                                </a>
+                                                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                                    <!--Inventory Primary Menu-->
+                                                    @{
+                                                        /**
+                                                         * ********************************************************************************
+                                                         * *                                START OF INVENTORY                            *
+                                                         * ********************************************************************************
+                                                         * START OF INVENTORY SUBMENU LINK
+                                                         * if (User.IsInRole("Office of the Chief Information Officer") || User.IsInRole("QSHE Intranet"))
+                                                         *      --  This line on codes allows only all users in the set role.
+                                                         *      --  else the link is hidden.
+                                                         */
+                                                        if (User.Identity.IsAuthenticated)
+                                                        {
+                                                            if (User.IsInRole("Office of the Chief Information Officer") ||
+                                                                User.IsInRole("QSHE Intranet"))
+                                                            {
+                                                                <li class="dropdown-submenu small">
+                                                                    <a class="dropdown-item">Inventory <i class="fas fa-chevron-circle-right float-right"></i></a>
+                                                                    <ul class="dropdown-menu">
+                                                                        <!--Quality Secondary Menu-->
+                                                                        @{
+                                                                            /**
+                                                                             * ********************************************************************************
+                                                                             * *                            START OF QUALITY                                  *
+                                                                             * ********************************************************************************
+                                                                             * START OF QUALITY LINK
+                                                                             * if (User.IsInRole("Office of the Chief Information Officer") ||
+                                                                             *     User.IsInRole("QSHE QtyAdmin") ||
+                                                                             *     User.IsInRole("QSHE QtyUser"))
+                                                                             *     --   This line on codes allows only all users in the set role.
+                                                                             *     --   else the link is hidden.
+                                                                             */
+                                                                            if (User.Identity.IsAuthenticated)
+                                                                            {
+                                                                                if (User.IsInRole("Office of the Chief Information Officer") ||
+                                                                                    User.IsInRole("QSHE QtyAdmin") ||
+                                                                                    User.IsInRole("QSHE QtyUser"))
+                                                                                {
+                                                                                    <li><a class="dropdown-item small float-md-left" asp-controller="ItemReg" asp-action="Index">Quality</a></li>
+                                                                                }
+                                                                            }
+                                                                            /**
+                                                                             * ********************************************************************************
+                                                                             * *                            END OF QUALITY                                    *
+                                                                             * ********************************************************************************
+                                                                             */
+                                                                        }
+
+                                                                        <!--SHEE Secondary Menu-->
+                                                                        @{
+                                                                            /**
+                                                                             * ********************************************************************************
+                                                                             * *                            START OF SSHE                                     *
+                                                                             * ********************************************************************************
+                                                                             * START OF SSHE LINK
+                                                                             * if (User.IsInRole("Office of the Chief Information Officer") ||
+                                                                             *     User.IsInRole("SSHE Admin") ||
+                                                                             *     User.IsInRole("SSHE User"))
+                                                                             *     --   This line on codes allows only all users in the set role.
+                                                                             *     --   else the link is hidden.
+                                                                             */
+                                                                            if (User.Identity.IsAuthenticated)
+                                                                            {
+                                                                                if (User.IsInRole("Office of the Chief Information Officer") ||
+                                                                                    User.IsInRole("SSHE Admin") ||
+                                                                                    User.IsInRole("SSHE User"))
+                                                                                {
+                                                                                    <li><a class="dropdown-item small" asp-controller="ItemRegSHE" asp-action="Index">SSHE</a></li>
+                                                                                }
+                                                                            }
+                                                                            /**
+                                                                             * ********************************************************************************
+                                                                             * *                            END OF SSHE                                       *
+                                                                             * ********************************************************************************
+                                                                             */
+                                                                        }
+                                                                    </ul>
+                                                                </li>
+                                                            }
+                                                        }
+                                                        /**
+                                                         * ********************************************************************************
+                                                         * *                                END OFF INVENTORY                             *
+                                                         * ********************************************************************************
+                                                         */
+                                                    }
+
+                                                    <!--Report Primary Menu-->
+                                                    @{
+                                                        /**
+                                                         * ********************************************************************************
+                                                         * *                                START OF REPORT                               *
+                                                         * ********************************************************************************
+                                                         * START OF REPORT SUBMENU LINK
+                                                         * This link covers two groups namely Quality and SSHE.
+                                                         * if (User.IsInRole("Office of the Chief Information Officer") ||
+                                                         *     User.IsInRole("QSHE Intranet"))
+                                                         *     --   This line on codes allows only all users in the set role.
+                                                         *     --   else the link is hidden.
+                                                         */
+                                                        if (User.Identity.IsAuthenticated)
+                                                        {
+                                                            if (User.IsInRole("Office of the Chief Information Officer") ||
+                                                                User.IsInRole("QSHE Intranet"))
+                                                            {
+                                                                <li class="dropdown-submenu small">
+                                                                    <a class="dropdown-item">Reports <i class="fas fa-chevron-circle-right float-right"></i></a>
+                                                                    <ul class="dropdown-menu">
+
+                                                                        <!--Quality Secondary Menu-->
+                                                                        @{
+                                                                            /**
+                                                                             * ********************************************************************************
+                                                                             * *                                START OF QUALITY                              *
+                                                                             * ********************************************************************************
+                                                                             * START OF QUALITY SUBMENU LINK
+                                                                             * (User.IsInRole("Office of the Chief Information Officer") ||
+                                                                             *       User.IsInRole("QSHE QtyAdmin") ||
+                                                                             *       User.IsInRole("QSHE QtyUser"))
+                                                                             *     --   This line on codes allows only all users in the set role.
+                                                                             *     --   else the link is hidden.
+                                                                             */
+                                                                            if (User.Identity.IsAuthenticated)
+                                                                            {
+                                                                                if (User.IsInRole("Office of the Chief Information Officer") ||
+                                                                                    User.IsInRole("QSHE QtyAdmin") ||
+                                                                                    User.IsInRole("QSHE QtyUser"))
+                                                                                {
+                                                                                    <li><a class="dropdown-item small" asp-controller="Report" asp-action="Index">Quality</a></li>
+                                                                                }
+                                                                            }
+                                                                            /**
+                                                                             * ********************************************************************************
+                                                                             * *                                START OF QUALITY                              *
+                                                                             * ********************************************************************************
+                                                                             */
+                                                                        }
+
+                                                                        <!--SHEE Secondary Menu-->
+                                                                        @{
+                                                                            /**
+                                                                             * ********************************************************************************
+                                                                             * *                                START OF SSHE                                 *
+                                                                             * ********************************************************************************
+                                                                             * START OF SSHE SUBMENU LINK
+                                                                             * (User.IsInRole("Office of the Chief Information Officer") ||
+                                                                             *       User.IsInRole("SSHE Admin") ||
+                                                                             *       User.IsInRole("SSHE User"))
+                                                                             *     --   This line on codes allows only all users in the set role.
+                                                                             *     --   else the link is hidden.
+                                                                             */
+                                                                            if (User.Identity.IsAuthenticated)
+                                                                            {
+                                                                                if (User.IsInRole("Office of the Chief Information Officer") ||
+                                                                                    User.IsInRole("SSHE Admin") ||
+                                                                                    User.IsInRole("SSHE User"))
+                                                                                {
+                                                                                    <li><a class="dropdown-item small" asp-controller="ReportSHE" asp-action="Index">SSHE</a></li>
+                                                                                }
+                                                                            }
+                                                                            /**
+                                                                             * ********************************************************************************
+                                                                             * *                                END OF SSHE                                   *
+                                                                             * ********************************************************************************
+                                                                             */
+                                                                        }
+                                                                    </ul>
+                                                                </li>
+                                                            }
+                                                        }
+                                                        /**
+                                                         * ********************************************************************************
+                                                         * *                                END  OF REPORT                                *
+                                                         * ********************************************************************************
+                                                         */
+                                                    }
+
+                                                    <!--Tables Primary menu-->
+                                                    @{
+                                                        /**
+                                                         * ********************************************************************************
+                                                         * *                                START OF TABLES                               *
+                                                         * ********************************************************************************
+                                                         * START OF TABLES SUBMENU
+                                                         * This link covers two groups namely Quality and SSHE.
+                                                         * (User.IsInRole("Office of the Chief Information Officer") ||
+                                                         *       User.IsInRole("QSHE QtyAdmin") ||
+                                                         *       User.IsInRole("SSHE Admin"))
+                                                         *     --   This line on codes allows only all users in the set role.
+                                                         *     --   else the link is hidden.
+                                                         */
+                                                        @if (User.Identity.IsAuthenticated)
+                                                        {
+                                                            if (User.IsInRole("Office of the Chief Information Officer") || User.IsInRole("QSHE QtyAdmin") || User.IsInRole("SSHE Admin"))
+                                                            {
+                                                                <!--Separator-->
+                                                                <li class="dropdown-divider"></li>
+
+                                                                <!--Location Primary menu-->
+                                                                <li class="dropdown-submenu">
+                                                                    <a class="dropdown-item small" asp-controller="InvLocation" asp-action="Index">Location</a>
+                                                                </li>
+
+                                                                <!--Type Primary menu-->
+                                                                <li class="dropdown-submenu">
+                                                                    <a class="dropdown-item small" asp-controller="InvType" asp-action="Index">Type</a>
+                                                                </li>
+
+                                                                <!--Unit Primary menu-->
+                                                                <li class="dropdown-submenu">
+                                                                    <a class="dropdown-item small" asp-controller="InvUnit" asp-action="Index">Unit</a>
+                                                                </li>
+
+                                                                <!--Manufacturer Primary menu-->
+                                                                <li class="dropdown-submenu">
+                                                                    <a class="dropdown-item small" asp-controller="InvManufacturer" asp-action="Index">Manufacturer</a>
+                                                                </li>
+
+                                                                <!--Email Primary menu-->
+                                                                <li class="dropdown-submenu">
+                                                                    <a class="dropdown-item small" asp-controller="InvEmail" asp-action="Index">Email</a>
+                                                                </li>
+                                                            }
+                                                        }
+                                                        /**
+                                                         * ********************************************************************************
+                                                         * *                                END  OF TABLES                                *
+                                                         * ********************************************************************************
+                                                         */
+                                                    }
+                                                </ul>
+                                            </li>
+                                        }
+                                    }
+                                    /**
+                                     * ********************************************************************************
+                                     * *                            END OF QSHE                                       *
+                                     * ********************************************************************************
+                                     */
+                                }
+
+                                <!--CNC Tab-->
+                                @{
+                                    /**
+                                     * ********************************************************************************
+                                     * *                            START OF CNC                                      *
+                                     * ********************************************************************************
+                                     * START OF CNC DROPDOWN MENU
+                                     */
+                                    if (User.Identity.IsAuthenticated)
+                                    {
+                                        if (User.IsInRole("Office of the Chief Information Officer") || User.IsInRole("CNC Admin") || User.IsInRole("CNC User"))
+                                        {
+                                            <li class="nav-item dropdown">
+                                                <a class="nav-link" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="fas fa-credit-card"></i> CNC
+                                                </a>
+                                                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                                    <!--Banks Primary Menu-->
+                                                    <li class="dropdown-submenu small">
+                                                        <a class="dropdown-item">Banks <i class="fas fa-chevron-circle-right float-right"></i></a>
+                                                        <!--Secondary Menu-->
+                                                        <ul class="dropdown-menu">
+                                                            <!--Metrobank-->
+                                                            <li><a class="dropdown-item small" asp-controller="BdoPE" asp-action="IndexMTR">Metrobank</a></li>
+
+                                                            <!--BDO-->
+                                                            <li><a class="dropdown-item small" asp-controller="BdoPE" asp-action="Index">BDO</a></li>
+
+                                                            <!--Security Bank-->
+                                                            <li><a class="dropdown-item small" asp-controller="BdoPE" asp-action="IndexSBC">Security Bank</a></li>
+
+                                                            <!--BPI-->
+                                                            <li><a class="dropdown-item small" asp-controller="BdoPE" asp-action="IndexBPI">BPI</a></li>
+                                                        </ul>
+                                                    </li>
+
+                                                    <!--LSMW Primary Menu-->
+                                                    <li class="dropdown-submenu small">
+                                                        <a class="dropdown-item" asp-controller="BdoPE" asp-action="Lsmw">LSMW </a>
+                                                    </li>
+
+                                                    <!--Payment Records Primary Menu-->
+                                                    @if (User.IsInRole("Office of the Chief Information Officer") || User.IsInRole("CNC Admin"))
+                                                    {
+                                                        <li class="dropdown-submenu">
+                                                            <a class="dropdown-item small" asp-controller="BdoPE" asp-action="LsmwAdmin">Payment Records</a>
+                                                        </li>
+                                                    }
+                                                </ul>
+                                            </li>
+                                        }
+                                    }
+                                    /**
+                                     * ********************************************************************************
+                                     * *                            END OF CNC                                        *
+                                     * ********************************************************************************
+                                     */
+                                }
+
+                                <!--Corp Com Tab-->
+                                @{
+                                    /**
+                                     * ********************************************************************************
+                                     * *                            START OF CNC                                      *
+                                     * ********************************************************************************
+                                     * START OF CNC DROPDOWN MENU
+                                     */
+                                    if (User.Identity.IsAuthenticated)
+                                    {
+                                        if (User.IsInRole("Office of the Chief Information Officer") || User.IsInRole("CNC Admin") || User.IsInRole("CNC User"))
+                                        {
+                                            <li class="nav-item dropdown">
+                                                <a class="nav-link" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="fas fa-credit-card"></i> Corp Comm
+                                                </a>
+                                                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                                    <li class="dropdown-submenu small">
+                                                        <a class="dropdown-item" asp-area="CorpComm" asp-controller="Collateral" asp-action="Catalog">Catalog</a>
+                                                    </li>
+
+                                                    <li class="dropdown-submenu small">
+                                                        <a class="dropdown-item" asp-area="CorpComm" asp-controller="Collateral" asp-action="Index">Collaterals</a>
+                                                    </li>
+
+                                                    <li class="dropdown-divider"></li>
+
+                                                    <li class="dropdown-submenu small">
+                                                        <a class="dropdown-item">Tables <i class="fas fa-chevron-circle-right float-right"></i></a>
+                                                        <a class="dropdown-item" asp-area="CorpComm" asp-controller="Brand" asp-action="Index">Brand</a>
+                                                        <!--Secondary Menu-->
+                                                        <ul class="dropdown-menu">
+                                                            <li><a class="dropdown-item small" asp-area="CorpComm" asp-controller="Department" asp-action="Index">Department</a></li>
+                                                            <li><a class="dropdown-item small" asp-area="CorpComm" asp-controller="Email" asp-action="Index">Email</a></li>
+                                                            <li><a class="dropdown-item small" asp-area="CorpComm" asp-controller="Location" asp-action="Index">Location</a></li>
+                                                            <li><a class="dropdown-item small" asp-area="CorpComm" asp-controller="Size" asp-action="Index">Size</a></li>
+                                                            <li><a class="dropdown-item small" asp-area="CorpComm" asp-controller="Station" asp-action="Index">Station</a></li>
+                                                            <li><a class="dropdown-item small" asp-area="CorpComm" asp-controller="StationType" asp-action="Index">Station Type</a></li>
+                                                            <li><a class="dropdown-item small" asp-area="CorpComm" asp-controller="Status" asp-action="Index">Type</a></li>
+                                                            <li><a class="dropdown-item small" asp-area="CorpComm" asp-controller="Unit" asp-action="Index">Unit</a></li>
+                                                            <li><a class="dropdown-item small" asp-area="CorpComm" asp-controller="Event" asp-action="Index">Event</a></li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        }
+                                    }
+                                    /**
+                                     * ********************************************************************************
+                                     * *                            END OF CNC                                        *
+                                     * ********************************************************************************
+                                     */
+                                }
+
+                                <!--Procurement Tab-->
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link">
+                                        <i class="fas fa-cart-arrow-down"></i> Procurement
+                                    </a>
+
+                                    <!--Primary menu-->
+                                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                        @{
+                                            @if (User.IsInRole("Office of the Chief Information Officer") || User.IsInRole("Procurement Intranet"))
+                                            {
+                                                <!--Go Pro-->
+                                                <li class="dropdown-submenu small">
+                                                    <a class="dropdown-item" href="https://pttadmin.sharepoint.com/sites/Procurement/Lists/Unable%20to%20Process/AllItems.aspx" target="_blank">
+                                                        Go Pro
+                                                    </a>
+                                                </li>
+                                            }
+                                        }
+
+                                        <!--Vendor Evaluation-->
+                                        <li class="dropdown-submenu small">
+                                            <a class="dropdown-item" href="https://pttadmin.sharepoint.com/sites/Vendor-Evaluation/VES/SitePages/Home.aspx?CT=1575440268879&OR=OWA-NT&CID=fdf82904-aec6-c146-1ba4-a9d5c3a03499" target="_blank">
+                                                Vendor Evaluation
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <!--Logistics Tab-->
+                                @{
+                                    @if (User.IsInRole("Office of the Chief Information Officer") || User.IsInRole("Logistics Management Intranet"))
+                                    {
+                                        <li class="nav-item dropdown">
+                                            <a class="nav-link">
+                                                <i class="fas fa-shipping-fast"></i> Logistics
+                                            </a>
+
+                                            <!--Primary Menu-->
+                                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                                <!--Manual Delivery Request-->
+                                                <li class="dropdown-submenu small">
+                                                    <a class="dropdown-item" href="https://pttadmin.sharepoint.com/sites/LogisticsManagement/Lists/Manual%20DRLoading%20Request/AllItems.aspx" target="_blank">
+                                                        Manual Delivery Request
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    }
+                                }
+
+                                <!--Ticketing Tab-->
+                                <li class="nav-item">
+                                    <a class="nav-link" href="https://apps.powerapps.com/play/ffa735ea-8496-4cfa-84c2-ab57dbb240a0?tenantId=78db0b1d-e5d5-4f05-af3c-cc72575b1ba3" target="_blank">
+                                        <i class="fas fa-ticket-alt"></i> Ticketing
+                                    </a>
+                                </li>
+
+                                <!--ESS Tab-->
+                                <li class="nav-item">
+                                    <a class="nav-link" href="http://sub-ess-prd.pttphils.com:50000/irj/portal" target="_blank">
+                                        <i class="fas fa-calendar-alt"></i> ESS
+                                    </a>
+                                </li>
+
+                                <!--Policy Tab-->
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-action="Policy">
+                                        <i class="fas fa-clipboard-list"></i> Policy
+                                    </a>
+                                </li>
+
+                                @{
+                                    @if (User.IsInRole("Office of the Chief Information Officer") || User.IsInRole("SPEM Intranet"))
+                                    {
+                                        <!--SPEM Tab-->
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="@ViewBag.SPEM" target="_blank">
+                                                <i class="fas fa-truck-loading"></i> SPEM
+                                            </a>
+                                        </li>
+                                    }
+
+                                }
+
+                                @{
+                                    if (User.Identity.Name == "OFFICE\\jose.baleros")
+                                    {
+                                        <li class="nav-item dropdown">
+                                            <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Admin
+                                            </a>
+                                            <div class="dropdown-menu small" aria-labelledby="navbarDropdown">
+                                                <a class="dropdown-item" asp-controller="Suggestion" asp-action="Create">Suggestion</a>
+                                                <a class="dropdown-item" asp-controller="ImageCarousel" asp-action="Index">Carousel</a>
+                                                @*<div class="dropdown-divider"></div>
+                                                    <a class="dropdown-item" href="#">Something else here</a>*@
+                                            </div>
+                                        </li>
+                                    }
+                                }
+
+                                <li class="nav-item dropright float-right">
+                                    <span class="nav-link" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user"></i> <i class="fas fa-chevron-circle-down"></i></span>
+                                    @{
+                                        <!--User Details-->
+                                        /**
+                                         * ********************************************************************************
+                                         * *                            START OF USER DETAIL                              *
+                                         * ********************************************************************************
+                                         * START OF USER DETAIL LINK
+                                         */
+                                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                            <li><a class="dropdown-item small">User: <strong>@ViewBag.DisplayName</strong>  <br /> Dept: <strong>@ViewBag.Department</strong></a></li>
+                                        </ul>
+                                        /**
+                                         * ********************************************************************************
+                                         * *                            END OF USER DETAIL                                *
+                                         * ********************************************************************************
+                                         */
+                                    }
+                                </li>
+                            </ul>
+                        </div>
+                        @{
+                            /**
+                             * ********************************************************************************
+                             * *                            END OF TOP MENU                                   *
+                             * ********************************************************************************
+                             */
+                        }
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <partial name="_CookieConsentPartial" />
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-white-50 bg-primary">
+        <div class="container">
+            Copyright &copy; 2019 PTT Philippines Corporation. All rights reserved. - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://kit.fontawesome.com/9ca3bb7322.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

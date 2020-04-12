@@ -1,0 +1,149 @@
+﻿@model IEnumerable<Intranet.Models.BdoPE>
+
+@{
+    ViewData["Title"] = "LsmwAdmin";
+}
+
+<h4 class="display-4">Payment Record [Admin]</h4><th></th>
+<br />
+<table id="cool-table" class="table table-hover small table-sm compact border" style="display: block; overflow-x: auto; white-space: nowrap; width:100%; ">
+    <thead>
+        <tr>
+            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.DocDateInDoc)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DocType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CompanyCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FiscalPeriod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CurrentKey)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AccMatNextLine2)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DocHeadT)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AmountDocCur)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AssignNum)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ItemText)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RefDocNum)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MarketerZ2)
+            </th>
+            <th>
+                DL
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="small">
+                    <a asp-action="EditAdmin" asp-route-id="@item.Id"><i class="fa fa-marker fa-lg" title="Edit"></i></a>
+                    @{
+                        if (User.IsInRole("Office of the Chief Information Officer") || User.IsInRole("CNC Admin"))
+                        {
+                            <a asp-action="DeleteAdmin" asp-route-id="@item.Id"
+                               class="text-danger ml-1"
+                               onclick="return confirm('Are you sure to delete this record?')">
+                                <i class="fa fa-trash-alt fa-lg" title="Delete"></i>
+                            </a>
+                        }
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DocDateInDoc)
+                </td>
+                <td class="text-center">
+                    @Html.DisplayFor(modelItem => item.DocType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CompanyCode)
+                </td>
+                <td class="text-center">
+                    @Html.DisplayFor(modelItem => item.FiscalPeriod)
+                </td>
+                <td class="text-center">
+                    @Html.DisplayFor(modelItem => item.CurrentKey)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AccMatNextLine2)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DocHeadT)
+                </td>
+                <td class="number">
+                    @Html.DisplayFor(modelItem => item.AmountDocCur)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AssignNum)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ItemText)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RefDocNum)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MarketerZ2)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.isDownloaded)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section scripts {
+
+    <!-- This script sets parameters for the Datatable used -->
+    <script>
+        $(document).ready(function () {
+            $('#cool-table').DataTable({
+                "displayLength": 10,
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
+                //dom: 'Bfrtip'
+            });
+        });
+    </script>
+
+    <script type="text/javascript" src="~/lib/number/jquery.number.min.js"></script>
+    <script>
+        $('td.number').number(true, 2)
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $("#myInput").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#myTable tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
+
+    <style type="text/css">
+        ::-webkit-input-placeholder {
+            font-style: italic;
+        }
+    </style>
+}

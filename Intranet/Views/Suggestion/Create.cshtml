@@ -1,0 +1,72 @@
+﻿@model Intranet.Models.Suggestion
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h4 class="display-4">Suggestion</h4>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="UserName" value="@ViewBag.DisplayName" />
+            <input type="hidden" asp-for="UserIP" value="@HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString()" />
+            <input type="hidden" asp-for="UserDate" value="@DateTime.Now.ToString("MM/dd/yyyy")" />
+            <div class="form-row">
+                <div class="form-group col-md-5">
+                    <label asp-for="SuggName" class="control-label small font-weight-bold"></label>
+                    <input id="imgInput" asp-for="SuggName" class="form-control form-control-sm" value="@ViewBag.DisplayName" readonly />
+                    <span asp-validation-for="SuggName" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-6">
+                    <label asp-for="SuggEmail" class="control-label small font-weight-bold"></label>
+                    <input id="imgInput2" asp-for="SuggEmail" class="form-control form-control-sm" value="@ViewBag.EmailAddress" readonly />
+                    <span asp-validation-for="SuggEmail" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-1">
+                    <label class="control-label small font-weight-bold">Anonymous</label>
+                    <input id="remove" name="remove" type="checkbox" class="form-control form-control-sm" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="SuggSubject" class="control-label small font-weight-bold"></label>
+                <input asp-for="SuggSubject" class="form-control form-control-sm" />
+                <span asp-validation-for="SuggSubject" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SuggMessage" class="control-label small font-weight-bold"></label>
+                <textarea asp-for="SuggMessage" class="form-control form-control-sm" rows="6" style="resize:none"></textarea>
+                <div class="cke_1 cke cke_reset cke_chrome cke_editor_RichText cke_ltr cke_browser_gecko"></div>
+                <span asp-validation-for="SuggMessage" class="text-danger"></span>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <input type="submit" value="Submit" class="btn btn-primary btn-block" />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        var imgInput = document.getElementById('imgInput')
+        var imgInput2 = document.getElementById('imgInput2'),
+            remove = document.getElementById('remove'),
+            val = imgInput.value;
+        val2 = imgInput2.value;
+
+        remove.onchange = function () {
+            if (this.checked) {
+                imgInput.value = "Anonymous";
+                imgInput2.value = "Anonymous";
+            } else {
+                imgInput.value = val;
+                imgInput2.value = val2;
+            }
+        }
+    </script>
+}

@@ -1,0 +1,2 @@
+DocDateInDoc	DocType	CompanyCode	PosDateInDoc	FiscalPeriod	CurrentKey	RefDocNum	DocHeadT	PosKeyInNextLine	AccMatNextLine	AmountDocCur	ValDate	AssignNum	ItemText	PosKeyInNextLine2	AccMatNextLine2	AmountDocCur2	BaseDateDueCal	ItemText2
+12/16/2019	DZ	3000	12/16/2019	12	PHP	Off-us Check	SBC	40	11231150	82543.75	12/16/2019	EEA	1000143005	15	1300000093	82543.75	12/16/2019	1000143005

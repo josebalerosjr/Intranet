@@ -1,0 +1,96 @@
+﻿@model Intranet.Models.BdoPE
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h4 class="display-4">Update Bills Payment details</h4>
+<br />
+<hr />
+<div class="flex-wrap container row small">
+    <div class="col-md-10">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="UserName" value="@ViewBag.DisplayName" />
+            <input type="hidden" asp-for="UserIP" value="@HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString()" />
+            <input type="hidden" asp-for="UserDate" value="@DateTime.Now.ToString("MM/dd/yyyy")" />
+            <div class="form-row">
+                <div class="form-group  col-md-2">
+                    <label asp-for="DocType" class="control-label font-weight-bold">Type</label>
+                    <select name="doctype" asp-for="DocType" class="form-control">
+                        <option value="">- Select Type -</option>
+                        <option value="DX">DX</option>
+                        <option value="DY">DY</option>
+                        <option value="DZ">DZ</option>
+                    </select>
+                    <span asp-validation-for="DocType" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-2">
+                    <label asp-for="CompanyCode" class="control-label font-weight-bold"></label>
+                    <select name="companycode" asp-for="CompanyCode" class="form-control">
+                        <option value="">- Select Code -</option>
+                        <option value="3000">2000</option>
+                        <option value="3000">3000</option>
+                    </select>
+                    <span asp-validation-for="CompanyCode" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-2">
+                    <label asp-for="AssignNum" class="control-label font-weight-bold">Assignment</label>
+                    <input name="assignnum" asp-for="AssignNum" class="form-control" placeholder="Marketer" maxlength="18" />
+                    <span asp-validation-for="AssignNum" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-2">
+                    <label asp-for="ItemText" class="control-label font-weight-bold">Text </label>
+                    <input id="item1" name="itemtext" asp-for="ItemText" class="form-control" placeholder="Invoice No." maxlength="50">
+                    <span asp-validation-for="ItemText" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-2">
+                    <label asp-for="ItemText2" class="control-label font-weight-bold">Text</label>
+                    <input id="item2" name="itemtext2" asp-for="ItemText2" class="form-control" readonly maxlength="50">
+                    <span asp-validation-for="ItemText2" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <input type="submit" value="Submit" class="btn btn-primary btn-block form-control form-control-sm" />
+                </div>
+                <div class="form-group col-md-4">
+                    <a asp-action="Lsmw" class="btn btn-secondary btn-block form-control form-control-sm"><i class="fa fa-table"></i> Back to List</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+@section Scripts
+{
+    <style type="text/css">
+        ::-webkit-input-placeholder {
+            font-style: italic;
+        }
+    </style>
+    <script>
+        $('#item1').keyup(function () {
+            $('#item2').val($(this).val());
+        });
+    </script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
+    <script src="//ajax.aspnetcdn.com/ajax/mvc/4.0/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        $(document).ready(
+            function () {
+                $('input:file').change(
+                    function () {
+                        if ($(this).val()) {
+                            $('input:submit').attr('disabled', false);
+                        } else {
+                            $('input:submit').attr('disabled', true);
+                        }
+                    }
+                );
+            }
+        );
+    </script>
+}

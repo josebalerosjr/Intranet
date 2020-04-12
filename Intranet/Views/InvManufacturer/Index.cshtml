@@ -1,0 +1,52 @@
+﻿@model IEnumerable<Intranet.Models.InvManufacturer>
+
+@{
+    ViewData["Title"] = "Manufacturer";
+}
+
+<h4 class="display-4">Manufacturer Register</h4>
+<br />
+<table id="cool-table" class="table table-hover small table-sm compact border">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.MakerName)
+            </th>
+            <th width="155px">
+                <a asp-action="AddOrEdit" class="btn btn-outline-success small">
+                    <i class="far fa-plus-square small"></i> Manufacturer
+                </a>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td width="300px">
+                    @Html.DisplayFor(modelItem => item.MakerName)
+                </td>
+                <td>
+                    <a asp-action="AddOrEdit" asp-route-id="@item.MakerId"><i class="fa fa-marker fa-lg"></i></a>
+                    <a asp-action="Delete" asp-route-id="@item.MakerId"
+                       class="text-danger ml-1"
+                       onclick="return confirm('Are you sure to delete this record?')">
+                        <i class="fa fa-trash-alt fa-lg"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('#cool-table').DataTable({
+                "displayLength": 10,
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
+                //dom: 'Bfrtip'
+            });
+        });
+    </script>
+}

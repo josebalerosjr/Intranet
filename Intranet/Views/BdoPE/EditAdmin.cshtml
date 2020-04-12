@@ -1,0 +1,153 @@
+﻿@model Intranet.Models.BdoPE
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
+    ViewData["Title"] = "EditAdmin";
+}
+
+<h4 class="display-4">Edit Admin</h4>
+<hr />
+<div class="flex-wrap container row small">
+    <div class="col-md-9">
+        <form asp-action="EditAdmin">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="UserName" value="@ViewBag.DisplayName" />
+            <input type="hidden" asp-for="UserIP" value="@HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString()" />
+            <input type="hidden" asp-for="UserDate" value="@DateTime.Now.ToString("MM/dd/yyyy")" />
+            <div class="form-group col-md-12">
+                <label class="form-check-label font-weight-bold">
+                    <input class="form-check-input" asp-for="isDownloaded" /> @Html.DisplayNameFor(model => model.isDownloaded)
+                </label>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-2">
+                    <label asp-for="DocDateInDoc" class="control-label font-weight-bold">Doc. Date</label>
+                    <input asp-for="DocDateInDoc" class="form-control" readonly />
+                    <span asp-validation-for="DocDateInDoc" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-1">
+                    <label asp-for="DocType" class="control-label font-weight-bold">Type</label>
+                    <input asp-for="DocType" class="form-control" />
+                    <span asp-validation-for="DocType" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-1">
+                    <label asp-for="CompanyCode" class="control-label font-weight-bold">CoCd</label>
+                    <input asp-for="CompanyCode" class="form-control" />
+                    <span asp-validation-for="CompanyCode" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-2">
+                    <label asp-for="PosDateInDoc" class="control-label font-weight-bold"></label>
+                    <input asp-for="PosDateInDoc" class="form-control" readonly />
+                    <span asp-validation-for="PosDateInDoc" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-1">
+                    <label asp-for="FiscalPeriod" class="control-label font-weight-bold">Period</label>
+                    <input asp-for="FiscalPeriod" class="form-control" readonly />
+                    <span asp-validation-for="FiscalPeriod" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-1">
+                    <label asp-for="CurrentKey" class="control-label font-weight-bold">Currency</label>
+                    <input asp-for="CurrentKey" class="form-control" readonly />
+                    <span asp-validation-for="CurrentKey" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-2">
+                    <label asp-for="RefDocNum" class="control-label font-weight-bold"></label>
+                    <input asp-for="RefDocNum" class="form-control" />
+                    <span asp-validation-for="RefDocNum" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-2">
+                    <label asp-for="DocHeadT" class="control-label font-weight-bold">Header Text</label>
+                    <input asp-for="DocHeadT" class="form-control" readonly />
+                    <span asp-validation-for="DocHeadT" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-1">
+                    <label asp-for="PosKeyInNextLine" class="control-label font-weight-bold"></label>
+                    <input asp-for="PosKeyInNextLine" class="form-control" readonly />
+                    <span asp-validation-for="PosKeyInNextLine" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-2">
+                    <label asp-for="AccMatNextLine" class="control-label font-weight-bold"></label>
+                    <input asp-for="AccMatNextLine" class="form-control" readonly />
+                    <span asp-validation-for="AccMatNextLine" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-3">
+                    <label asp-for="AmountDocCur" class="control-label font-weight-bold"></label>
+                    <input id="item1" asp-for="AmountDocCur" class="form-control number" />
+                    <span asp-validation-for="AmountDocCur" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-2">
+                    <label asp-for="ValDate" class="control-label font-weight-bold"></label>
+                    <input asp-for="ValDate" class="form-control" readonly />
+                    <span asp-validation-for="ValDate" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-4">
+                    <label asp-for="AssignNum" class="control-label font-weight-bold"></label>
+                    <input asp-for="AssignNum" class="form-control" />
+                    <span asp-validation-for="AssignNum" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-4">
+                    <label asp-for="ItemText" class="control-label font-weight-bold"></label>
+                    <input id="item3" asp-for="ItemText" class="form-control" />
+                    <span asp-validation-for="ItemText" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-1">
+                    <label asp-for="PosKeyInNextLine2" class="control-label font-weight-bold"></label>
+                    <input asp-for="PosKeyInNextLine2" class="form-control" readonly />
+                    <span asp-validation-for="PosKeyInNextLine2" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-3">
+                    <label asp-for="AccMatNextLine2" class="control-label font-weight-bold"></label>
+                    <input asp-for="AccMatNextLine2" class="form-control" />
+                    <span asp-validation-for="AccMatNextLine2" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-4">
+                    <label asp-for="AmountDocCur2" class="control-label font-weight-bold"></label>
+                    <input id="item2" asp-for="AmountDocCur2" class="form-control number" readonly />
+                    <span asp-validation-for="AmountDocCur2" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-3">
+                    <label asp-for="BaseDateDueCal" class="control-label font-weight-bold"></label>
+                    <input asp-for="BaseDateDueCal" class="form-control" readonly />
+                    <span asp-validation-for="BaseDateDueCal" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-5">
+                    <label asp-for="ItemText2" class="control-label font-weight-bold"></label>
+                    <input id="item4" asp-for="ItemText2" class="form-control" readonly />
+                    <span asp-validation-for="ItemText2" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-4">
+                    <label asp-for="MarketerZ2" class="control-label font-weight-bold"></label>
+                    <input asp-for="MarketerZ2" class="form-control" />
+                    <span asp-validation-for="MarketerZ2" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <input type="submit" value="Submit" class="btn btn-primary btn-block form-control form-control-sm" />
+                </div>
+                <div class="form-group col-md-4">
+                    <a asp-action="LsmwAdmin" class="btn btn-secondary btn-block form-control form-control-sm"><i class="fa fa-table"></i> Back to List</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+@section Scripts
+{
+    <script type="text/javascript" src="~/lib/number/jquery.number.min.js"></script>
+    <script>
+        $('td.number').number(true, 2)
+    </script>
+
+    <script>
+        $('#item1').keyup(function () {
+            $('#item2').val($(this).val());
+        });
+    </script>
+    <script>
+        $('#item3').keyup(function () {
+            $('#item4').val($(this).val());
+        });
+    </script>
+}

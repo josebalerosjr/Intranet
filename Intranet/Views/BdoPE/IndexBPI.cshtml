@@ -1,0 +1,34 @@
+﻿@model IEnumerable<Intranet.Models.BdoPE>
+
+@{
+    ViewData["Title"] = "IndexBPI";
+}
+
+<h4 class="display-4">BPI Bills Payment Upload</h4>
+<br />
+<div class="container">
+    <form class="mb-3" asp-controller="BdoPE" asp-action="IndexBPI" method="post" enctype="multipart/form-data">
+        <div class="row ">
+            <input class="input-group-prepend " type="submit" value="Upload" disabled />&nbsp;
+            <input id="uploadFile" class="input-group-append border" name="files" type="file" />
+        </div>
+    </form>
+</div>
+@section Scripts
+{
+    <script>
+        $(document).ready(
+            function () {
+                $('input:file').change(
+                    function () {
+                        if ($(this).val()) {
+                            $('input:submit').attr('disabled', false);
+                        } else {
+                            $('input:submit').attr('disabled', true);
+                        }
+                    }
+                );
+            }
+        );
+    </script>
+}

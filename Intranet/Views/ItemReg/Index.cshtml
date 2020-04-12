@@ -1,0 +1,149 @@
+﻿@*@model IEnumerable<Intranet.Models.ItemReg>*@
+@model PaginatedList<Intranet.Models.ItemReg>
+
+@{
+    ViewData["Title"] = "Item";
+}
+
+<h4 class="display-4">Item Register</h4>
+<br />
+<table id="cool-table" class="table table-hover small table-sm compact border" style="display: block; overflow-x: auto; white-space: nowrap; width:100%;">
+    <thead>
+        <tr>
+            <th width="102px">
+                <a asp-action="AddOrEdit" class="btn btn-outline-success">
+                    <i class="far fa-plus-square small"></i> &nbsp; Item
+                </a>
+            </th>
+            <th>
+                <label asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParam"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                    Name
+                </label>
+            </th>
+            <th>
+                <label asp-action="Index" asp-route-sortOrder="@ViewData["DescSortParam"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                    Item Description
+                </label>
+            </th>
+            <th>
+                <label asp-action="Index" asp-route-sortOrder="@ViewData["MfrSortParam"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                    MFR
+                </label>
+            </th>
+            <th>
+                <label asp-action="Index" asp-route-sortOrder="@ViewData["SnSortParam"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                    Asset/SN
+                </label>
+            </th>
+            <th>
+                <label asp-action="Index" asp-route-sortOrder="@ViewData["PnSortParam"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                    P/N
+                </label>
+            </th>
+            <th>
+                <label asp-action="Index" asp-route-sortOrder="@ViewData["TypeSortParam"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                    Type
+                </label>
+            </th>
+            <th>
+                <label asp-action="Index" asp-route-sortOrder="@ViewData["CALSortParam"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                    CAL Date
+                </label>
+            </th>
+            <th>
+                <label asp-action="Index" asp-route-sortOrder="@ViewData["QtySortParam"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                    QTY
+                </label>
+            </th>
+            <th>
+                <label asp-action="Index" asp-route-sortOrder="@ViewData["UnitSortParam"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                    Unit
+                </label>
+            </th>
+            <th>
+                <label asp-action="Index" asp-route-sortOrder="@ViewData["RemSortParam"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                    Remarks
+                </label>
+            </th>
+            <th>
+                <label asp-action="Index" asp-route-sortOrder="@ViewData["LocSortParam"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                    Location
+                </label>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        if (User.IsInRole("Office of the Chief Information Officer") ||
+                            User.IsInRole("QSHE QtyAdmin"))
+                        {
+                            <a asp-action="AddOrEdit" asp-route-id="@item.ItemId"><i class="fa fa-marker fa-lg"></i></a>
+                            <a asp-action="Delete" asp-route-id="@item.ItemId"
+                               class="text-danger ml-1"
+                               onclick="return confirm('Are you sure to delete this record?')"><i class="fa fa-trash-alt fa-lg"></i></a>
+                        }
+                    }
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        if (User.IsInRole("Office of the Chief Information Officer") ||
+                            User.IsInRole("QSHE QtyAdmin") ||
+                            User.IsInRole("QSHE QtyUser"))
+                        {
+                            <a asp-action="Withdraw" asp-route-id="@item.ItemId"><i class="fas fa-dolly-flatbed"></i></a>
+                        }
+                    }
+                </td>
+                <td width="125px">
+                    @Html.DisplayFor(modelItem => item.ItemName)
+                </td>
+                <td width="250px">
+                    @Html.DisplayFor(modelItem => item.ItemDesc)
+                </td>
+                <td width="100px">
+                    @Html.DisplayFor(modelItem => item.ManufName)
+                </td>
+                <td width="50px">
+                    @Html.DisplayFor(modelItem => item.AsstSerial)
+                </td>
+                <td width="50px">
+                    @Html.DisplayFor(modelItem => item.PartNum)
+                </td>
+                <td width="50px">
+                    @Html.DisplayFor(modelItem => item.TypeName)
+                </td>
+                <td width="50px">
+                    @Html.DisplayFor(modelItem => item.CalDate)
+                </td>
+                <td width="30px">
+                    @Html.DisplayFor(modelItem => item.Qty)
+                </td>
+                <td width="50px">
+                    @Html.DisplayFor(modelItem => item.UnitName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Remarks)
+                </td>
+                <td width="50px">
+                    @Html.DisplayFor(modelItem => item.LocName)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#cool-table').DataTable({
+                "displayLength": 10,
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
+                //dom: 'Bfrtip'
+            });
+        });
+    </script>
+}

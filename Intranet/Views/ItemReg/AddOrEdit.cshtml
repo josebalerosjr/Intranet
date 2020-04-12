@@ -1,0 +1,113 @@
+﻿@model Intranet.Models.ItemReg
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
+    ViewData["Title"] = "Item";
+}
+
+<h4 class="display-4">Item Register</h4>
+<hr />
+<div class="flex-wrap container row">
+    <div class="col-md-9">
+        <form asp-action="AddOrEdit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ItemId" />
+            <input type="hidden" asp-for="UserName" value="@ViewBag.DisplayName" />
+            <input type="hidden" asp-for="UserIP" value="@HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString()" />
+            <input type="hidden" asp-for="UserDate" value="@DateTime.Now.ToString("MM/dd/yyyy")" />
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label asp-for="ItemName" class="control-label small font-weight-bold">Name <strong style="color:red">*</strong></label>
+                    <input asp-for="ItemName" class="form-control form-control-sm" />
+                    <span asp-validation-for="ItemName" class="text-danger small"></span>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label asp-for="ManufName" class="control-label small font-weight-bold">Manufacturer <strong style="color:red">*</strong></label>
+                    <select asp-for="ManufName"
+                            class="form-control form-control-sm"
+                            asp-items="@(new SelectList(@ViewBag.ListOfManufacturer, "MakerName","MakerName"))"></select>
+                    <span asp-validation-for="ManufName" class="text-danger small"></span>
+                </div>
+
+                <div class="form-group col-md-3">
+                    <label asp-for="AsstSerial" class="control-label  small font-weight-bold"></label>
+                    <input asp-for="AsstSerial" class="form-control form-control-sm" />
+                    <span asp-validation-for="AsstSerial" class="text-danger small"></span>
+                </div>
+
+                <div class="form-group col-md-3">
+                    <label asp-for="PartNum" class="control-label  small font-weight-bold"></label>
+                    <input asp-for="PartNum" class="form-control form-control-sm" />
+                    <span asp-validation-for="PartNum" class="text-danger small"></span>
+                </div>
+
+                <div class="form-group col-md-3">
+                    <label asp-for="TypeName" class="control-label  small font-weight-bold">Type <strong style="color:red">*</strong></label>
+                    <select asp-for="TypeName"
+                            class="form-control form-control-sm"
+                            asp-items="@(new SelectList(@ViewBag.ListOfType, "TypeName","TypeName"))"></select>
+                    <span asp-validation-for="TypeName" class="text-danger small"></span>
+                </div>
+
+                <div class="form-group col-md-3">
+                    <label asp-for="CalDate" class="control-label  small font-weight-bold">Cal Date</label>
+                    <input asp-for="CalDate" class="form-control form-control-sm" id="CalDate" />
+                    <span asp-validation-for="CalDate" class="text-danger small"></span>
+                </div>
+
+                <div class="form-group col-md-1">
+                    <label asp-for="Qty" class="control-label small font-weight-bold">Qty <strong style="color:red">*</strong></label>
+                    <input asp-for="Qty" class="form-control form-control-sm" />
+                    <span asp-validation-for="Qty" class="text-danger small"></span>
+                </div>
+
+                <div class="form-group col-md-1">
+                    <label asp-for="CritLevel" class="control-label small font-weight-bold">C. Level <strong style="color:red">*</strong></label>
+                    <input asp-for="CritLevel" class="form-control form-control-sm" />
+                    <span asp-validation-for="CritLevel" class="text-danger small"></span>
+                </div>
+
+                <div class="form-group col-md-2">
+                    <label asp-for="UnitName" class="control-label small font-weight-bold">Unit <strong style="color:red">*</strong></label>
+                    <select asp-for="UnitName"
+                            class="form-control form-control-sm"
+                            asp-items="@(new SelectList(@ViewBag.ListOfUnit, "UnitName","UnitName"))"></select>
+                    <span asp-validation-for="UnitName" class="text-danger small"></span>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label asp-for="LocName" class="control-label small font-weight-bold">Location <strong style="color:red">*</strong></label>
+                    <select asp-for="LocName"
+                            class="form-control form-control-sm"
+                            asp-items="@(new SelectList(@ViewBag.ListOfLocation, "LocName","LocName"))"></select>
+                    <span asp-validation-for="LocName" class="text-danger small"></span>
+                </div>
+
+                <div class="form-group col-md-5">
+                    <label asp-for="ItemDesc" class="control-label small font-weight-bold">Item Description <strong style="color:red">*</strong></label>
+                    <input asp-for="ItemDesc" class="form-control form-control-sm" />
+                    <span asp-validation-for="ItemDesc" class="text-danger small"></span>
+                </div>
+
+                <div class="form-group col-md-11">
+                    <label asp-for="Remarks" class="control-label  small font-weight-bold">Remarks</label>
+                    <textarea asp-for="Remarks" class="form-control form-control-sm" style="resize: none"></textarea>
+                    <span asp-validation-for="Remarks" class="text-danger small"></span>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <input type="submit" value="Submit" class="btn btn-primary btn-block form-control form-control-sm" />
+                </div>
+                <div class="form-group col-md-5">
+                    <a asp-action="Index" class="btn btn-secondary btn-block form-control form-control-sm"><i class="fa fa-table"></i> Back to List</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
