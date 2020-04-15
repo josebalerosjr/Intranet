@@ -1,26 +1,70 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Intranet.Classes;
 using Intranet.DataAccess.Repository.CorpComm.IRepository;
+using Intranet.Models.CorpComm;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using System.DirectoryServices.AccountManagement;
 
 namespace Intranet.Areas.CorpComm.Controllers
 {
     [Area("CorpComm")]
-    [Route("CorpComm/[controller]/[Action]")]
+    [Route("CorpComm/[controller]/[Action]/{id?}")]
     public class BrandController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly AppSettings _appSettings;
 
-        public BrandController(IUnitOfWork unitOfWork)
+        public BrandController(IUnitOfWork unitOfWork, IOptions<AppSettings> appSettings)
         {
             _unitOfWork = unitOfWork;
+            _appSettings = appSettings.Value;
         }
 
         public IActionResult Index()
         {
+            UserDetails();
             return View();
+        }
+
+        public IActionResult Upsert(int? id)
+        {
+            UserDetails();
+            Brand brand = new Brand();
+
+            if (id == null)
+            {
+                // for create
+                return View(brand);
+            }
+
+            brand = _unitOfWork.Brand.Get(id.GetValueOrDefault());
+            if (brand == null)
+            {
+                return NotFound();
+            }
+            return View(brand);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Upsert(Brand brand)
+        {
+            UserDetails();
+            if (ModelState.IsValid)
+            {
+                if (brand.Id == 0)
+                {
+                    _unitOfWork.Brand.Add(brand);
+                    _unitOfWork.Save();
+                }
+                else
+                {
+                    _unitOfWork.Brand.Update(brand);
+                }
+                _unitOfWork.Save();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(brand);
         }
 
         #region API CALLS
@@ -32,6 +76,35 @@ namespace Intranet.Areas.CorpComm.Controllers
             return Json(new { data = allObj });
         }
 
-        #endregion
+        [HttpDelete]
+        public IActionResult Delete(int id)
+        {
+            var objFromDb = _unitOfWork.Brand.Get(id);
+            if (objFromDb == null)
+            {
+                return Json(new { success = false, message = "Error while deleting" });
+            }
+            _unitOfWork.Brand.Remove(objFromDb);
+            _unitOfWork.Save();
+            return Json(new { success = true, message = "Delete Successful" });
+        }
+
+        #endregion API CALLS
+
+        #region UserDetails function
+
+        public void UserDetails()
+        {
+            var username = User.Identity.Name;
+            var domain = _appSettings.appDomain;
+            using (var context = new PrincipalContext(ContextType.Domain, domain))
+            {
+                var user = UserPrincipal.FindByIdentity(context, username);
+                ViewBag.Department = user.GetDepartment();
+                ViewBag.DisplayName = user.GetDisplayname();
+            }
+        }
+
+        #endregion UserDetails function
     }
 }

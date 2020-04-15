@@ -10,18 +10,13 @@ namespace Intranet.Models.CorpComm
         public int Id { get; set; }
 
         [Required]
-        [DisplayName("Email")]
-        [RegularExpression(".+\\@.+\\..+",
-            ErrorMessage = "Please enter a valid email address")]
+        [DisplayName("Email Address")]
+        [RegularExpression(".+\\@.+\\..+", ErrorMessage = "Please enter a valid email address")]
         [MaxLength(100)]
         [Column(TypeName = "nvarchar(100)")]
         public string EmailAddress { get; set; }
 
-        [Required]
-        [DisplayName("User Fullname")]
-        [MaxLength(255)]
-        [Column(TypeName = "nvarchar(255)")]
-        public string Decription { get; set; }
+        #region UserDetails
 
         [Required]
         [DisplayName("Encoder Name")]
@@ -37,5 +32,7 @@ namespace Intranet.Models.CorpComm
         [DisplayName("Date")]
         [Column(TypeName = "nvarchar(10)")]
         public string UserDate { get; set; }
+
+        #endregion
     }
 }

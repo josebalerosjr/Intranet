@@ -22,7 +22,6 @@ namespace Intranet.DataAccess.Repository.CorpComm
             if (objFromDb != null)
             {
                 objFromDb.Name = brand.Name;
-                _db.SaveChanges();
             }
         }
     }

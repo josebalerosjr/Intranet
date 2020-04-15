@@ -1,0 +1,110 @@
+﻿using Intranet.Classes;
+using Intranet.DataAccess.Repository.CorpComm.IRepository;
+using Intranet.Models.CorpComm;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using System.DirectoryServices.AccountManagement;
+
+namespace Intranet.Areas.CorpComm.Controllers
+{
+    [Area("CorpComm")]
+    [Route("CorpComm/[controller]/[Action]/{id?}")]
+    public class DepartmentController : Controller
+    {
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly AppSettings _appSettings;
+
+        public DepartmentController(IUnitOfWork unitOfWork, IOptions<AppSettings> appSettings)
+        {
+            _unitOfWork = unitOfWork;
+            _appSettings = appSettings.Value;
+        }
+
+        public IActionResult Index()
+        {
+            UserDetails();
+            return View();
+        }
+
+        public IActionResult Upsert(int? id)
+        {
+            UserDetails();
+            Department department = new Department();
+
+            if (id == null)
+            {
+                // for create
+                return View(department);
+            }
+
+            department = _unitOfWork.Department.Get(id.GetValueOrDefault());
+            if (department == null)
+            {
+                return NotFound();
+            }
+            return View(department);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Upsert(Department department)
+        {
+            UserDetails();
+            if (ModelState.IsValid)
+            {
+                if (department.Id == 0)
+                {
+                    _unitOfWork.Department.Add(department);
+                    _unitOfWork.Save();
+                }
+                else
+                {
+                    _unitOfWork.Department.Update(department);
+                }
+                _unitOfWork.Save();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(department);
+        }
+
+        #region API CALLS
+
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            var allObj = _unitOfWork.Department.GetAll();
+            return Json(new { data = allObj });
+        }
+
+        [HttpDelete]
+        public IActionResult Delete(int id)
+        {
+            var objFromDb = _unitOfWork.Department.Get(id);
+            if (objFromDb == null)
+            {
+                return Json(new { success = false, message = "Error while deleting" });
+            }
+            _unitOfWork.Department.Remove(objFromDb);
+            _unitOfWork.Save();
+            return Json(new { success = true, message = "Delete Successful" });
+        }
+
+        #endregion API CALLS
+
+        #region UserDetails function
+
+        public void UserDetails()
+        {
+            var username = User.Identity.Name;
+            var domain = _appSettings.appDomain;
+            using (var context = new PrincipalContext(ContextType.Domain, domain))
+            {
+                var user = UserPrincipal.FindByIdentity(context, username);
+                ViewBag.Department = user.GetDepartment();
+                ViewBag.DisplayName = user.GetDisplayname();
+            }
+        }
+
+        #endregion UserDetails function
+    }
+}

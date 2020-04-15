@@ -10,14 +10,9 @@ namespace Intranet.Models.CorpComm
         public int Id { get; set; }
 
         [Required]
-        [DisplayName("Type")]
-        [Column(TypeName = "nvarchar(100)")]
+        [DisplayName("Station Type")]
+        [Column(TypeName = "nvarchar(50)")]
         public string Name { get; set; }
-
-        [Required]
-        [DisplayName("Description")]
-        [Column(TypeName = "nvarchar(255)")]
-        public string Decription { get; set; }
 
         [Required]
         [DisplayName("Encoder Name")]

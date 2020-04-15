@@ -16,14 +16,11 @@ namespace Intranet.Models.CorpComm
         public string Name { get; set; }
 
         [Required]
-        [DisplayName("Description")]
-        [MaxLength(255)]
-        [Column(TypeName = "nvarchar(255)")]
-        public string Decription { get; set; }
-
-        [Required]
-        [DisplayName("Price Limit")]
+        [DisplayName("Budget Limit")]
+        [Range(1,10000)]
         public int PriceLimit { get; set; }
+
+        #region UserDetails
 
         [Required]
         [DisplayName("Encoder Name")]
@@ -39,5 +36,7 @@ namespace Intranet.Models.CorpComm
         [DisplayName("Date")]
         [Column(TypeName = "nvarchar(10)")]
         public string UserDate { get; set; }
+
+        #endregion
     }
 }

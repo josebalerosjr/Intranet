@@ -10,16 +10,12 @@ namespace Intranet.Models.CorpComm
         public int Id { get; set; }
 
         [Required]
-        [DisplayName("Location")]
+        [DisplayName("Location Name")]
         [MaxLength(100)]
         [Column(TypeName = "nvarchar(100)")]
         public string Name { get; set; }
 
-        [Required]
-        [DisplayName("Province")]
-        [MaxLength(255)]
-        [Column(TypeName = "nvarchar(255)")]
-        public string Decription { get; set; }
+        #region UserDetails
 
         [Required]
         [DisplayName("Encoder Name")]
@@ -35,5 +31,7 @@ namespace Intranet.Models.CorpComm
         [DisplayName("Date")]
         [Column(TypeName = "nvarchar(10)")]
         public string UserDate { get; set; }
+
+        #endregion
     }
 }

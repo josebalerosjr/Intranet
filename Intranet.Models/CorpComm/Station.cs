@@ -15,11 +15,6 @@ namespace Intranet.Models.CorpComm
         public string Name { get; set; }
 
         [Required]
-        [DisplayName("Description")]
-        [Column(TypeName = "nvarchar(255)")]
-        public string Decription { get; set; }
-
-        [Required]
         [DisplayName("Status Type")]
         [Column(TypeName = "nvarchar(255)")]
         public string StationType { get; set; }

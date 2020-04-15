@@ -10,14 +10,10 @@ namespace Intranet.Models.CorpComm
         public int Id { get; set; }
 
         [Required]
+        [MaxLength(50)]
         [DisplayName("Size")]
-        [Column(TypeName = "nvarchar(100)")]
+        [Column(TypeName = "nvarchar(50)")]
         public string Name { get; set; }
-
-        [Required]
-        [DisplayName("Description")]
-        [Column(TypeName = "nvarchar(255)")]
-        public string Decription { get; set; }
 
         [Required]
         [DisplayName("Encoder Name")]

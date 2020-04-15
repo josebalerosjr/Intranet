@@ -1,8 +1,5 @@
 ﻿using Intranet.DataAccess.Data;
 using Intranet.DataAccess.Repository.CorpComm.IRepository;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Intranet.DataAccess.Repository.CorpComm
 {
@@ -14,10 +11,24 @@ namespace Intranet.DataAccess.Repository.CorpComm
         {
             _db = db;
             Brand = new BrandRepository(_db);
+            StationType = new StationTypeRepository(_db);
+            Unit = new UnitRepository(_db);
+            Department = new DepartmentRepository(_db);
+            Status = new StatusRepository(_db);
+            Size = new SizeRepository(_db);
+            Email = new EmailRepository(_db);
+            Location = new LocationRepository(_db);
             SP_Call = new SP_Call(_db);
         }
 
         public IBrandRepository Brand { get; private set; }
+        public IStationTypeRepository StationType { get; private set; }
+        public IUnitRepository Unit { get; private set; }
+        public IDepartmentRepository Department { get; private set; }
+        public IStatusRepository Status { get; private set; }
+        public ISizeRepository Size { get; private set; }
+        public IEmailRepository Email { get; private set; }
+        public ILocationRepository Location { get; private set; }
         public ISP_Call SP_Call { get; private set; }
 
         public void Dispose()

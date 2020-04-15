@@ -12,7 +12,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-primary border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
                 <div class="row-fluid">
                     <!--PTT Logo Home page-->
@@ -594,6 +594,13 @@
                                                     <li class="dropdown-submenu small">
                                                         <a class="dropdown-item">Tables <i class="fas fa-chevron-circle-right float-right"></i></a>
                                                         <a class="dropdown-item" asp-area="CorpComm" asp-controller="Brand" asp-action="Index">Brand</a>
+                                                        <a class="dropdown-item" asp-area="CorpComm" asp-controller="StationType" asp-action="Index">Station Type</a>
+                                                        <a class="dropdown-item" asp-area="CorpComm" asp-controller="Unit" asp-action="Index">Unit</a>
+                                                        <a class="dropdown-item" asp-area="CorpComm" asp-controller="Department" asp-action="Index">Department</a>
+                                                        <a class="dropdown-item" asp-area="CorpComm" asp-controller="Status" asp-action="Index">Status</a>
+                                                        <a class="dropdown-item" asp-area="CorpComm" asp-controller="Size" asp-action="Index">Size</a>
+                                                        <a class="dropdown-item" asp-area="CorpComm" asp-controller="Email" asp-action="Index">Email</a>
+                                                        <a class="dropdown-item" asp-area="CorpComm" asp-controller="Location" asp-action="Index">Location</a>
                                                         <!--Secondary Menu-->
                                                         <ul class="dropdown-menu">
                                                             <li><a class="dropdown-item small" asp-area="CorpComm" asp-controller="Department" asp-action="Index">Department</a></li>
@@ -601,7 +608,6 @@
                                                             <li><a class="dropdown-item small" asp-area="CorpComm" asp-controller="Location" asp-action="Index">Location</a></li>
                                                             <li><a class="dropdown-item small" asp-area="CorpComm" asp-controller="Size" asp-action="Index">Size</a></li>
                                                             <li><a class="dropdown-item small" asp-area="CorpComm" asp-controller="Station" asp-action="Index">Station</a></li>
-                                                            <li><a class="dropdown-item small" asp-area="CorpComm" asp-controller="StationType" asp-action="Index">Station Type</a></li>
                                                             <li><a class="dropdown-item small" asp-area="CorpComm" asp-controller="Status" asp-action="Index">Type</a></li>
                                                             <li><a class="dropdown-item small" asp-area="CorpComm" asp-controller="Unit" asp-action="Index">Unit</a></li>
                                                             <li><a class="dropdown-item small" asp-area="CorpComm" asp-controller="Event" asp-action="Index">Event</a></li>
@@ -760,7 +766,7 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-white-50 bg-primary">
+    <footer class="border-top footer bg-white">
         <div class="container">
             Copyright &copy; 2019 PTT Philippines Corporation. All rights reserved. - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
