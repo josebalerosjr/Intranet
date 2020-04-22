@@ -55,7 +55,6 @@ namespace Intranet.Areas.CorpComm.Controllers
                 if (location.Id == 0)
                 {
                     _unitOfWork.Location.Add(location);
-                    _unitOfWork.Save();
                 }
                 else
                 {

@@ -55,7 +55,6 @@ namespace Intranet.Areas.CorpComm.Controllers
                 if (status.Id == 0)
                 {
                     _unitOfWork.Status.Add(status);
-                    _unitOfWork.Save();
                 }
                 else
                 {

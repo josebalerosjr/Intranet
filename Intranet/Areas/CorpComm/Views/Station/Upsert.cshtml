@@ -1,0 +1,60 @@
+﻿@model Intranet.Models.ViewModels.StationVM
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var title = "Create Station";
+}
+
+<form method="post">
+    <div class="row p-3 border">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Station.UserName" value="@ViewBag.DisplayName" />
+        <input type="hidden" asp-for="Station.UserIP" value="@HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString()" />
+        <input type="hidden" asp-for="Station.UserDate" value="@DateTime.Now.ToString("MM/dd/yyyy")" />
+        @if (Model.Station.Id != 0)
+        {
+            title = "Edit Station";
+            <input type="hidden" asp-for="Station.Id" />
+        }
+        <div class="col-12 border-bottom">
+            <h2 class="text-primary">@title</h2>
+        </div>
+        <div class="col-8 pt-4">
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Station.Name"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Station.Name" class="form-control" />
+                    <span asp-validation-for="Station.Name" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-4">
+                    Station Type
+                </div>
+                <div class="col-8">
+                    @Html.DropDownListFor(m => m.Station.StationTypeId, Model.StationTypeList, "-Select a Station Type",
+                    new { @class = "form-control" })
+                    <span asp-validation-for="Station.StationTypeId" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-8 offset-4">
+                    @if (Model.Station.Id != 0)
+                    {
+                        <partial name="_EditAndBackToListButton" model="Model.Station.Id" />
+                    }
+                    else
+                    {
+                        <partial name="_CreateAndBackToListButton" />
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

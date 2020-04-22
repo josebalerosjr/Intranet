@@ -14,6 +14,8 @@ namespace Intranet.Models.CorpComm
         [Column(TypeName = "nvarchar(50)")]
         public string Name { get; set; }
 
+        #region UserDetails
+
         [Required]
         [DisplayName("Encoder Name")]
         [Column(TypeName = "nvarchar(32)")]
@@ -28,5 +30,7 @@ namespace Intranet.Models.CorpComm
         [DisplayName("Date")]
         [Column(TypeName = "nvarchar(10)")]
         public string UserDate { get; set; }
+
+        #endregion
     }
 }

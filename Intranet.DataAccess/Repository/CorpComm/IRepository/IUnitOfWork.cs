@@ -14,6 +14,12 @@ namespace Intranet.DataAccess.Repository.CorpComm.IRepository
         ISizeRepository Size { get; }
         IEmailRepository Email { get; }
         ILocationRepository Location { get; }
+        IEventRepository Event { get; }
+        IStationRepository Station { get; }
+        ICollateralRepository Collateral { get; }
+        IShoppingCartRepository ShoppingCart { get; }
+        IOrderDetailsRepository OrderDetails { get; }
+        IOrderHeaderRepository OrderHeader { get; }
         ISP_Call SP_Call { get; }
 
         void Save();

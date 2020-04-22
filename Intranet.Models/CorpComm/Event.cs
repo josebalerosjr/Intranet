@@ -17,8 +17,8 @@ namespace Intranet.Models.CorpComm
 
         [Required]
         [DisplayName("Budget Limit")]
-        [Range(1,10000)]
-        public int PriceLimit { get; set; }
+        [Range(1,100000)]
+        public int BudgetLimit { get; set; }
 
         #region UserDetails
 

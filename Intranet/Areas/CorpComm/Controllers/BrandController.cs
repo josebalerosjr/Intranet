@@ -55,7 +55,6 @@ namespace Intranet.Areas.CorpComm.Controllers
                 if (brand.Id == 0)
                 {
                     _unitOfWork.Brand.Add(brand);
-                    _unitOfWork.Save();
                 }
                 else
                 {

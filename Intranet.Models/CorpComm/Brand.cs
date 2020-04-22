@@ -12,8 +12,9 @@ namespace Intranet.Models.CorpComm
         [Required]
         [DisplayName("Brand Name")]
         [MaxLength(50)]
-        [Column(TypeName = "nvarchar(50)")]
         public string Name { get; set; }
+
+        #region UserDetails
 
         [Required]
         [DisplayName("Encoder Name")]
@@ -29,5 +30,7 @@ namespace Intranet.Models.CorpComm
         [DisplayName("Date")]
         [Column(TypeName = "nvarchar(10)")]
         public string UserDate { get; set; }
+
+        #endregion
     }
 }

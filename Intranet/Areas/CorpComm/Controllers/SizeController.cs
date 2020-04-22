@@ -55,7 +55,6 @@ namespace Intranet.Areas.CorpComm.Controllers
                 if (size.Id == 0)
                 {
                     _unitOfWork.Size.Add(size);
-                    _unitOfWork.Save();
                 }
                 else
                 {

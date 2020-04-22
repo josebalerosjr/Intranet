@@ -59,7 +59,6 @@ namespace Intranet.Areas.CorpComm.Controllers
                 if (stationType.Id == 0)
                 {
                     _unitOfWork.StationType.Add(stationType);
-                    _unitOfWork.Save();
                 }
                 else
                 {

@@ -55,7 +55,6 @@ namespace Intranet.Areas.CorpComm.Controllers
                 if (email.Id == 0)
                 {
                     _unitOfWork.Email.Add(email);
-                    _unitOfWork.Save();
                 }
                 else
                 {

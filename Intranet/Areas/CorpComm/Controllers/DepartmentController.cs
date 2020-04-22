@@ -55,7 +55,6 @@ namespace Intranet.Areas.CorpComm.Controllers
                 if (department.Id == 0)
                 {
                     _unitOfWork.Department.Add(department);
-                    _unitOfWork.Save();
                 }
                 else
                 {

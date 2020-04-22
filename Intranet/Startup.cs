@@ -63,6 +63,8 @@ namespace Intranet
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+
+
             services.AddHttpContextAccessor();
             services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddTransient<ItemRegController>();
@@ -181,13 +183,19 @@ namespace Intranet
 
             #endregion Hangfire service
 
-            _ = services.AddMvc()
+            services.AddMvc()
                     .AddNToastNotifyToastr()
                     .AddControllersAsServices();
 
             services.AddScoped<IGenerateDailyCriticalItemReport, GenerateDailyCriticalItemReport>();
             services.AddScoped<IGenerateCalibrationDate, GenerateCalibrationDate>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            services.AddSession(options => {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -196,6 +204,7 @@ namespace Intranet
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseDatabaseErrorPage();
             }
             else
             {
@@ -207,7 +216,8 @@ namespace Intranet
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseSession();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

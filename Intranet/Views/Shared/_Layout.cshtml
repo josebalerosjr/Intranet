@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using Intranet.Utilities
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttContextAccessor
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -130,7 +134,7 @@
                                 <!--General Tab-->
                                 <li class="nav-item dropdown">
                                     <a class="nav-link" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fas fa-clinic-medical"></i> General
+                                        General
                                     </a>
 
                                     <!--Primary Sub-menu-->
@@ -171,7 +175,7 @@
                                         {
                                             <li class="nav-item dropdown">
                                                 <a class="nav-link" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <i class="fas fa-tv"></i> MIS/ICT
+                                                    MIS/ICT
                                                 </a>
 
                                                 <!--MIS Primary Sub-menu-->
@@ -261,7 +265,7 @@
                                         {
                                             <li class="nav-item dropdown">
                                                 <a class="nav-link" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <i class="fas fa-plus-square"></i> QSHE
+                                                    QSHE
                                                 </a>
                                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                                                     <!--Inventory Primary Menu-->
@@ -519,7 +523,7 @@
                                         {
                                             <li class="nav-item dropdown">
                                                 <a class="nav-link" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <i class="fas fa-credit-card"></i> CNC
+                                                    CNC
                                                 </a>
                                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                                                     <!--Banks Primary Menu-->
@@ -578,7 +582,7 @@
                                         {
                                             <li class="nav-item dropdown">
                                                 <a class="nav-link" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <i class="fas fa-credit-card"></i> Corp Comm
+                                                    Corp Comm
                                                 </a>
                                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                                                     <li class="dropdown-submenu small">
@@ -586,7 +590,7 @@
                                                     </li>
 
                                                     <li class="dropdown-submenu small">
-                                                        <a class="dropdown-item" asp-area="CorpComm" asp-controller="Collateral" asp-action="Index">Collaterals</a>
+                                                        <a class="dropdown-item" asp-area="CorpComm" asp-controller="Collateral" asp-action="Index">Collateral</a>
                                                     </li>
 
                                                     <li class="dropdown-divider"></li>
@@ -601,6 +605,8 @@
                                                         <a class="dropdown-item" asp-area="CorpComm" asp-controller="Size" asp-action="Index">Size</a>
                                                         <a class="dropdown-item" asp-area="CorpComm" asp-controller="Email" asp-action="Index">Email</a>
                                                         <a class="dropdown-item" asp-area="CorpComm" asp-controller="Location" asp-action="Index">Location</a>
+                                                        <a class="dropdown-item" asp-area="CorpComm" asp-controller="Event" asp-action="Index">Event</a>
+                                                        <a class="dropdown-item" asp-area="CorpComm" asp-controller="Station" asp-action="Index">Station</a>
                                                         <!--Secondary Menu-->
                                                         <ul class="dropdown-menu">
                                                             <li><a class="dropdown-item small" asp-area="CorpComm" asp-controller="Department" asp-action="Index">Department</a></li>
@@ -615,6 +621,26 @@
                                                     </li>
                                                 </ul>
                                             </li>
+                                            @if (ViewBag.ItemCount != null)
+                                            {
+                                                <li style="color: white">
+                                                    <a asp-area="CorpComm" asp-controller="Cart" asp-action="Index" class="nav-link">
+                                                        @{
+                                                            //var count = HttContextAccessor.HttpContext.Session.GetInt32(SD.ssShoppingCart);
+                                                        }
+                                                        <i class="fas fa-shopping-cart"></i> &nbsp; (@ViewBag.ItemCount)
+                                                    </a>
+                                                </li>
+                                            }
+                                            else
+                                            {
+                                                <li style="color: white">
+                                                    <a href="#" class="nav-link">
+                                                        <i class="fas fa-shopping-cart"></i> &nbsp; (0)
+                                                    </a>
+                                                </li>
+                                            }
+
                                         }
                                     }
                                     /**
@@ -627,7 +653,7 @@
                                 <!--Procurement Tab-->
                                 <li class="nav-item dropdown">
                                     <a class="nav-link">
-                                        <i class="fas fa-cart-arrow-down"></i> Procurement
+                                        Procurement
                                     </a>
 
                                     <!--Primary menu-->
@@ -658,7 +684,7 @@
                                     {
                                         <li class="nav-item dropdown">
                                             <a class="nav-link">
-                                                <i class="fas fa-shipping-fast"></i> Logistics
+                                                Logistics
                                             </a>
 
                                             <!--Primary Menu-->
@@ -677,21 +703,21 @@
                                 <!--Ticketing Tab-->
                                 <li class="nav-item">
                                     <a class="nav-link" href="https://apps.powerapps.com/play/ffa735ea-8496-4cfa-84c2-ab57dbb240a0?tenantId=78db0b1d-e5d5-4f05-af3c-cc72575b1ba3" target="_blank">
-                                        <i class="fas fa-ticket-alt"></i> Ticketing
+                                        Ticketing
                                     </a>
                                 </li>
 
                                 <!--ESS Tab-->
                                 <li class="nav-item">
                                     <a class="nav-link" href="http://sub-ess-prd.pttphils.com:50000/irj/portal" target="_blank">
-                                        <i class="fas fa-calendar-alt"></i> ESS
+                                        ESS
                                     </a>
                                 </li>
 
                                 <!--Policy Tab-->
                                 <li class="nav-item">
                                     <a class="nav-link" asp-action="Policy">
-                                        <i class="fas fa-clipboard-list"></i> Policy
+                                        Policy
                                     </a>
                                 </li>
 
@@ -701,7 +727,7 @@
                                         <!--SPEM Tab-->
                                         <li class="nav-item">
                                             <a class="nav-link" href="@ViewBag.SPEM" target="_blank">
-                                                <i class="fas fa-truck-loading"></i> SPEM
+                                                SPEM
                                             </a>
                                         </li>
                                     }
@@ -779,6 +805,7 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="https://kit.fontawesome.com/9ca3bb7322.js"></script>
+    <script src="https://cdn.tiny.cloud/1/6tlyv68msnzpy67ppz9obr11cf1942saql6mxzp71yrkdwpa/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

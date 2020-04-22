@@ -18,6 +18,12 @@ namespace Intranet.DataAccess.Repository.CorpComm
             Size = new SizeRepository(_db);
             Email = new EmailRepository(_db);
             Location = new LocationRepository(_db);
+            Event = new EventRepository(_db);
+            Station = new StationRepository(_db);
+            Collateral = new CollateralRepository(_db);
+            OrderDetails = new OrderDetailsRepository(_db);
+            OrderHeader = new OrderHeaderRepository(_db);
+            ShoppingCart = new ShoppingCartRepository(_db);
             SP_Call = new SP_Call(_db);
         }
 
@@ -29,6 +35,12 @@ namespace Intranet.DataAccess.Repository.CorpComm
         public ISizeRepository Size { get; private set; }
         public IEmailRepository Email { get; private set; }
         public ILocationRepository Location { get; private set; }
+        public IEventRepository Event { get; private set; }
+        public IStationRepository Station { get; private set; }
+        public ICollateralRepository Collateral { get; private set; }
+        public IOrderDetailsRepository OrderDetails { get; private set; }
+        public IOrderHeaderRepository OrderHeader { get; private set; }
+        public IShoppingCartRepository ShoppingCart { get; private set; }
         public ISP_Call SP_Call { get; private set; }
 
         public void Dispose()

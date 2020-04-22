@@ -1,0 +1,93 @@
+﻿@model Intranet.Models.CorpComm.ShoppingCart
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form method="post">
+    <input hidden asp-for="CollateralId" />
+    <input type="hidden" asp-for="UserName" value="@ViewBag.DisplayName" />
+    <input type="hidden" asp-for="UserIP" value="@HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString()" />
+    <input type="hidden" asp-for="UserDate" value="@DateTime.Now.ToString("MM/dd/yyyy")" />
+        <div class="container backgroundWhite">
+            <div class="card">
+                <div class="card-header bg-light text-light ml-0 row container">
+                    <div class="col-12 col-md-6">
+                        <h1 class="text-primary">@Model.Collateral.Name</h1>
+                        <p class="text-warning">@Model.Collateral.Brand.Name</p>
+                    </div>
+                    <div class="col-12 col-md-6 text-md-right pt-4">
+                        <span class="badge badge-success pt-2" style="height:30px;">Unit: @Model.Collateral.Unit.Name</span>
+                        <span class="badge badge-warning pt-2" style="height:30px;">Size: @Model.Collateral.Size.Name</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="container rounded p-2">
+                        <div class="row">
+                            <div class="col-8 col-lg-8">
+
+                                @*<div class="row pl-2">
+                                        <h5 class="text-muted">ISBN : --ISBN--</h5>
+                                    </div>*@
+                                @*<div class="row pl-2">
+                                        <h5 class="text-muted pb-2">List Price: <strike>$ --LIST PRICE--</strike></h5>
+                                    </div>*@
+                                <div class="row text-center pl-2">
+                                    <div class="p-1 col-2 bg-secondary border-bottom">
+                                        <div>Quantity</div>
+                                    </div>
+                                    <div class="p-1 col-2 bg-secondary border-bottom">
+                                        <div>@Model.Collateral.Count</div>
+                                    </div>@*
+                                        <div class="p-1 col-2 bg-secondary border-bottom">
+                                            <div>50-99</div>
+                                        </div>
+                                        <div class="p-1 col-2 bg-secondary border-bottom">
+                                            <div>100+</div>
+                                        </div>*@
+                                </div>
+                                <div class="row text-center pl-2" style="color:maroon; font-weight:bold">
+                                    <div class="p-1 col-2 bg-secondary">
+                                        <div>Price</div>
+                                    </div>
+                                    <div class="p-1 col-2 bg-secondary">
+                                        <div>@Model.Collateral.Price</div>
+                                    </div>
+                                    @*<div class="p-1 col-2 bg-secondary">
+                                            <div>--PRICE 50--</div>
+                                        </div>
+                                        <div class="p-1 col-2 bg-secondary">
+                                            <div>--PRICE 100--</div>
+                                        </div>*@
+                                </div>
+                                <div class="row pl-2">
+                                    <p class="text-secondary">@Html.Raw(Model.Collateral.Description)</p>
+                                </div>
+                                <div class="row pl-2">
+                                    <div class="col-2 text-primary"><h4>Count</h4></div>
+                                    <div class="col-10"><input class="form-control" /></div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-3 offset-lg-1 text-center">
+                                <img src="@Model.Collateral.ImgUrl" width="100%" class="rounded" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-12 col-md-6 pb-1">
+                            <a asp-action="Catalog" class="btn btn-success form-control  btn-square btn-lg" style="height:50px;">Back to List</a>
+                        </div>
+                        <div class="col-12 col-md-6 pb-1">
+
+                            <button type="submit" value="Add to Cart" class="btn btn-primary btn-square btn-lg form-control" style="height:50px;">Add to Cart</button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</form>
+

@@ -11,36 +11,47 @@ namespace Intranet.Models.CorpComm
 
         [Required]
         [DisplayName("Name")]
-        [MaxLength(100)]
-        [Column(TypeName = "nvarchar(32)")]
+        [MaxLength(50)]
         public string Name { get; set; }
 
         [Required]
         [DisplayName("Description")]
-        [MaxLength(100)]
-        [Column(TypeName = "nvarchar(MAX)")]
         public string Description { get; set; }
 
         [Required]
-        [DisplayName("Brand")]
-        [MaxLength(100)]
-        [Column(TypeName = "nvarchar(100)")]
-        public string Brand { get; set; }
+        public int SizeId { get; set; }
+        [ForeignKey("SizeId")]
+        public Size Size { get; set; }
 
         [Required]
-        [DisplayName("Size")]
-        [MaxLength(100)]
-        [Column(TypeName = "nvarchar(100)")]
-        public string Size { get; set; }
+        public int UnitId { get; set; }
+        [ForeignKey("UnitId")]
+        public Unit Unit { get; set; }
 
         [Required]
-        [DisplayName("Image")]
-        [Column(TypeName = "nvarchar(MAX)")]
-        public string ImgLink { get; set; }
+        public int BrandId { get; set; }
+        [ForeignKey("BrandId")]
+        public Brand Brand { get; set; }
+
+        [Required]
+        public int LocationId { get; set; }
+        [ForeignKey("LocationId")]
+        public Location Location { get; set; }
+
+        [Required]
+        [Range(1,10000)]
+        public int Count { get; set; }
+
+        [Required]
+        [Range(1, 1000000)]
+        public int Price { get; set; }
+        public string ImgUrl { get; set; }
 
         [Required]
         [DisplayName("isActive")]
         public bool isActive { get; set; }
+
+        #region UserDetails
 
         [Required]
         [DisplayName("Encoder Name")]
@@ -56,5 +67,7 @@ namespace Intranet.Models.CorpComm
         [DisplayName("Date")]
         [Column(TypeName = "nvarchar(10)")]
         public string UserDate { get; set; }
+
+        #endregion
     }
 }

@@ -1,0 +1,163 @@
+﻿@model Intranet.Models.ViewModels.CollateralVM
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var title = "Create Collateral";
+}
+
+<form method="post" enctype="multipart/form-data">
+    <div class="row p-3 border">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Collateral.UserName" value="@ViewBag.DisplayName" />
+        <input type="hidden" asp-for="Collateral.UserIP" value="@HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString()" />
+        <input type="hidden" asp-for="Collateral.UserDate" value="@DateTime.Now.ToString("MM/dd/yyyy")" />
+        @if (Model.Collateral.Id != 0)
+        {
+            title = "Edit Collateral";
+            <input type="hidden" asp-for="Collateral.Id" />
+        }
+        <div class="col-12 border-bottom">
+            <h2 class="text-primary">@title</h2>
+        </div>
+        <div class="col-8 pt-4">
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Collateral.Name"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Collateral.Name" class="form-control" />
+                    <span asp-validation-for="Collateral.Name" class="text-danger"></span>
+                </div>
+            </div> <!--Name-->
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Collateral.Description"></label>
+                </div>
+                <div class="col-8">
+                    <textarea asp-for="Collateral.Description" class="form-control"></textarea>
+                    <span asp-validation-for="Collateral.Description" class="text-danger"></span>
+                </div>
+            </div> <!--Description-->
+            <div class="form-group row">
+                <div class="col-4">
+                    Size
+                </div>
+                <div class="col-8">
+                    @Html.DropDownListFor(m => m.Collateral.SizeId, Model.SizeList, "-Select a Size",
+                    new { @class = "form-control" })
+                    <span asp-validation-for="Collateral.SizeId" class="text-danger"></span>
+                </div>
+            </div> <!--Size-->
+            <div class="form-group row">
+                <div class="col-4">
+                    Unit
+                </div>
+                <div class="col-8">
+                    @Html.DropDownListFor(m => m.Collateral.UnitId, Model.UnitList, "-Select a Unit",
+                    new { @class = "form-control" })
+                    <span asp-validation-for="Collateral.UnitId" class="text-danger"></span>
+                </div>
+            </div> <!--Unit-->
+            <div class="form-group row">
+                <div class="col-4">
+                    Brand
+                </div>
+                <div class="col-8">
+                    @Html.DropDownListFor(m => m.Collateral.BrandId, Model.BrandList, "-Select a Brand",
+                    new { @class = "form-control" })
+                    <span asp-validation-for="Collateral.BrandId" class="text-danger"></span>
+                </div>
+            </div> <!--Brand-->
+            <div class="form-group row">
+                <div class="col-4">
+                    Location
+                </div>
+                <div class="col-8">
+                    @Html.DropDownListFor(m => m.Collateral.LocationId, Model.LocationList, "-Select a Location",
+                    new { @class = "form-control" })
+                    <span asp-validation-for="Collateral.LocationId" class="text-danger"></span>
+                </div>
+            </div> <!--Location-->
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Collateral.Count"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Collateral.Count" class="form-control" />
+                    <span asp-validation-for="Collateral.Count" class="text-danger"></span>
+                </div>
+            </div> <!--Count-->
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Collateral.Price"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Collateral.Price" class="form-control" />
+                    <span asp-validation-for="Collateral.Price" class="text-danger"></span>
+                </div>
+            </div> <!--Price-->
+            <div class="form-group row">
+                <div class="col-4">
+                    Image
+                </div>
+                <div class="col-8">
+                    <input type="file" name="files" id="uploadBox" multiple class="form-control" />
+                </div>
+            </div> <!--Image-->
+            <div class="form-group row">
+                <div class="col-4">
+                    Active
+                </div>
+                <div class="col-8">
+                    <input class="form-check form-control" asp-for="Collateral.isActive" />
+                    <span asp-validation-for="Collateral.isActive" class="text-danger"></span>
+                </div>
+            </div> <!--isActive-->
+            <div class="form-group row">
+                <div class="col-8 offset-4">
+                    @if (Model.Collateral.Id != 0)
+                    {
+                        <partial name="_EditAndBackToListButton" model="Model.Collateral.Id" />
+                    }
+                    else
+                    {
+                        <div class="row">
+                            <div class="col">
+                                <button type="submit" onclick="return validateInput()" class="btn btn-primary form-control">Create</button>
+                            </div>
+                            <div class="col">
+                                <a asp-action="Index" class="btn btn-success form-control">Back to List</a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        @if (Model.Collateral.Id != 0)
+        {
+            <div class="col-3 offset-1 pt-4">
+                <img src="@Model.Collateral.ImgUrl" width="100%" style="border-radius:5px; border:1px solid #bbb9b9"/>
+            </div>
+        }
+    </div>
+</form>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        tinymce.init({
+            selector: 'textarea',
+            plugins: 'lists',
+            menubar: 'none'
+        })
+
+        function validateInput() {
+            if (document.getElementById("uploadBox").value == "") {
+                swal("Error", "Please select an image", "error");
+                return false;
+            }
+            return true;
+        }
+    </script>
+}

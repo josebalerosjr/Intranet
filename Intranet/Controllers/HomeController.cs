@@ -1,6 +1,8 @@
 ﻿using Intranet.Classes;
 using Intranet.Data;
+using Intranet.DataAccess.Repository.CorpComm.IRepository;
 using Intranet.Models;
+using Intranet.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
@@ -18,13 +20,15 @@ namespace Intranet.Controllers
         private readonly AppLinks _appLinks;
         private readonly OnlineImageLinks _onlineImageLinks;
         private readonly ImageCarouselContext _imagecarouselContext;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public HomeController(ImageCarouselContext imagecarouselContext, IOptions<AppSettings> appSettings, IOptions<AppLinks> appLinks, IOptions<OnlineImageLinks> onlineImageLinks)
+        public HomeController(ImageCarouselContext imagecarouselContext, IOptions<AppSettings> appSettings, IOptions<AppLinks> appLinks, IOptions<OnlineImageLinks> onlineImageLinks, IUnitOfWork unitOfWork)
         {
             _imagecarouselContext = imagecarouselContext;
             _appSettings = appSettings.Value;
             _appLinks = appLinks.Value;
             _onlineImageLinks = onlineImageLinks.Value;
+            _unitOfWork = unitOfWork;
         }
 
         public IActionResult Index()
@@ -32,6 +36,11 @@ namespace Intranet.Controllers
             UserDetails(); // TODO: calls UserDetails method
             AppLinks();
             OnlineImageLink();
+            string GetUser = ViewBag.DisplayName;
+            int count = _unitOfWork.ShoppingCart.GetAll(u => u.LoginUser == GetUser).Count();
+            HttpContext.Session.SetObject(SD.ssShoppingCart, count);
+            ViewBag.ItemCount = count;
+
             return View(_imagecarouselContext.imageCarousels.Where(c => c.isActive == true).ToList());
         }
 

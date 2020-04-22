@@ -11,13 +11,15 @@ namespace Intranet.Models.CorpComm
 
         [Required]
         [DisplayName("Name")]
-        [Column(TypeName = "nvarchar(100)")]
+        [MaxLength(100)]
         public string Name { get; set; }
 
         [Required]
-        [DisplayName("Status Type")]
-        [Column(TypeName = "nvarchar(255)")]
-        public string StationType { get; set; }
+        public int StationTypeId { get; set; }
+        [ForeignKey("StationTypeId")]
+        public StationType StationType { get; set; }
+
+        #region UserDetails
 
         [Required]
         [DisplayName("Encoder Name")]
@@ -33,5 +35,7 @@ namespace Intranet.Models.CorpComm
         [DisplayName("Date")]
         [Column(TypeName = "nvarchar(10)")]
         public string UserDate { get; set; }
+
+        #endregion
     }
 }
