@@ -4,7 +4,7 @@ using System.DirectoryServices.AccountManagement;
 using System.Linq;
 using System.Threading.Tasks;
 using Intranet.Classes;
-using Intranet.DataAccess.Repository.CorpComm.IRepository;
+using Intranet.DataAccess.Repository.IRepository;
 using Intranet.Models.CorpComm;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;

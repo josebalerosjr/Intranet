@@ -17,15 +17,18 @@ namespace Intranet.Models.CorpComm
         public string LoginUser { get; set; }
 
         public int CollateralId { get; set; }
-
         [ForeignKey("CollateralId")]
         public Collateral Collateral { get; set; }
+
+        public int? EventId { get; set; }
+        [ForeignKey("EventId")]
+        public Event Event { get; set; }
 
         [Range(1, 1000)]
         public int Count { get; set; }
 
         [NotMapped]
-        public double Price { get; set; }
+        public int Price { get; set; }
 
         #region UserDetails
 

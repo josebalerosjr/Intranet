@@ -1,5 +1,5 @@
 ﻿using Intranet.DataAccess.Data;
-using Intranet.DataAccess.Repository.CorpComm.IRepository;
+using Intranet.DataAccess.Repository.IRepository.CorpComm;
 using Intranet.Models.CorpComm;
 using System;
 using System.Collections.Generic;

@@ -17,6 +17,14 @@
     <Compile Remove="Data\Migrations\CorpComm\20200420024456_AddShoppingCartOrderDetailsOrderHeaderlToDb.Designer.cs" />
     <Compile Remove="Data\Migrations\CorpComm\20200420024536_AddShoppingCartOrderDetailsOrderHeaderlToDb.cs" />
     <Compile Remove="Data\Migrations\CorpComm\20200420024536_AddShoppingCartOrderDetailsOrderHeaderlToDb.Designer.cs" />
+    <Compile Remove="Data\Migrations\CorpComm\20200422025132_UpdateOrderHeaderOrderTotalDoubleToDb.cs" />
+    <Compile Remove="Data\Migrations\CorpComm\20200422025132_UpdateOrderHeaderOrderTotalDoubleToDb.Designer.cs" />
+    <Compile Remove="Data\Migrations\CorpComm\20200422025346_UpdateOrderHeaderOrderTotalDoubleToDb.cs" />
+    <Compile Remove="Data\Migrations\CorpComm\20200422025346_UpdateOrderHeaderOrderTotalDoubleToDb.Designer.cs" />
+    <Compile Remove="Data\Migrations\CorpComm\20200508045541_UpdateOrderDetails.cs" />
+    <Compile Remove="Data\Migrations\CorpComm\20200508045541_UpdateOrderDetails.Designer.cs" />
+    <Compile Remove="Data\Migrations\CorpComm\20200508061748_UpdateOrderDetails.cs" />
+    <Compile Remove="Data\Migrations\CorpComm\20200508061748_UpdateOrderDetails.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

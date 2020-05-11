@@ -1,5 +1,5 @@
 ﻿using Intranet.Classes;
-using Intranet.DataAccess.Repository.CorpComm.IRepository;
+using Intranet.DataAccess.Repository.IRepository;
 using Intranet.Models.CorpComm;
 using Intranet.Models.ViewModels;
 using Intranet.Utilities;
@@ -34,13 +34,7 @@ namespace Intranet.Areas.CorpComm.Controllers
         public IActionResult Index()
         {
             UserDetails();
-
-            string CartObject = ViewBag.DisplayName;
-            if (CartObject != null)
-            {
-                var count = _unitOfWork.ShoppingCart.GetAll(c => c.LoginUser == CartObject).ToList().Count();
-                HttpContext.Session.SetObject(SD.ssShoppingCart, count);
-            }
+            CartCount();
 
             return View();
         }
@@ -48,6 +42,7 @@ namespace Intranet.Areas.CorpComm.Controllers
         public IActionResult Upsert(int? id)
         {
             UserDetails();
+            CartCount();
             CollateralVM collateralVM = new CollateralVM()
             {
                 Collateral = new Collateral(),
@@ -92,6 +87,7 @@ namespace Intranet.Areas.CorpComm.Controllers
         public IActionResult Upsert(CollateralVM collateralVM)
         {
             UserDetails();
+            CartCount();
             if (ModelState.IsValid)
             {
                 string webRootPath = _hostEnvironment.WebRootPath;
@@ -171,6 +167,9 @@ namespace Intranet.Areas.CorpComm.Controllers
 
         public IActionResult Catalog()
         {
+            UserDetails();
+            CartCount();
+
             IEnumerable<Collateral> collateralList1 = _unitOfWork.Collateral.GetAll(s => s.isActive == true);
             return View(collateralList1);
         }
@@ -178,6 +177,8 @@ namespace Intranet.Areas.CorpComm.Controllers
         public IActionResult Details(int id)
         {
             UserDetails();
+
+            CartCount();
 
             var collateralFromDb = _unitOfWork.Collateral.GetFirstOrDefault(u => u.Id == id, includeProperties: "Size,Unit,Brand,Location");
             ShoppingCart cartFromDB = new ShoppingCart()
@@ -194,13 +195,12 @@ namespace Intranet.Areas.CorpComm.Controllers
         public IActionResult Details(ShoppingCart CartObject)
         {
             UserDetails();
+            CartCount();
 
             CartObject.Id = 0;
 
             if (ModelState.IsValid)
             {
-                //var claimsIdentity = (ClaimsIdentity)User.Identity.Name;
-                //var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
                 CartObject.LoginUser = ViewBag.DisplayName;
                 ShoppingCart cartFromDb = _unitOfWork.ShoppingCart.GetFirstOrDefault(
                     u => u.LoginUser == CartObject.LoginUser &&
@@ -215,10 +215,7 @@ namespace Intranet.Areas.CorpComm.Controllers
                     _unitOfWork.ShoppingCart.Update(cartFromDb);
                 }
                 _unitOfWork.Save();
-                var count = _unitOfWork.ShoppingCart.GetAll(c=>c.LoginUser == CartObject.LoginUser).ToList().Count();
-                HttpContext.Session.SetObject(SD.ssShoppingCart, count);
-                var obj =  HttpContext.Session.GetObject<ShoppingCart>(SD.ssShoppingCart);
-
+                CartCount();
                 return RedirectToAction(nameof(Catalog));
             }
             else
@@ -239,6 +236,7 @@ namespace Intranet.Areas.CorpComm.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
+            CartCount();
             var allObj = _unitOfWork.Collateral.GetAll(includeProperties: "Size,Unit,Brand,Location");
             return Json(new { data = allObj });
         }
@@ -246,6 +244,7 @@ namespace Intranet.Areas.CorpComm.Controllers
         [HttpDelete]
         public IActionResult Delete(int id)
         {
+            CartCount();
             var objFromDb = _unitOfWork.Collateral.Get(id);
             if (objFromDb == null)
             {
@@ -275,6 +274,17 @@ namespace Intranet.Areas.CorpComm.Controllers
                 var user = UserPrincipal.FindByIdentity(context, username);
                 ViewBag.Department = user.GetDepartment();
                 ViewBag.DisplayName = user.GetDisplayname();
+            }
+        }
+
+        public void CartCount()
+        {
+            string UserCart = ViewBag.DisplayName;
+            if (UserCart != null)
+            {
+                var count = _unitOfWork.ShoppingCart.GetAll(c => c.LoginUser == UserCart).ToList().Count();
+                HttpContext.Session.SetObject(SD.ssShoppingCart, count);
+                ViewBag.ItemCount = count;
             }
         }
 

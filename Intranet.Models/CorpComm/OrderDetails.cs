@@ -10,35 +10,15 @@ namespace Intranet.Models.CorpComm
 
         [Required]
         public int? OrderId { get; set; }
-
         [ForeignKey("OrderId")]
         public OrderHeader OrderHeader { get; set; }
 
+        [Required]
         public int? CollateralId { get; set; }
-
         [ForeignKey("CollateralId")]
         public Collateral Collateral { get; set; }
 
         public int Count { get; set; }
-        public double Price { get; set; }
-
-        #region UserDetails
-
-        [Required]
-        [Display(Name = "Encoder Name")]
-        [Column(TypeName = "nvarchar(32)")]
-        public string UserName { get; set; }
-
-        [Required]
-        [Display(Name = "IP Address")]
-        [Column(TypeName = "nvarchar(15)")]
-        public string UserIP { get; set; }
-
-        [Required]
-        [Display(Name = "Date")]
-        [Column(TypeName = "nvarchar(10)")]
-        public string UserDate { get; set; }
-
-        #endregion UserDetails
+        public int Price { get; set; }
     }
 }

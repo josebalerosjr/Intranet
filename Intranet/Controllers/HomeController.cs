@@ -1,6 +1,6 @@
 ﻿using Intranet.Classes;
 using Intranet.Data;
-using Intranet.DataAccess.Repository.CorpComm.IRepository;
+using Intranet.DataAccess.Repository.IRepository;
 using Intranet.Models;
 using Intranet.Utilities;
 using Microsoft.AspNetCore.Mvc;

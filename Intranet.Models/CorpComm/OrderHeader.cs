@@ -13,42 +13,16 @@ namespace Intranet.Models.CorpComm
 
         [Required]
         public DateTime OrderDate { get; set; }
-
         [Required]
         public DateTime ShippingDate { get; set; }
-
         [Required]
-        public DateTime OrderTotal { get; set; }
-
-        public int StatusId { get; set; }
-
-        [ForeignKey("StatusId")]
-        public Status Status { get; set; }
-
-        public int LocationId { get; set; }
-
-        [ForeignKey("LocationId")]
-        public Location Location { get; set; }
-
+        public int OrderTotal { get; set; }
+        public string TrackingNumber { get; set; }
         public bool? ItemReceipt { get; set; }
-
-        #region UserDetails
-
-        [Required]
-        [Display(Name = "Encoder Name")]
-        [Column(TypeName = "nvarchar(32)")]
-        public string UserName { get; set; }
-
-        [Required]
-        [Display(Name = "IP Address")]
-        [Column(TypeName = "nvarchar(15)")]
-        public string UserIP { get; set; }
-
-        [Required]
-        [Display(Name = "Date")]
-        [Column(TypeName = "nvarchar(10)")]
-        public string UserDate { get; set; }
-
-        #endregion UserDetails
+        public string OrderStatus { get; set; }
+        public string PaymentStatus { get; set; }
+        public DateTime PaymentDate { get; set; }
+        public DateTime PaymentDueDate { get; set; }
+        public string TransactionId { get; set; }
     }
 }

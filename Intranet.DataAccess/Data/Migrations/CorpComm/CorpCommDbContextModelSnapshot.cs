@@ -249,20 +249,8 @@ namespace Intranet.DataAccess.Data.Migrations.CorpComm
                         .IsRequired()
                         .HasColumnType("int");
 
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
-
-                    b.Property<string>("UserDate")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(10)");
-
-                    b.Property<string>("UserIP")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(15)");
-
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(32)");
+                    b.Property<int>("Price")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -283,41 +271,37 @@ namespace Intranet.DataAccess.Data.Migrations.CorpComm
                     b.Property<bool?>("ItemReceipt")
                         .HasColumnType("bit");
 
-                    b.Property<int>("LocationId")
-                        .HasColumnType("int");
-
                     b.Property<string>("LoginUser")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("OrderTotal")
+                    b.Property<string>("OrderStatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("OrderTotal")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("PaymentDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("PaymentDueDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PaymentStatus")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("ShippingDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("StatusId")
-                        .HasColumnType("int");
+                    b.Property<string>("TrackingNumber")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserDate")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(10)");
-
-                    b.Property<string>("UserIP")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(15)");
-
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(32)");
+                    b.Property<string>("TransactionId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("LocationId");
-
-                    b.HasIndex("StatusId");
 
                     b.ToTable("OrderHeaders");
                 });
@@ -333,6 +317,9 @@ namespace Intranet.DataAccess.Data.Migrations.CorpComm
                         .HasColumnType("int");
 
                     b.Property<int>("Count")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("EventId")
                         .HasColumnType("int");
 
                     b.Property<string>("LoginUser")
@@ -353,6 +340,8 @@ namespace Intranet.DataAccess.Data.Migrations.CorpComm
                     b.HasKey("Id");
 
                     b.HasIndex("CollateralId");
+
+                    b.HasIndex("EventId");
 
                     b.ToTable("ShoppingCarts");
                 });
@@ -545,21 +534,6 @@ namespace Intranet.DataAccess.Data.Migrations.CorpComm
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Intranet.Models.CorpComm.OrderHeader", b =>
-                {
-                    b.HasOne("Intranet.Models.CorpComm.Location", "Location")
-                        .WithMany()
-                        .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Intranet.Models.CorpComm.Status", "Status")
-                        .WithMany()
-                        .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Intranet.Models.CorpComm.ShoppingCart", b =>
                 {
                     b.HasOne("Intranet.Models.CorpComm.Collateral", "Collateral")
@@ -567,6 +541,10 @@ namespace Intranet.DataAccess.Data.Migrations.CorpComm
                         .HasForeignKey("CollateralId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Intranet.Models.CorpComm.Event", "Event")
+                        .WithMany()
+                        .HasForeignKey("EventId");
                 });
 
             modelBuilder.Entity("Intranet.Models.CorpComm.Station", b =>

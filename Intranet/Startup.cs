@@ -1,26 +1,24 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Hangfire;
-using Intranet.DataAccess.Data;
-using Intranet.DataAccess.Repository.CorpComm;
-using Intranet.DataAccess.Repository.CorpComm.IRepository;
 using Intranet.Classes;
 using Intranet.Controllers;
 using Intranet.Data;
+using Intranet.DataAccess.Data;
+using Intranet.DataAccess.Repository;
+using Intranet.DataAccess.Repository.CorpComm;
+using Intranet.DataAccess.Repository.IRepository;
 using Intranet.Models;
+using Intranet.Utilities;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
-using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace Intranet
 {
@@ -62,8 +60,6 @@ namespace Intranet
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
-
-
 
             services.AddHttpContextAccessor();
             services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
@@ -136,6 +132,7 @@ namespace Intranet
             services.Configure<MtrInfo>(mtrInfo);
             services.Configure<AppLinks>(appLinks);
             services.Configure<OnlineImageLinks>(onlineimagelinks);
+            services.Configure<ConnectionString>(Configuration.GetSection("ConnectionStrings"));
 
             #endregion appsettings service
 
@@ -187,11 +184,12 @@ namespace Intranet
                     .AddNToastNotifyToastr()
                     .AddControllersAsServices();
 
-            services.AddScoped<IGenerateDailyCriticalItemReport, GenerateDailyCriticalItemReport>();
-            services.AddScoped<IGenerateCalibrationDate, GenerateCalibrationDate>();
+            //services.AddScoped<IGenerateDailyCriticalItemReport, GenerateDailyCriticalItemReport>();
+            //services.AddScoped<IGenerateCalibrationDate, GenerateCalibrationDate>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-            services.AddSession(options => {
+            services.AddSession(options =>
+            {
                 options.IdleTimeout = TimeSpan.FromMinutes(30);
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
@@ -214,6 +212,18 @@ namespace Intranet
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseNToastNotify();
+
+            app.UseHangfireDashboard();
+            app.UseHangfireServer();
+
+            //RecurringJob.AddOrUpdate<IGenerateDailyCriticalItemReport>(
+            //    critItem => critItem.SendEmail(), Cron.Daily
+            //);
+
+            //RecurringJob.AddOrUpdate<IGenerateCalibrationDate>(
+            //    CalDateItem => CalDateItem.SendMail(), Cron.Daily
+            //);
 
             app.UseRouting();
             app.UseSession();

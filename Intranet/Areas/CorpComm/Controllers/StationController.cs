@@ -1,5 +1,4 @@
 ﻿using Intranet.Classes;
-using Intranet.DataAccess.Repository.CorpComm.IRepository;
 using Intranet.Models.CorpComm;
 using Intranet.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +6,7 @@ using Microsoft.Extensions.Options;
 using System.DirectoryServices.AccountManagement;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Intranet.DataAccess.Repository.IRepository;
 
 namespace Intranet.Areas.CorpComm.Controllers
 {
