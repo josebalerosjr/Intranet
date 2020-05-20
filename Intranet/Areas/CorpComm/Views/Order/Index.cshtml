@@ -1,6 +1,32 @@
-﻿
-@{
+﻿@{
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var status = Context.Request.Query["status"];
+
+    var pending = "bg-white";
+    var all = "bg-white";
+    var inprocess = "bg-white";
+    var completed = "bg-white";
+    var rejected = "bg-white";
+
+    switch (status)
+    {
+        case "pending":
+            pending = "active bg-primary text-white";
+            break;
+        case "inprocess":
+            inprocess = "active bg-primary text-white";
+            break;
+        case "completed":
+            completed = "active bg-primary text-white";
+            break;
+        case "rejected":
+            rejected = "active bg-primary text-white";
+            break;
+        default:
+            all = "active bg-primary text-white";
+            break;
+    }
 }
 
 <br />
@@ -12,21 +38,11 @@
         </div>
         <div class="p-2">
             <ul class="list-group list-group-horizontal-sm">
-                <li>
-                    <a style="text-decoration:none;" asp-controller="Order" asp-action="Index" asp-route-status="inprocess">In Process</a>
-                </li>
-                <li>
-                    <a style="text-decoration:none;" asp-controller="Order" asp-action="Index" asp-route-status="inprocess">Pending</a>
-                </li>
-                <li>
-                    <a style="text-decoration:none;" asp-controller="Order" asp-action="Index" asp-route-status="inprocess">Completed</a>
-                </li>
-                <li>
-                    <a style="text-decoration:none;" asp-controller="Order" asp-action="Index" asp-route-status="inprocess">Rejected</a>
-                </li>
-                <li>
-                    <a style="text-decoration:none;" asp-controller="Order" asp-action="Index" asp-route-status="inprocess">All</a>
-                </li>
+                <a style="text-decoration:none;" class="btn border @inprocess" asp-controller="Order" asp-action="Index" asp-route-status="inprocess">In Process</a>
+                <a style="text-decoration:none;" class="btn border @pending" asp-controller="Order" asp-action="Index" asp-route-status="pending">Pending</a>
+                <a style="text-decoration:none;" class="btn border @completed" asp-controller="Order" asp-action="Index" asp-route-status="completed">Completed</a>
+                <a style="text-decoration:none;" class="btn border @rejected" asp-controller="Order" asp-action="Index" asp-route-status="rejected">Rejected</a>
+                <a style="text-decoration:none;" class="btn border @all" asp-controller="Order" asp-action="Index" asp-route-status="all">All</a>
             </ul>
         </div>
     </div>
@@ -44,9 +60,8 @@
             </tr>
         </thead>
     </table>
-
 </div>
 
 @section Scripts {
-    <script src="~/js/CorpComm/orders.js"></script>
+    <script src="~/js/CorpComm/order.js"></script>
 }

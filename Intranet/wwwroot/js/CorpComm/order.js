@@ -1,58 +1,49 @@
 ﻿var dataTable;
 
 $(document).ready(function () {
-    loadDataTable();
+    var url = window.location.search;
+    if (url.includes("inprocess")) {
+        loadDataTable("GetOrderList?status=inprocess");
+    } else {
+        if (url.includes("pending")) {
+            loadDataTable("GetOrderList?status=pending");
+        } else {
+            if (url.includes("completed")) {
+                loadDataTable("GetOrderList?status=completed");
+            } else {
+                if (url.includes("rejected")) {
+                    loadDataTable("GetOrderList?status=rejected");
+                } else {
+                    loadDataTable("GetOrderList?status=all");
+                }
+            }
+        }
+    }
 });
 
 
-function loadDataTable() {
+function loadDataTable(url) {
     dataTable = $('#tblData').DataTable({
         "ajax": {
-            "url": "/CorpComm/Brand/GetAll"
+            "url": "/CorpComm/Order/" + url
         },
         "columns": [
-            { "data": "name", "width": "90%" },
+            { "data": "id", "width": "10%" },
+            { "data": "loginUser", "width": "25%" },
+            { "data": "orderTotal", "width": "25%" },
+            { "data": "orderStatus", "width": "25%" },
             {
                 "data": "id",
                 "render": function (data) {
                     return `
                             <div class="text-center">
-                                <a href="/CorpComm/Brand/Upsert/${data}" class="text-success" style="cursor:pointer">
+                                <a href="/CorpComm/Order/Details/${data}" class="text-success" style="cursor:pointer">
                                     <i class="fas fa-edit"></i> 
-                                </a>
-                                <a onclick=Delete("/CorpComm/Brand/Delete/${data}") class="text-danger" style="cursor:pointer">
-                                    <i class="fas fa-trash-alt"></i> 
                                 </a>
                             </div>
                            `;
-                }, "width": "10%"
+                }, "width": "15%"
             }
         ]
-    });
-}
-
-function Delete(url) {
-    swal({
-        title: "Are you sure you want to Delete?",
-        text: "You will not be able to restore the data!",
-        icon: "warning",
-        buttons: true,
-        dangerMode: true
-    }).then((willDelete) => {
-        if (willDelete) {
-            $.ajax({
-                type: "DELETE",
-                url: url,
-                success: function (data) {
-                    if (data.success) {
-                        toastr.success(data.message);
-                        dataTable.ajax.reload();
-                    }
-                    else {
-                        toastr.error(data.message);
-                    }
-                }
-            });
-        }
     });
 }

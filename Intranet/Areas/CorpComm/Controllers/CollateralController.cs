@@ -1,7 +1,7 @@
 ﻿using Intranet.Classes;
 using Intranet.DataAccess.Repository.IRepository;
 using Intranet.Models.CorpComm;
-using Intranet.Models.ViewModels;
+using Intranet.Models.ViewModels.CorpComm;
 using Intranet.Utilities;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;

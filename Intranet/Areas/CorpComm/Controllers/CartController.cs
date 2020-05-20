@@ -1,7 +1,7 @@
 ﻿using Intranet.Classes;
 using Intranet.DataAccess.Repository.IRepository;
 using Intranet.Models.CorpComm;
-using Intranet.Models.ViewModels;
+using Intranet.Models.ViewModels.CorpComm;
 using Intranet.Utilities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -141,7 +141,6 @@ namespace Intranet.Areas.CorpComm.Controllers
 
             _unitOfWork.OrderHeader.Add(ShoppingCartVM.OrderHeader);
             _unitOfWork.Save();
-            List<OrderDetails> orderDetailsList = new List<OrderDetails>();
             foreach (var item in ShoppingCartVM.ListCart) 
             {
                 OrderDetails orderDetails = new OrderDetails()

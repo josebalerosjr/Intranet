@@ -1,6 +1,6 @@
 ﻿using Intranet.Classes;
 using Intranet.Models.CorpComm;
-using Intranet.Models.ViewModels;
+using Intranet.Models.ViewModels.CorpComm;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System.DirectoryServices.AccountManagement;

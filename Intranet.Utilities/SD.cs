@@ -10,18 +10,22 @@ namespace Intranet.Utilities
         public static string ConString = "Server=(LocalDb)\\MSSQLLocalDB;Database=CorpComm;User Id=sa;Password=mis@2020;MultipleActiveResultSets=True";
 
         public const string ssShoppingCart = "Shopping Cart Session";
+
         public const string StatusPending = "Pending";
         public const string StatusApproved = "Approved";
-        public const string StatusInProcess = "Processing";
+        public const string StatusInProcess = "In Process";
         public const string StatusShipped = "Shipped";
         public const string StatusCancelled = "Cancelled";
         public const string StatusRefunded = "Refunded";
         public const string StatusReject = "Rejected";
+        public const string StatusCompleted = "Completed";
 
         public const string PaymentStatusPending = "Pending";
         public const string PaymentStatusApproved = "Approved";
         public const string PaymentStatusDelayedPayment = "ApprovedForDelayedPayment";
         public const string PaymentStatusRejected = "Rejected";
+
+        public const string CIOAdmin = "Office of the Chief Information Officer";
 
         public static int GetPriceBaseOnQuantity(int quantity, int price) 
         {
@@ -29,7 +33,6 @@ namespace Intranet.Utilities
             total = price * quantity;
             return total;
         }
-
         public static string ConvertToRawHtml(String source)
         {
             char[] array = new char[source.Length];
