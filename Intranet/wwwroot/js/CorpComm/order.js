@@ -2,19 +2,27 @@
 
 $(document).ready(function () {
     var url = window.location.search;
-    if (url.includes("inprocess")) {
-        loadDataTable("GetOrderList?status=inprocess");
+    if (url.includes("requestsent")) {
+        loadDataTable("GetOrderList?status=requestsent");
     } else {
-        if (url.includes("pending")) {
-            loadDataTable("GetOrderList?status=pending");
+        if (url.includes("forapproval")) {
+            loadDataTable("GetOrderList?status=forapproval");
         } else {
-            if (url.includes("completed")) {
-                loadDataTable("GetOrderList?status=completed");
+            if (url.includes("fordelivery")) {
+                loadDataTable("GetOrderList?status=fordelivery");
             } else {
-                if (url.includes("rejected")) {
-                    loadDataTable("GetOrderList?status=rejected");
+                if (url.includes("foracknowledge")) {
+                    loadDataTable("GetOrderList?status=foracknowledge");
                 } else {
-                    loadDataTable("GetOrderList?status=all");
+                    if (url.includes("forrating")) {
+                        loadDataTable("GetOrderList?status=forrating");
+                    } else {
+                        if (url.includes("rejected")) {
+                            loadDataTable("GetOrderList?status=rejected")
+                        } else {
+                            loadDataTable("GetOrderList?status=all");
+                        }
+                    }
                 }
             }
         }

@@ -134,8 +134,8 @@ namespace Intranet.Areas.CorpComm.Controllers
 
             ShoppingCartVM.ListCart = _unitOfWork.ShoppingCart.GetAll(c => c.LoginUser == loginUser);
 
-            ShoppingCartVM.OrderHeader.PaymentStatus = SD.PaymentStatusPending;
-            ShoppingCartVM.OrderHeader.OrderStatus = SD.StatusPending;
+            //ShoppingCartVM.OrderHeader.PaymentStatus = SD.PaymentStatusPending;
+            ShoppingCartVM.OrderHeader.OrderStatus = SD.StatusRequestSent;
             ShoppingCartVM.OrderHeader.LoginUser = ViewBag.DisplayName;
             ShoppingCartVM.OrderHeader.OrderDate = DateTime.Now;
 

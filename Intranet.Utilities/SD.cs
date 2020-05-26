@@ -7,23 +7,17 @@ namespace Intranet.Utilities
 {
     public static class SD
     {
-        public static string ConString = "Server=(LocalDb)\\MSSQLLocalDB;Database=CorpComm;User Id=sa;Password=mis@2020;MultipleActiveResultSets=True";
+        public static string ConString = "Server=(LocalDb)\\MSSQLLocalDB;Database=CorpComm;User Id=sa;Password=mis@2019;MultipleActiveResultSets=True";
 
         public const string ssShoppingCart = "Shopping Cart Session";
 
-        public const string StatusPending = "Pending";
-        public const string StatusApproved = "Approved";
-        public const string StatusInProcess = "In Process";
-        public const string StatusShipped = "Shipped";
-        public const string StatusCancelled = "Cancelled";
-        public const string StatusRefunded = "Refunded";
-        public const string StatusReject = "Rejected";
+        public const string StatusRequestSent = "Request Sent";
+        public const string StatusForApproval = "For Approval";
+        public const string StatusForDelivery = "For Delivery";
+        public const string StatusForAcknowledgement = "For Acknowledgement";
+        public const string StatusForRating = "For Rating";
+        public const string StatusRejected = "Rejected";
         public const string StatusCompleted = "Completed";
-
-        public const string PaymentStatusPending = "Pending";
-        public const string PaymentStatusApproved = "Approved";
-        public const string PaymentStatusDelayedPayment = "ApprovedForDelayedPayment";
-        public const string PaymentStatusRejected = "Rejected";
 
         public const string CIOAdmin = "Office of the Chief Information Officer";
 

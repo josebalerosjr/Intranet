@@ -47,36 +47,61 @@ namespace Intranet.Areas.CorpComm.Controllers
         }
 
         [Authorize(Roles = SD.CIOAdmin)]
-        public IActionResult StartProcessing(int id)
+        public IActionResult ReceiveRequestAndForApproval(int id)
         {
             OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == id);
-            orderHeader.OrderStatus = SD.StatusInProcess;
-            _unitOfWork.Save();
-            return RedirectToAction(nameof(Index));
-        }
-
-        [HttpPost]
-        [Authorize(Roles = SD.CIOAdmin)]
-        public IActionResult ShipOrder(int id)
-        {
-            OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == id);
-            orderHeader.TrackingNumber = OrderVM.OrderHeader.TrackingNumber;
-            orderHeader.ShippingDate = DateTime.Now;
-            orderHeader.OrderStatus = SD.StatusShipped;
-
+            orderHeader.OrderStatus = SD.StatusForApproval;
             _unitOfWork.Save();
             return RedirectToAction(nameof(Index));
         }
 
         [Authorize(Roles = SD.CIOAdmin)]
-        public IActionResult CancelOrder(int id)
+        public IActionResult ProcessOrderAndForDelivery(int id)
         {
             OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == id);
-            orderHeader.OrderStatus = SD.StatusInProcess;
-            
+            orderHeader.OrderStatus = SD.StatusForDelivery;
             _unitOfWork.Save();
             return RedirectToAction(nameof(Index));
         }
+
+        public IActionResult ReceiveItemAndForAcknowledgement(int id)
+        {
+            OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == id);
+            orderHeader.OrderStatus = SD.StatusForAcknowledgement;
+            _unitOfWork.Save();
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult AcknowledgeAndConfirmReceipt(int id)
+        {
+            OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == id);
+            orderHeader.OrderStatus = SD.StatusForRating;
+            _unitOfWork.Save();
+            return RedirectToAction(nameof(Index));
+        }
+
+        //[HttpPost]
+        //[Authorize(Roles = SD.CIOAdmin)]
+        //public IActionResult ShipOrder(int id)
+        //{
+        //    OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == id);
+        //    orderHeader.TrackingNumber = OrderVM.OrderHeader.TrackingNumber;
+        //    orderHeader.ShippingDate = DateTime.Now;
+        //    orderHeader.OrderStatus = SD.StatusRequestSent;
+
+        //    _unitOfWork.Save();
+        //    return RedirectToAction(nameof(Index));
+        //}
+
+        //[Authorize(Roles = SD.CIOAdmin)]
+        //public IActionResult CancelOrder(int id)
+        //{
+        //    OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == id);
+        //    orderHeader.OrderStatus = SD.StatusRequestSent;
+
+        //    _unitOfWork.Save();
+        //    return RedirectToAction(nameof(Index));
+        //}
 
         #region API CALLS
 
@@ -99,18 +124,23 @@ namespace Intranet.Areas.CorpComm.Controllers
 
             switch (status)
             {
-                case "pending":
-                    orderHeadersList = orderHeadersList.Where(o => o.OrderStatus == SD.StatusPending);
+                case "requestsent":
+                    orderHeadersList = orderHeadersList.Where(o => o.OrderStatus == SD.StatusRequestSent);
                     break;
-                case "inprocess":
-                    orderHeadersList = orderHeadersList.Where(o => o.OrderStatus == SD.StatusInProcess);
+                case "forapproval":
+                    orderHeadersList = orderHeadersList.Where(o => o.OrderStatus == SD.StatusForApproval);
                     break;
-                case "completed":
-                    orderHeadersList = orderHeadersList.Where(o => o.OrderStatus == SD.StatusCompleted);
+                case "fordelivery":
+                    orderHeadersList = orderHeadersList.Where(o => o.OrderStatus == SD.StatusForDelivery);
+                    break;
+                case "foracknowledge":
+                    orderHeadersList = orderHeadersList.Where(o => o.OrderStatus == SD.StatusForAcknowledgement);
+                    break;
+                case "forrating":
+                    orderHeadersList = orderHeadersList.Where(o => o.OrderStatus == SD.StatusForRating);
                     break;
                 case "rejected":
-                    orderHeadersList = orderHeadersList.Where(
-                        o => o.OrderStatus == SD.StatusReject || o.OrderStatus == SD.StatusCancelled);
+                    orderHeadersList = orderHeadersList.Where(o => o.OrderStatus == SD.StatusRejected);
                     break;
                 default:
                     break;
