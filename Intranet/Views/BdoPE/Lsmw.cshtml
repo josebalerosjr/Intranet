@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<Intranet.Models.BdoPE>
+@using Intranet.Utilities;
 
 @{
     ViewData["Title"] = "BdoLsmw";
@@ -51,7 +52,7 @@
             <tr>
                 <td class="small">
                     @{
-                        if (User.IsInRole("Office of the Chief Information Officer") || User.IsInRole("CNC Admin"))
+                        if (User.IsInRole(SD.CIOAdmin) || User.IsInRole("CNC Admin"))
                         {
                             <a asp-action="EditAdmin" asp-route-id="@item.Id"><i class="fa fa-marker fa-lg" title="Edit"></i></a>
                             <a asp-action="DeleteAdmin" asp-route-id="@item.Id"

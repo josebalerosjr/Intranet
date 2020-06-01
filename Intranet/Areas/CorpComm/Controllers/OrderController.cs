@@ -22,13 +22,20 @@ namespace Intranet.Areas.CorpComm.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly AppSettings _appSettings;
+        private readonly EmailSender _emailSender;
+        public readonly EmailOptions _emailOptions;
+
         [BindProperty]
         public OrderDetailsVM OrderVM { get; set; }  
 
-        public OrderController(IUnitOfWork unitOfWork, IOptions<AppSettings> appSettings)
+        [BindProperty]
+        public ShoppingCartVM ShoppingCartVM { get; set; }
+
+        public OrderController(IUnitOfWork unitOfWork, IOptions<AppSettings> appSettings, IOptions<EmailOptions> emailOptions)
         {
             _unitOfWork = unitOfWork;
             _appSettings = appSettings.Value;
+            _emailOptions = emailOptions.Value;
         }
 
         public IActionResult Index()
@@ -51,6 +58,19 @@ namespace Intranet.Areas.CorpComm.Controllers
         {
             OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == id);
             orderHeader.OrderStatus = SD.StatusForApproval;
+
+            _emailSender.SendMail(
+                _emailOptions.SMTPHostClient,
+                orderHeader.TrackingNumber,
+                "Collateral Request Approval",
+                "<p>Request No." + orderHeader.Id.ToString() + " Has been approved!</p>",
+                _emailOptions.AuthEmail,
+                _emailOptions.AuthPassword,
+                _emailOptions.AuthDomain,
+                _emailOptions.SMTPHostPort,
+                _emailOptions.SMTPHostBool
+            ); 
+
             _unitOfWork.Save();
             return RedirectToAction(nameof(Index));
         }
@@ -163,6 +183,16 @@ namespace Intranet.Areas.CorpComm.Controllers
                 var user = UserPrincipal.FindByIdentity(context, username);
                 ViewBag.Department = user.GetDepartment();
                 ViewBag.DisplayName = user.GetDisplayname();
+            }
+        }
+        public void CartCount()
+        {
+            string UserCart = ViewBag.DisplayName;
+            if (UserCart != null)
+            {
+                var count = _unitOfWork.ShoppingCart.GetAll(c => c.LoginUser == UserCart, includeProperties: "Collateral").ToList().Count();
+                HttpContext.Session.SetObject(SD.ssShoppingCart, count);
+                ViewBag.ItemCount = count;
             }
         }
 

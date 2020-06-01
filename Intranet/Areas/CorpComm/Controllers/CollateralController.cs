@@ -6,6 +6,7 @@ using Intranet.Utilities;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -229,6 +230,41 @@ namespace Intranet.Areas.CorpComm.Controllers
 
                 return View(cartFromDB);
             }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Withdraw(int id)
+        {
+            //ViewBag.qty = quantity;
+            var collateral = _unitOfWork.Collateral.GetAll(u => u.Id == id);
+
+            _unitOfWork.Save();
+            //var itemreg = _context.ItemRegs.Find(itemReg.ItemId);
+            //itemreg.Qty -= ViewBag.qty;
+            //itemReg.UserName = ViewBag.DisplayName;
+            //itemreg.UserIP = HttpContext.Connection.RemoteIpAddress.ToString();
+            //itemreg.UserDate = DateTime.Now.ToString("MM/dd/yyyy");
+            //return RedirectToAction(nameof(Index));
+            //}
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddStcoks()
+        {
+            //ViewBag.qty = quantity;
+            ////if (ModelState.IsValid) {
+            ////var itemreg = _context.ItemRegs.Find(itemReg.ItemId);
+            ////itemreg.Qty -= ViewBag.qty;
+            //itemReg.UserName = ViewBag.DisplayName;
+            //itemreg.UserIP = HttpContext.Connection.RemoteIpAddress.ToString();
+            //itemreg.UserDate = DateTime.Now.ToString("MM/dd/yyyy");
+            ////await _context.SaveChangesAsync();
+            //return RedirectToAction(nameof(Index));
+            //}
+            return View(/*itemReg*/);
         }
 
         #region API CALLS

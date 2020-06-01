@@ -7,6 +7,9 @@ $(document).ready(function () {
 
 function loadDataTable() {
     dataTable = $('#tblData').DataTable({
+        "displayLength": 10,
+        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+        dom: 'Bfrtip',
         "ajax": {
             "url": "/CorpComm/Collateral/GetAll"
         },
@@ -31,6 +34,12 @@ function loadDataTable() {
                                 <a onclick=Delete("/CorpComm/Collateral/Delete/${data}") class="text-danger" style="cursor:pointer">
                                     <i class="fas fa-trash-alt"></i> 
                                 </a>
+                                <!--<a onclick=Delete("/CorpComm/Collateral/Withdraw/${data}") class="text-warning" style="cursor:pointer">
+                                    <i class="fas fa-cart-arrow-down"></i>
+                                </a>
+                                <a onclick=Delete("/CorpComm/Collateral/AddStocks/${data}") class="text-info" style="cursor:pointer">
+                                    <i class="fas fa-cart-plus"></i>
+                                </a>-->
                             </div>
                            `;
                 }, "width": "7%"
