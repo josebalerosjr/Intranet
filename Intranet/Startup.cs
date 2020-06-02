@@ -188,7 +188,7 @@ namespace Intranet
             //services.AddScoped<IGenerateCalibrationDate, GenerateCalibrationDate>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-            services.AddSingleton<EmailSender>();
+            //services.AddSingleton<EmailSender>();
             services.Configure<EmailOptions>(Configuration);
 
             services.AddSession(options =>

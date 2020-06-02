@@ -17,7 +17,8 @@ namespace Intranet.Models.CorpComm
         public DateTime ShippingDate { get; set; }
         [Required]
         public int OrderTotal { get; set; }
-        public string TrackingNumber { get; set; }
+        public string RequestorEmail { get; set; }
+        public string PicupPoint { get; set; }
         public bool? ItemReceipt { get; set; }
         public string OrderStatus { get; set; }
         public string PaymentStatus { get; set; }

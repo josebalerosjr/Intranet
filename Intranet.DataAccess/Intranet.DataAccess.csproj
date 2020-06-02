@@ -29,6 +29,10 @@
     <Compile Remove="Data\Migrations\CorpComm\20200529070429_CurrentPendingMigration.Designer.cs" />
     <Compile Remove="Data\Migrations\CorpComm\20200529071930_AddRequestorEmail.cs" />
     <Compile Remove="Data\Migrations\CorpComm\20200529071930_AddRequestorEmail.Designer.cs" />
+    <Compile Remove="Data\Migrations\CorpComm\20200601011403_PendingUpdatesForDatabase.cs" />
+    <Compile Remove="Data\Migrations\CorpComm\20200601011403_PendingUpdatesForDatabase.Designer.cs" />
+    <Compile Remove="Data\Migrations\CorpComm\20200601012252_PendingDataBaseUpdate.cs" />
+    <Compile Remove="Data\Migrations\CorpComm\20200601012252_PendingDataBaseUpdate.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -104,18 +104,18 @@
                                 </div>
                             </div>
                             @*<div class="row my-1">
-                                <div class="col-3">Transaction ID</div>
-                                <div class="col-9">
-                                    @if (User.IsInRole(SD.CIOAdmin))
-                                    {
-                                        <input asp-for="OrderHeader.TransactionId" type="text" class="form-control" />
-                                    }
-                                    else
-                                    {
-                                        <input asp-for="OrderHeader.TransactionId" type="text" readonly class="form-control" />
-                                    }
-                                </div>
-                            </div>*@
+                                    <div class="col-3">Transaction ID</div>
+                                    <div class="col-9">
+                                        @if (User.IsInRole(SD.CIOAdmin))
+                                        {
+                                            <input asp-for="OrderHeader.TransactionId" type="text" class="form-control" />
+                                        }
+                                        else
+                                        {
+                                            <input asp-for="OrderHeader.TransactionId" type="text" readonly class="form-control" />
+                                        }
+                                    </div>
+                                </div>*@
                             @*<div class="row my-1">
                                     <div class="col-3">Payment Due Date</div>
                                     <div class="col-9">
@@ -126,6 +126,19 @@
                                         <input readonly id="paymentDate" type="text" class="form-control" />
                                     </div>
                                 </div>*@
+                            <div class="row my-1">
+                                <div class="col-3">Pick-up Point</div>
+                                <div class="col-9">
+                                    @if (User.IsInRole(SD.CIOAdmin))
+                                    {
+                                        <input asp-for="OrderHeader.PicupPoint" type="text" class="form-control" />
+                                    }
+                                    else
+                                    {
+                                        <input asp-for="OrderHeader.PicupPoint" type="text" readonly class="form-control" />
+                                    }
+                                </div>
+                            </div>
                             <div class="row my-1">
                                 <div class="col-3">Order Status</div>
                                 <div class="col-9">
@@ -178,20 +191,23 @@
                                 if (Model.OrderHeader.OrderStatus == SD.StatusRequestSent)
                                 {
                                     <a asp-action="ReceiveRequestAndForApproval" asp-route-id="@Model.OrderHeader.Id"
-                                       class="btn btn-primary form-control">Receive Order</a>
+                                       class="btn btn-primary form-control">Receive Order</a> <br /><br />
+
+                                    <a asp-action="ReceiveRequestAndReject" asp-route-id="@Model.OrderHeader.Id"
+                                       class="btn btn-primary form-control">Reject Order</a>
                                 }
                                 @if (Model.OrderHeader.OrderStatus == SD.StatusForApproval)
                                 {
                                     @*<input type="submit" value="Ship Order" onclick="validateInput()"
-                class="btn btn-primary form-control" formaction="/Admin/Order/ShipOrder" formmethod="post" />*@
+                                        class="btn btn-primary form-control" formaction="/Admin/Order/ShipOrder" formmethod="post" />*@
                                     <a asp-action="ProcessOrderAndForDelivery" asp-route-id="@Model.OrderHeader.Id"
                                        class="btn btn-primary form-control">Prepare Item</a>
                                 }
                             }
                             @*else
-        {
-            <label class="btn btn-primary form-control">@Model.OrderHeader.OrderStatus</label>
-        }*@
+                                {
+                                    <label class="btn btn-primary form-control">@Model.OrderHeader.OrderStatus</label>
+                                }*@
 
                             @if (!User.IsInRole(SD.CIOAdmin))
                             {
@@ -213,3 +229,14 @@
         </div>
     </div>
 </form>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var shippingDate = document.getElementById("shippingDate");
+
+            if (shippingDate.value == '1/1/0001') {
+                shippingDate.value = "";
+            }
+        });
+    </script>
+}

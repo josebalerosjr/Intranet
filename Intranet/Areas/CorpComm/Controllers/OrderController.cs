@@ -8,11 +8,13 @@ using Intranet.DataAccess.Repository.IRepository;
 using Intranet.Models.CorpComm;
 using Intranet.Models.ViewModels.CorpComm;
 using Intranet.Utilities;
+using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Options;
 using Microsoft.Extensions.Options;
+using MimeKit;
 
 namespace Intranet.Areas.CorpComm.Controllers
 {
@@ -59,17 +61,55 @@ namespace Intranet.Areas.CorpComm.Controllers
             OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == id);
             orderHeader.OrderStatus = SD.StatusForApproval;
 
-            _emailSender.SendMail(
-                _emailOptions.SMTPHostClient,
-                orderHeader.TrackingNumber,
-                "Collateral Request Approval",
-                "<p>Request No." + orderHeader.Id.ToString() + " Has been approved!</p>",
-                _emailOptions.AuthEmail,
-                _emailOptions.AuthPassword,
-                _emailOptions.AuthDomain,
-                _emailOptions.SMTPHostPort,
-                _emailOptions.SMTPHostBool
-            ); 
+            string mailFrom = orderHeader.TrackingNumber;
+
+                var message = new MimeMessage();
+                var builder = new BodyBuilder();
+                message.From.Add(new MailboxAddress(_emailOptions.AuthEmail));
+                message.To.Add(new MailboxAddress(mailFrom));
+                message.Subject = "Collateral Request Approval";
+                builder.HtmlBody =  "<p>Request No." + orderHeader.Id.ToString() + " Has been approved!</p> <br />" +
+                                    "You can check the order details and status, <a href='http://localhost:44301/CorpComm/Order/Details/" + orderHeader.Id + "'>Click here.</a>";
+                message.Body = builder.ToMessageBody();
+                using (var client = new SmtpClient())
+                {
+                    client.Connect(_emailOptions.SMTPHostClient, _emailOptions.SMTPHostPort);
+                    //client.AuthenticationMechanisms.Remove("XOAUTH2");
+                    // Note: only needed if the SMTP server requires authentication
+                    client.Authenticate(_emailOptions.AuthEmail, _emailOptions.AuthPassword);
+                    client.Send(message);
+                    client.Disconnect(true);
+                }
+
+            _unitOfWork.Save();
+            return RedirectToAction(nameof(Index));
+        }
+
+        [Authorize(Roles = SD.CIOAdmin)]
+        public IActionResult ReceiveRequestAndReject(int id)
+        {
+            OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == id);
+            orderHeader.OrderStatus = SD.StatusRejected;
+
+            string mailFrom = orderHeader.TrackingNumber;
+
+            var message = new MimeMessage();
+            var builder = new BodyBuilder();
+            message.From.Add(new MailboxAddress(_emailOptions.AuthEmail));
+            message.To.Add(new MailboxAddress(mailFrom));
+            message.Subject = "Collateral Request Rejected";
+            builder.HtmlBody = "<p>Request No." + orderHeader.Id.ToString() + " Has been Rejected!</p>" +
+                                "<p> You can check the order details and status, <a href='http://localhost:44301/CorpComm/Order/Details/" + orderHeader.Id + "'>Click here.</a> </p>";
+            message.Body = builder.ToMessageBody();
+            using (var client = new SmtpClient())
+            {
+                client.Connect(_emailOptions.SMTPHostClient, _emailOptions.SMTPHostPort, _emailOptions.SMTPHostBool);
+
+                // Note: only needed if the SMTP server requires authentication
+                client.Authenticate(_emailOptions.AuthEmail, _emailOptions.AuthPassword);
+                client.Send(message);
+                client.Disconnect(true);
+            }
 
             _unitOfWork.Save();
             return RedirectToAction(nameof(Index));
@@ -99,29 +139,6 @@ namespace Intranet.Areas.CorpComm.Controllers
             _unitOfWork.Save();
             return RedirectToAction(nameof(Index));
         }
-
-        //[HttpPost]
-        //[Authorize(Roles = SD.CIOAdmin)]
-        //public IActionResult ShipOrder(int id)
-        //{
-        //    OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == id);
-        //    orderHeader.TrackingNumber = OrderVM.OrderHeader.TrackingNumber;
-        //    orderHeader.ShippingDate = DateTime.Now;
-        //    orderHeader.OrderStatus = SD.StatusRequestSent;
-
-        //    _unitOfWork.Save();
-        //    return RedirectToAction(nameof(Index));
-        //}
-
-        //[Authorize(Roles = SD.CIOAdmin)]
-        //public IActionResult CancelOrder(int id)
-        //{
-        //    OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == id);
-        //    orderHeader.OrderStatus = SD.StatusRequestSent;
-
-        //    _unitOfWork.Save();
-        //    return RedirectToAction(nameof(Index));
-        //}
 
         #region API CALLS
 
@@ -197,5 +214,9 @@ namespace Intranet.Areas.CorpComm.Controllers
         }
 
         #endregion UserDetails function
+
+        #region SendMail
+        
+        #endregion
     }
 }

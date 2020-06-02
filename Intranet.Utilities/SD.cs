@@ -54,5 +54,7 @@ namespace Intranet.Utilities
             }
             return new string(array, 0, arrayIndex);
         }
+
+        //public const string EmailFrom = "jose.baleros@pttphils.com";
     }
 }
