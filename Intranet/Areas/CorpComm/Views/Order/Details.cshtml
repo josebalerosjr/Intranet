@@ -3,6 +3,8 @@
 
 <form method="post">
     <input type="hidden" asp-for="OrderHeader.Id" />
+    <input type="hidden" asp-for="OrderHeader.LoginUser" />
+    <input type="hidden" asp-for="OrderHeader.RequestorEmail" />
     <br />
     <div class="backgroundWhite container">
         <div class="card">
@@ -23,48 +25,6 @@
                                     <span class="text-primary">Status Details:</span>
                                 </h4>
                             </div>
-                            @*<div class="row my-1">
-                                    <div class="col-3">Name</div>
-                                    <div class="col-9">
-                                        <input readonly type="text" class="form-control" />
-                                    </div>
-                                </div>
-                                <div class="row my-1">
-                                    <div class="col-3">Phone</div>
-                                    <div class="col-9">
-                                        <input readonly type="text" class="form-control" />
-                                    </div>
-                                </div>
-                                <div class="row my-1">
-                                    <div class="col-3">Address</div>
-                                    <div class="col-9">
-                                        <input readonly type="text" class="form-control" />
-                                    </div>
-                                </div>
-                                <div class="row my-1">
-                                    <div class="col-3">City</div>
-                                    <div class="col-9">
-                                        <input readonly type="text" class="form-control" />
-                                    </div>
-                                </div>
-                                <div class="row my-1">
-                                    <div class="col-3">State</div>
-                                    <div class="col-9">
-                                        <input readonly type="text" class="form-control" />
-                                    </div>
-                                </div>
-                                <div class="row my-1">
-                                    <div class="col-3">Zip Code</div>
-                                    <div class="col-9">
-                                        <input readonly type="text" class="form-control" />
-                                    </div>
-                                </div>
-                                <div class="row my-1">
-                                    <div class="col-3">Email</div>
-                                    <div class="col-9">
-                                        <input id="txtName" readonly type="text" class="form-control" />
-                                    </div>
-                                </div>*@
                             <div class="row my-1">
                                 <div class="col-3">Order Date</div>
                                 <div class="col-9">
@@ -78,81 +38,77 @@
                                     }
                                 </div>
                             </div>
-                            @*<div class="row my-1">
-                                    <div class="col-3">Carrier</div>
-                                    <div class="col-9">
-                                        <input type="text" readonly class="form-control" />
-                                    </div>
-                                </div>
+                            @if (Model.OrderHeader.OrderStatus != SD.StatusRequestSent)
+                            {
                                 <div class="row my-1">
-                                    <div class="col-3">Tracking</div>
-                                    <div class="col-9">
-                                        <input type="text" readonly class="form-control" />
-                                    </div>
-                                </div>*@
-                            <div class="row my-1">
-                                <div class="col-3">Shipping Date</div>
-                                <div class="col-9">
-                                    @if (User.IsInRole(SD.CIOAdmin))
-                                    {
-                                        <input id="shippingDate" value="@Model.OrderHeader.ShippingDate.ToShortDateString()" type="text" class="form-control" />
-                                    }
-                                    else
-                                    {
-                                        <input id="shippingDate" value="@Model.OrderHeader.ShippingDate.ToShortDateString()" type="text" readonly class="form-control" />
-                                    }
-                                </div>
-                            </div>
-                            @*<div class="row my-1">
-                                    <div class="col-3">Transaction ID</div>
+                                    <div class="col-3">Shipping Date</div>
                                     <div class="col-9">
                                         @if (User.IsInRole(SD.CIOAdmin))
                                         {
-                                            <input asp-for="OrderHeader.TransactionId" type="text" class="form-control" />
+                                            <input id="shippingDate" value="@Model.OrderHeader.OrderDate.ToShortDateString()"
+                                                   asp-for="OrderHeader.ShippingDate" type="date" class="form-control" />
                                         }
                                         else
                                         {
-                                            <input asp-for="OrderHeader.TransactionId" type="text" readonly class="form-control" />
+                                            <input id="shippingDate" value="@Model.OrderHeader.OrderDate.ToShortDateString()"
+                                                   asp-for="OrderHeader.ShippingDate" class="form-control" readonly />
                                         }
                                     </div>
-                                </div>*@
-                            @*<div class="row my-1">
-                                    <div class="col-3">Payment Due Date</div>
+                                </div>
+                            }
+                            @if (Model.OrderHeader.OrderStatus != SD.StatusRequestSent)
+                            {
+                                <div class="row my-1">
+                                    <div class="col-3">Drop-off Point</div>
                                     <div class="col-9">
-                                        <input readonly type="text" class="form-control" />
+                                        @if (User.IsInRole(SD.CIOAdmin))
+                                        {
+                                            <select id="pickupPoint" class="form-control" asp-for="OrderHeader.PickUpPoints">
+                                                <option>-Drop-off Point</option>
+                                                <option value="@SD.DO_Edsa">@SD.DO_Edsa</option>
+                                                <option value="@SD.DO_LKG">@SD.DO_LKG</option>
+                                            </select>
+                                        }
+                                        else
+                                        {
+                                            <input class="form-control" asp-for="OrderHeader.PickUpPoints" readonly />
+                                        }
                                     </div>
-                                    <div class="col-3">Payment Date</div>
+                                </div>
+                            }
+
+                                <div class="row my-1">
+                                    <div class="col-3">Request Type</div>
                                     <div class="col-9">
-                                        <input readonly id="paymentDate" type="text" class="form-control" />
+                                        @if (User.IsInRole(SD.CIOAdmin))
+                                        {
+                                            <select class="form-control" asp-for="OrderHeader.RequestType">
+                                                <option value="@SD.ReqRegular">@SD.ReqRegular</option>
+                                                <option value="@SD.ReqUrgent">@SD.ReqUrgent</option>
+                                            </select>
+                                        }
+                                        else
+                                        {
+                                            <input class="form-control" asp-for="OrderHeader.RequestType" readonly />
+                                        }
                                     </div>
-                                </div>*@
-                            <div class="row my-1">
-                                <div class="col-3">Pick-up Point</div>
-                                <div class="col-9">
-                                    @if (User.IsInRole(SD.CIOAdmin))
-                                    {
-                                        <input asp-for="OrderHeader.PicupPoint" type="text" class="form-control" />
-                                    }
-                                    else
-                                    {
-                                        <input asp-for="OrderHeader.PicupPoint" type="text" readonly class="form-control" />
-                                    }
+                                </div>
+
+
+                                <div class="row my-1">
+                                    <div class="col-3">Order Status</div>
+                                    <div class="col-9">
+                                        @if (User.IsInRole(SD.CIOAdmin))
+                                        {
+                                            <input asp-for="OrderHeader.OrderStatus" type="text" class="form-control" />
+                                        }
+                                        else
+                                        {
+                                            <input asp-for="OrderHeader.OrderStatus" type="text" readonly class="form-control" />
+                                        }
+                                    </div>
                                 </div>
                             </div>
-                            <div class="row my-1">
-                                <div class="col-3">Order Status</div>
-                                <div class="col-9">
-                                    @if (User.IsInRole(SD.CIOAdmin))
-                                    {
-                                        <input asp-for="OrderHeader.OrderStatus" type="text" class="form-control" />
-                                    }
-                                    else
-                                    {
-                                        <input asp-for="OrderHeader.OrderStatus" type="text" readonly class="form-control" />
-                                    }
-                                </div>
-                            </div>
-                        </div>
                         <div class="col-12 col-lg-5 offset-lg-1">
                             <h4 class="d-flex justify-content-between align-items-center mb-3">
                                 <span class="text-primary">Order Summary</span>
@@ -190,24 +146,19 @@
                             {
                                 if (Model.OrderHeader.OrderStatus == SD.StatusRequestSent)
                                 {
-                                    <a asp-action="ReceiveRequestAndForApproval" asp-route-id="@Model.OrderHeader.Id"
-                                       class="btn btn-primary form-control">Receive Order</a> <br /><br />
+                                     <input value="Receive Order" class="btn btn-primary form-control" type="submit"
+                                           formaction="/CorpComm/Order/ReceiveRequestAndForApproval" formmethod="post" /><br /><br />
 
-                                    <a asp-action="ReceiveRequestAndReject" asp-route-id="@Model.OrderHeader.Id"
-                                       class="btn btn-primary form-control">Reject Order</a>
+                                    <a asp-area="CorpComm" asp-controller="Order" asp-action="ReceiveRequestAndReject"
+                                       asp-route-id="@Model.OrderHeader.Id" class="btn btn-primary form-control">Reject Order</a>
                                 }
+
                                 @if (Model.OrderHeader.OrderStatus == SD.StatusForApproval)
                                 {
-                                    @*<input type="submit" value="Ship Order" onclick="validateInput()"
-                                        class="btn btn-primary form-control" formaction="/Admin/Order/ShipOrder" formmethod="post" />*@
-                                    <a asp-action="ProcessOrderAndForDelivery" asp-route-id="@Model.OrderHeader.Id"
-                                       class="btn btn-primary form-control">Prepare Item</a>
+                                    <input value="Prepare Item" onclick="return validateInput()" class="btn btn-primary form-control" type="submit"
+                                           formaction="/CorpComm/Order/ProcessOrderAndForDelivery" formmethod="post" />
                                 }
                             }
-                            @*else
-                                {
-                                    <label class="btn btn-primary form-control">@Model.OrderHeader.OrderStatus</label>
-                                }*@
 
                             @if (!User.IsInRole(SD.CIOAdmin))
                             {
@@ -231,12 +182,37 @@
 </form>
 @section Scripts {
     <script>
+
+        function validateInput() {
+            var shippingdate = document.getElementById('shippingDate').value;
+            var pickuppoint = document.getElementById('pickupPoint').value;
+
+            if (shippingdate.toString() == '') {
+                swal("Error", "Please set a Shipping Date")
+                return false;
+            } else {
+                if (pickuppoint.toString() == '-Drop-off Point') {
+                    swal("Error", "Please set a Drop-off Point");
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        }
+
         $(document).ready(function () {
+
             var shippingDate = document.getElementById("shippingDate");
+            var today = new Date().toString();
 
             if (shippingDate.value == '1/1/0001') {
                 shippingDate.value = "";
             }
+
+            if (shippingDate.value == '0001-01-01') {
+                shippingDate.value = "";
+            }
+
         });
     </script>
 }

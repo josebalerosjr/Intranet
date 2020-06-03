@@ -139,7 +139,7 @@ namespace Intranet.Areas.CorpComm.Controllers
             ShoppingCartVM.OrderHeader.LoginUser = ViewBag.DisplayName;
             ShoppingCartVM.OrderHeader.OrderDate = DateTime.Now;
             string UserEmail =  User.Identity.Name.Substring(7);
-            ShoppingCartVM.OrderHeader.TrackingNumber = UserEmail + "@pttphils.com";
+            ShoppingCartVM.OrderHeader.RequestorEmail = UserEmail + "@pttphils.com";
 
             _unitOfWork.OrderHeader.Add(ShoppingCartVM.OrderHeader);
             _unitOfWork.Save();

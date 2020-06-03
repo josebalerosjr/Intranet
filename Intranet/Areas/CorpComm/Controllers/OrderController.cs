@@ -1,20 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.DirectoryServices.AccountManagement;
-using System.Linq;
-using System.Threading.Tasks;
-using Intranet.Classes;
+﻿using Intranet.Classes;
 using Intranet.DataAccess.Repository.IRepository;
 using Intranet.Models.CorpComm;
 using Intranet.Models.ViewModels.CorpComm;
 using Intranet.Utilities;
 using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Options;
 using Microsoft.Extensions.Options;
 using MimeKit;
+using System;
+using System.Collections.Generic;
+using System.DirectoryServices.AccountManagement;
+using System.IO;
+using System.Linq;
 
 namespace Intranet.Areas.CorpComm.Controllers
 {
@@ -24,20 +23,26 @@ namespace Intranet.Areas.CorpComm.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly AppSettings _appSettings;
-        private readonly EmailSender _emailSender;
         public readonly EmailOptions _emailOptions;
+        private readonly IWebHostEnvironment _hostEnvironment;
 
         [BindProperty]
-        public OrderDetailsVM OrderVM { get; set; }  
+        public OrderDetailsVM OrderVM { get; set; }
 
-        [BindProperty]
-        public ShoppingCartVM ShoppingCartVM { get; set; }
+        //[BindProperty]
+        //public ShoppingCartVM ShoppingCartVM { get; set; }
 
-        public OrderController(IUnitOfWork unitOfWork, IOptions<AppSettings> appSettings, IOptions<EmailOptions> emailOptions)
+        public OrderController(
+            IUnitOfWork unitOfWork,
+            IOptions<AppSettings> appSettings,
+            IOptions<EmailOptions> emailOptions,
+            IWebHostEnvironment hostEnvironment
+        )
         {
             _unitOfWork = unitOfWork;
             _appSettings = appSettings.Value;
             _emailOptions = emailOptions.Value;
+            _hostEnvironment = hostEnvironment;
         }
 
         public IActionResult Index()
@@ -55,31 +60,14 @@ namespace Intranet.Areas.CorpComm.Controllers
             return View(OrderVM);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         [Authorize(Roles = SD.CIOAdmin)]
-        public IActionResult ReceiveRequestAndForApproval(int id)
+        public IActionResult ReceiveRequestAndForApproval()
         {
-            OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == id);
+            OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == OrderVM.OrderHeader.Id);
             orderHeader.OrderStatus = SD.StatusForApproval;
-
-            string mailFrom = orderHeader.TrackingNumber;
-
-                var message = new MimeMessage();
-                var builder = new BodyBuilder();
-                message.From.Add(new MailboxAddress(_emailOptions.AuthEmail));
-                message.To.Add(new MailboxAddress(mailFrom));
-                message.Subject = "Collateral Request Approval";
-                builder.HtmlBody =  "<p>Request No." + orderHeader.Id.ToString() + " Has been approved!</p> <br />" +
-                                    "You can check the order details and status, <a href='http://localhost:44301/CorpComm/Order/Details/" + orderHeader.Id + "'>Click here.</a>";
-                message.Body = builder.ToMessageBody();
-                using (var client = new SmtpClient())
-                {
-                    client.Connect(_emailOptions.SMTPHostClient, _emailOptions.SMTPHostPort);
-                    //client.AuthenticationMechanisms.Remove("XOAUTH2");
-                    // Note: only needed if the SMTP server requires authentication
-                    client.Authenticate(_emailOptions.AuthEmail, _emailOptions.AuthPassword);
-                    client.Send(message);
-                    client.Disconnect(true);
-                }
+            orderHeader.RequestType = OrderVM.OrderHeader.RequestType;
 
             _unitOfWork.Save();
             return RedirectToAction(nameof(Index));
@@ -91,35 +79,68 @@ namespace Intranet.Areas.CorpComm.Controllers
             OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == id);
             orderHeader.OrderStatus = SD.StatusRejected;
 
-            string mailFrom = orderHeader.TrackingNumber;
-
-            var message = new MimeMessage();
-            var builder = new BodyBuilder();
-            message.From.Add(new MailboxAddress(_emailOptions.AuthEmail));
-            message.To.Add(new MailboxAddress(mailFrom));
-            message.Subject = "Collateral Request Rejected";
-            builder.HtmlBody = "<p>Request No." + orderHeader.Id.ToString() + " Has been Rejected!</p>" +
-                                "<p> You can check the order details and status, <a href='http://localhost:44301/CorpComm/Order/Details/" + orderHeader.Id + "'>Click here.</a> </p>";
-            message.Body = builder.ToMessageBody();
-            using (var client = new SmtpClient())
-            {
-                client.Connect(_emailOptions.SMTPHostClient, _emailOptions.SMTPHostPort, _emailOptions.SMTPHostBool);
-
-                // Note: only needed if the SMTP server requires authentication
-                client.Authenticate(_emailOptions.AuthEmail, _emailOptions.AuthPassword);
-                client.Send(message);
-                client.Disconnect(true);
-            }
+            // email process here
 
             _unitOfWork.Save();
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         [Authorize(Roles = SD.CIOAdmin)]
-        public IActionResult ProcessOrderAndForDelivery(int id)
+        public IActionResult ProcessOrderAndForDelivery()
         {
-            OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == id);
+            OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == OrderVM.OrderHeader.Id);
             orderHeader.OrderStatus = SD.StatusForDelivery;
+
+            orderHeader.ShippingDate = OrderVM.OrderHeader.ShippingDate;
+            orderHeader.PickUpPoints = OrderVM.OrderHeader.PickUpPoints;
+
+            #region EmailTemplate
+            var PathToFile = _hostEnvironment.WebRootPath + Path.DirectorySeparatorChar.ToString()
+                + "Templates" + Path.DirectorySeparatorChar.ToString() + "EmailTemplates"
+                + Path.DirectorySeparatorChar.ToString() + "Email_Notifications.html";
+
+            var subject = "For delivery";
+            var datetime = String.Format(DateTime.Now.ToShortDateString());
+            var OrderId = OrderVM.OrderHeader.Id;
+            var ShippingDate = OrderVM.OrderHeader.ShippingDate.ToShortDateString();
+            var PickUpPoints = OrderVM.OrderHeader.PickUpPoints;
+            var LoginUser = OrderVM.OrderHeader.LoginUser;
+            var RequestorEmail = OrderVM.OrderHeader.RequestorEmail;
+
+            string HtmlBody = "";
+
+            using (StreamReader streamReader = System.IO.File.OpenText(PathToFile))
+            {
+                HtmlBody = streamReader.ReadToEnd();
+            }
+
+            // {0} : for Delivery
+            // {1} : DateTime
+            // {2} : Request Number
+            // {3} : Shipping Date
+            // {4} : Drop-off Location
+            // {5} : Requestor Name
+            // {6} : Email
+
+            string messageBody = string.Format(HtmlBody,
+                subject,
+                datetime,
+                OrderId,
+                ShippingDate,
+                PickUpPoints,
+                LoginUser,
+                RequestorEmail
+                );
+            #endregion
+
+            EmailSender(
+                RequestorEmail,
+                subject,
+                messageBody
+                );
+
             _unitOfWork.Save();
             return RedirectToAction(nameof(Index));
         }
@@ -164,21 +185,27 @@ namespace Intranet.Areas.CorpComm.Controllers
                 case "requestsent":
                     orderHeadersList = orderHeadersList.Where(o => o.OrderStatus == SD.StatusRequestSent);
                     break;
+
                 case "forapproval":
                     orderHeadersList = orderHeadersList.Where(o => o.OrderStatus == SD.StatusForApproval);
                     break;
+
                 case "fordelivery":
                     orderHeadersList = orderHeadersList.Where(o => o.OrderStatus == SD.StatusForDelivery);
                     break;
+
                 case "foracknowledge":
                     orderHeadersList = orderHeadersList.Where(o => o.OrderStatus == SD.StatusForAcknowledgement);
                     break;
+
                 case "forrating":
                     orderHeadersList = orderHeadersList.Where(o => o.OrderStatus == SD.StatusForRating);
                     break;
+
                 case "rejected":
                     orderHeadersList = orderHeadersList.Where(o => o.OrderStatus == SD.StatusRejected);
                     break;
+
                 default:
                     break;
             }
@@ -202,6 +229,7 @@ namespace Intranet.Areas.CorpComm.Controllers
                 ViewBag.DisplayName = user.GetDisplayname();
             }
         }
+
         public void CartCount()
         {
             string UserCart = ViewBag.DisplayName;
@@ -215,8 +243,32 @@ namespace Intranet.Areas.CorpComm.Controllers
 
         #endregion UserDetails function
 
-        #region SendMail
-        
-        #endregion
+        #region EmailSender
+
+        private void EmailSender(
+            string RequestorEmail,
+            string subject,
+            string messageBody
+        )
+        {
+            var message = new MimeMessage();
+            var builder = new BodyBuilder();
+            message.From.Add(new MailboxAddress(_emailOptions.AuthEmail));
+            message.To.Add(new MailboxAddress(RequestorEmail));
+            message.Subject = subject;
+            builder.HtmlBody = messageBody;
+            message.Body = builder.ToMessageBody();
+            using (var client = new SmtpClient())
+            {
+                client.Connect(_emailOptions.SMTPHostClient, _emailOptions.SMTPHostPort, _emailOptions.SMTPHostBool);
+
+                // Note: only needed if the SMTP server requires authentication
+                client.Authenticate(_emailOptions.AuthEmail, _emailOptions.AuthPassword);
+                client.Send(message);
+                client.Disconnect(true);
+            }
+        }
+
+        #endregion EmailSender
     }
 }

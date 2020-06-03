@@ -7,10 +7,15 @@ namespace Intranet.Utilities
 {
     public static class SD
     {
+
+        #region CorpComm
+        // Connection String
         public static string ConString = "Server=(LocalDb)\\MSSQLLocalDB;Database=CorpComm;User Id=sa;Password=mis@2019;MultipleActiveResultSets=True";
 
+        // Cart Session
         public const string ssShoppingCart = "Shopping Cart Session";
 
+        // Request Status
         public const string StatusRequestSent = "Request Sent";
         public const string StatusForApproval = "For Approval";
         public const string StatusForDelivery = "For Delivery";
@@ -19,14 +24,28 @@ namespace Intranet.Utilities
         public const string StatusRejected = "Rejected";
         public const string StatusCompleted = "Completed";
 
-        public const string CIOAdmin = "Office of the Chief Information Officer";
+        // Drop-Off Location
+        public const string DO_Edsa = "EDSA Vet";
+        public const string DO_LKG = "LKG Makati";
 
-        public static int GetPriceBaseOnQuantity(int quantity, int price) 
-        {
-            int total = 0;
-            total = price * quantity;
-            return total;
-        }
+        // Request type
+        public const string ReqUrgent = "Urgent";
+        public const string ReqRegular = "Regular";
+
+        #endregion
+
+        #region MIS/ICT
+        public const string CIOAdmin = "Office of the Chief Information Officer";
+        #endregion
+
+        //public static int GetPriceBaseOnQuantity(int quantity, int price) 
+        //{
+        //    int total = 0;
+        //    total = price * quantity;
+        //    return total;
+        //}
+
+        #region RawHtmlConverter
         public static string ConvertToRawHtml(String source)
         {
             char[] array = new char[source.Length];
@@ -54,7 +73,6 @@ namespace Intranet.Utilities
             }
             return new string(array, 0, arrayIndex);
         }
-
-        //public const string EmailFrom = "jose.baleros@pttphils.com";
+        #endregion
     }
 }

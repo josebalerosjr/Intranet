@@ -4,14 +4,16 @@ using Intranet.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Intranet.DataAccess.Data.Migrations.CorpComm
 {
     [DbContext(typeof(CorpCommDbContext))]
-    partial class CorpCommDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200602074501_AddPickUpPointAndAddReqEmail")]
+    partial class AddPickUpPointAndAddReqEmail
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -297,9 +299,6 @@ namespace Intranet.DataAccess.Data.Migrations.CorpComm
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PickUpPoints")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RequestType")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RequestorEmail")

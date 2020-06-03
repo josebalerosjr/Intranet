@@ -13,12 +13,17 @@ namespace Intranet.Models.CorpComm
 
         [Required]
         public DateTime OrderDate { get; set; }
+
         [Required]
-        public DateTime ShippingDate { get; set; }
+        [DataType(DataType.DateTime)]
+        public DateTime ShippingDate { get; set; } = DateTime.Now;
+
         [Required]
         public int OrderTotal { get; set; }
+        public string TrackingNumber { get; set; }
         public string RequestorEmail { get; set; }
-        public string PicupPoint { get; set; }
+        public string RequestType { get; set; }
+        public string PickUpPoints { get; set; }
         public bool? ItemReceipt { get; set; }
         public string OrderStatus { get; set; }
         public string PaymentStatus { get; set; }
