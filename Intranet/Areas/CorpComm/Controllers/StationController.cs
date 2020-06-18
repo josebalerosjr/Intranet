@@ -1,12 +1,12 @@
 ﻿using Intranet.Classes;
+using Intranet.DataAccess.Repository.IRepository;
 using Intranet.Models.CorpComm;
 using Intranet.Models.ViewModels.CorpComm;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
 using System.DirectoryServices.AccountManagement;
 using System.Linq;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Intranet.DataAccess.Repository.IRepository;
 
 namespace Intranet.Areas.CorpComm.Controllers
 {
@@ -35,7 +35,8 @@ namespace Intranet.Areas.CorpComm.Controllers
             StationVM stationVM = new StationVM()
             {
                 Station = new Station(),
-                StationTypeList = _unitOfWork.StationType.GetAll().Select(i => new SelectListItem {
+                StationTypeList = _unitOfWork.StationType.GetAll().Select(i => new SelectListItem
+                {
                     Text = i.Name,
                     Value = i.Id.ToString()
                 })

@@ -6,6 +6,7 @@ using Intranet.DataAccess.Data;
 using Intranet.DataAccess.Repository;
 using Intranet.DataAccess.Repository.CorpComm;
 using Intranet.DataAccess.Repository.IRepository;
+using Intranet.DataAccess.Repository.IRepository.CorpComm;
 using Intranet.Models;
 using Intranet.Utilities;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -184,8 +185,9 @@ namespace Intranet
                     .AddNToastNotifyToastr()
                     .AddControllersAsServices();
 
-            //services.AddScoped<IGenerateDailyCriticalItemReport, GenerateDailyCriticalItemReport>();
-            //services.AddScoped<IGenerateCalibrationDate, GenerateCalibrationDate>();
+            services.AddScoped<IGenerateDailyCriticalItemReport, GenerateDailyCriticalItemReport>();
+            services.AddScoped<IGenerateCalibrationDate, GenerateCalibrationDate>();
+            services.AddScoped<IMondayReminder, MondayReminder>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             //services.AddSingleton<EmailSender>();
@@ -220,13 +222,17 @@ namespace Intranet
             app.UseHangfireDashboard();
             app.UseHangfireServer();
 
-            //RecurringJob.AddOrUpdate<IGenerateDailyCriticalItemReport>(
-            //    critItem => critItem.SendEmail(), Cron.Daily
-            //);
+            RecurringJob.AddOrUpdate<IGenerateDailyCriticalItemReport>(
+                critItem => critItem.SendEmail(), Cron.Daily
+            );
 
-            //RecurringJob.AddOrUpdate<IGenerateCalibrationDate>(
-            //    CalDateItem => CalDateItem.SendMail(), Cron.Daily
-            //);
+            RecurringJob.AddOrUpdate<IGenerateCalibrationDate>(
+                CalDateItem => CalDateItem.SendMail(), Cron.Daily
+            );
+
+            RecurringJob.AddOrUpdate<IMondayReminder>(
+                MondayReminder => MondayReminder.SendEmail(), Cron.Daily
+            ); 
 
             app.UseRouting();
             app.UseSession();

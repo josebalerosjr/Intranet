@@ -9,6 +9,7 @@ namespace Intranet.Models.ViewModels.CorpComm
     public class ShoppingCartVM
     {
         public IEnumerable<ShoppingCart> ListCart { get; set; }
+        public IEnumerable<OrderHeader> ListOrderHeader { get; set; }
         public IEnumerable<SelectListItem> EventList { get; set; }
         public OrderHeader OrderHeader { get; set; }
         public Event Event { get; set; }

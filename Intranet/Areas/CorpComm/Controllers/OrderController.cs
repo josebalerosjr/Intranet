@@ -47,6 +47,8 @@ namespace Intranet.Areas.CorpComm.Controllers
 
         public IActionResult Index()
         {
+            UserDetails();
+            CartCount();
             return View();
         }
 
@@ -60,6 +62,7 @@ namespace Intranet.Areas.CorpComm.Controllers
             return View(OrderVM);
         }
 
+        // Step 01
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = SD.CIOAdmin)]
@@ -79,12 +82,11 @@ namespace Intranet.Areas.CorpComm.Controllers
             OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == id);
             orderHeader.OrderStatus = SD.StatusRejected;
 
-            // email process here
-
             _unitOfWork.Save();
             return RedirectToAction(nameof(Index));
         }
 
+        // Step 02
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = SD.CIOAdmin)]
@@ -97,9 +99,10 @@ namespace Intranet.Areas.CorpComm.Controllers
             orderHeader.PickUpPoints = OrderVM.OrderHeader.PickUpPoints;
 
             #region EmailTemplate
+
             var PathToFile = _hostEnvironment.WebRootPath + Path.DirectorySeparatorChar.ToString()
                 + "Templates" + Path.DirectorySeparatorChar.ToString() + "EmailTemplates"
-                + Path.DirectorySeparatorChar.ToString() + "Email_Notifications.html";
+                + Path.DirectorySeparatorChar.ToString() + "Email_Notifications_ForDelivery.html";
 
             var subject = "For delivery";
             var datetime = String.Format(DateTime.Now.ToShortDateString());
@@ -133,7 +136,8 @@ namespace Intranet.Areas.CorpComm.Controllers
                 LoginUser,
                 RequestorEmail
                 );
-            #endregion
+
+            #endregion EmailTemplate
 
             EmailSender(
                 RequestorEmail,
@@ -145,10 +149,50 @@ namespace Intranet.Areas.CorpComm.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult ReceiveItemAndForAcknowledgement(int id)
+        // Step 03
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult ReceiveItemAndForAcknowledgement()
         {
-            OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == id);
+            OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == OrderVM.OrderHeader.Id);
             orderHeader.OrderStatus = SD.StatusForAcknowledgement;
+
+            #region EmailTemplate
+
+            var PathToFile = _hostEnvironment.WebRootPath + Path.DirectorySeparatorChar.ToString()
+                + "Templates" + Path.DirectorySeparatorChar.ToString() + "EmailTemplates"
+                + Path.DirectorySeparatorChar.ToString() + "Email_Notifications_ForAcknowledment.html";
+
+            var subject = "For Acknowledgement";
+            var datetime = String.Format(DateTime.Now.ToShortDateString());
+            var LoginUser = OrderVM.OrderHeader.LoginUser;
+            var RequestorEmail = OrderVM.OrderHeader.RequestorEmail;
+
+            string HtmlBody = "";
+
+            using (StreamReader streamReader = System.IO.File.OpenText(PathToFile))
+            {
+                HtmlBody = streamReader.ReadToEnd();
+            }
+
+            // {0} : for Delivery
+            // {1} : DateTime
+            // {2} : Request Number
+
+            string messageBody = string.Format(HtmlBody,
+                subject,
+                datetime,
+                LoginUser
+                );
+
+            #endregion EmailTemplate
+
+            EmailSender(
+                RequestorEmail,
+                subject,
+                messageBody
+                );
+
             _unitOfWork.Save();
             return RedirectToAction(nameof(Index));
         }
@@ -157,6 +201,22 @@ namespace Intranet.Areas.CorpComm.Controllers
         {
             OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == id);
             orderHeader.OrderStatus = SD.StatusForRating;
+
+            _unitOfWork.Save();
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult OrderRating()
+        {
+            OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == OrderVM.OrderHeader.Id);
+            orderHeader.OrderStatus = SD.StatusCompleted;
+
+            //string strRate = OrderVM.OrderHeader.OrderRating;
+
+            orderHeader.OrderRating = OrderVM.OrderHeader.OrderRating;
+
             _unitOfWork.Save();
             return RedirectToAction(nameof(Index));
         }

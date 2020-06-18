@@ -6,14 +6,12 @@ using Intranet.Utilities;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.DirectoryServices.AccountManagement;
 using System.IO;
 using System.Linq;
-using System.Security.Claims;
 
 namespace Intranet.Areas.CorpComm.Controllers
 {
@@ -232,44 +230,59 @@ namespace Intranet.Areas.CorpComm.Controllers
             }
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Withdraw(int id)
-        {
-            //ViewBag.qty = quantity;
-            var collateral = _unitOfWork.Collateral.GetAll(u => u.Id == id);
 
-            _unitOfWork.Save();
-            //var itemreg = _context.ItemRegs.Find(itemReg.ItemId);
-            //itemreg.Qty -= ViewBag.qty;
-            //itemReg.UserName = ViewBag.DisplayName;
-            //itemreg.UserIP = HttpContext.Connection.RemoteIpAddress.ToString();
-            //itemreg.UserDate = DateTime.Now.ToString("MM/dd/yyyy");
-            //return RedirectToAction(nameof(Index));
-            //}
-            return View();
+
+        public IActionResult Transfer(int? id)
+        {
+            UserDetails();
+            CartCount();
+
+            CollateralVM collateralVM = new CollateralVM()
+            {
+                LocationList = _unitOfWork.Location.GetAll().Select(i => new SelectListItem
+                {
+                    Text = i.Name,
+                    Value = i.Id.ToString()
+                })
+            };
+
+            collateralVM.Collateral = _unitOfWork.Collateral.Get(id.GetValueOrDefault());
+            SD.collateralName = collateralVM.Collateral.Location.Name;
+            SD.collateralLoc = collateralVM.Collateral.Name;
+            SD.collateralLocId = collateralVM.Collateral.LocationId;
+            return View(collateralVM);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AddStcoks()
+
+        public IActionResult Transfer(CollateralVM collateralVM, int qtyfrom)
         {
-            //ViewBag.qty = quantity;
-            ////if (ModelState.IsValid) {
-            ////var itemreg = _context.ItemRegs.Find(itemReg.ItemId);
-            ////itemreg.Qty -= ViewBag.qty;
-            //itemReg.UserName = ViewBag.DisplayName;
-            //itemreg.UserIP = HttpContext.Connection.RemoteIpAddress.ToString();
-            //itemreg.UserDate = DateTime.Now.ToString("MM/dd/yyyy");
-            ////await _context.SaveChangesAsync();
-            //return RedirectToAction(nameof(Index));
-            //}
-            return View(/*itemReg*/);
+            Collateral objMinusItem = _unitOfWork.Collateral.Get(collateralVM.Collateral.Id);
+            objMinusItem.Count -= qtyfrom;
+
+            if (SD.collateralName == SD.DO_Edsa)
+            {
+                Collateral collateral = _unitOfWork.Collateral.GetFirstOrDefault(c => c.Name == SD.collateralLoc && c.LocationId != SD.collateralLocId);
+                //collateral = _unitOfWork.Collateral.Get();
+                collateral.Count += qtyfrom;
+                _unitOfWork.Save();
+                
+            }
+
+            if (SD.collateralName == SD.DO_LKG)
+            {
+                Collateral collateral = _unitOfWork.Collateral.GetFirstOrDefault(c => c.Name == SD.collateralLoc && c.LocationId != SD.collateralLocId);
+                collateral.Count += qtyfrom;
+                _unitOfWork.Save();
+            }
+
+            return RedirectToAction(nameof(Index));
         }
 
         #region API CALLS
 
-        [HttpGet]
+            [HttpGet]
         public IActionResult GetAll()
         {
             CartCount();

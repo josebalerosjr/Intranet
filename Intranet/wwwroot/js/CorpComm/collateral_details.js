@@ -1,13 +1,10 @@
-﻿$(document).ready(function () {
-    $('#itemCount').keyup(function () {
-        var itemcount = parseInt($('#itemCount').val());
-        var itemqty = parseInt($('#itemQty').val());
+﻿function pointsCheckers() {
+    var pointschecker = document.getElementById('pointsChecker').value;
 
-        if (itemqty >= itemcount) {
-            $('#add2cart').attr('disabled', false);
-        } else {
-            swal("Error","Count should not be NULL or exeed available quantity."); 
-            $('#add2cart').attr('disabled', true);
-        }
-    });
-})
+    if (pointschecker.toString() == '-Points') {
+        swal("Error", "Please select a number");
+        return false;
+    } else {
+        return true;
+    }
+}

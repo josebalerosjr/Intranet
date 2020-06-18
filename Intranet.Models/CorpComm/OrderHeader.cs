@@ -15,8 +15,7 @@ namespace Intranet.Models.CorpComm
         public DateTime OrderDate { get; set; }
 
         [Required]
-        [DataType(DataType.DateTime)]
-        public DateTime ShippingDate { get; set; } = DateTime.Now;
+        public DateTime ShippingDate { get; set; }
 
         [Required]
         public int OrderTotal { get; set; }
@@ -30,5 +29,6 @@ namespace Intranet.Models.CorpComm
         public DateTime PaymentDate { get; set; }
         public DateTime PaymentDueDate { get; set; }
         public string TransactionId { get; set; }
+        public int OrderRating { get; set; }
     }
 }

@@ -29,6 +29,14 @@
                         <div class="carousel-item @active">
                             <img class="d-block w-100"
                                  src="@Html.DisplayFor(modelItem => item.ImageLink)">
+                            <div class="carousel-caption d-none d-md-block"
+                                 style="background: rgba(0,0,0,.3);">
+                                <h5 style="color: white">Sample Title</h5>
+                                <p style="color: white">
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras sollicitudin ultricies ex, imperdiet volutpat erat ornare eu.
+                                    <a asp-action="ReadMore" target="_blank"> <b>Read more</b></a>
+                                </p>
+                            </div>
                         </div>
                     }
                 }

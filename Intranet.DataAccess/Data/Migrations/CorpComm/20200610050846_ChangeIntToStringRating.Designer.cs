@@ -4,14 +4,16 @@ using Intranet.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Intranet.DataAccess.Data.Migrations.CorpComm
 {
     [DbContext(typeof(CorpCommDbContext))]
-    partial class CorpCommDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200610050846_ChangeIntToStringRating")]
+    partial class ChangeIntToStringRating
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -59,6 +61,9 @@ namespace Intranet.DataAccess.Data.Migrations.CorpComm
                         .HasColumnType("int");
 
                     b.Property<int>("Count")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CritCount")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
@@ -278,8 +283,8 @@ namespace Intranet.DataAccess.Data.Migrations.CorpComm
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("OrderRating")
-                        .HasColumnType("int");
+                    b.Property<string>("OrderRating")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("OrderStatus")
                         .HasColumnType("nvarchar(max)");

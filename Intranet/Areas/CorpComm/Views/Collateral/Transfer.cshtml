@@ -1,0 +1,43 @@
+﻿@model Intranet.Models.ViewModels.CorpComm.CollateralVM
+@using Intranet.Utilities
+
+@{
+    ViewData["Title"] = "Withdraw";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var loc = @Model.Collateral.Location.Name;
+}
+
+<h4 class="display-4">Transfer of stock</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Transfer">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Collateral.Id" />
+            <div class="form-group">
+                @if (loc == SD.DO_LKG)
+                {
+                    <label class="control-label"><h5>Transfer From <strong>LKG Makati</strong>  to <strong>EDSA Vet</strong> </h5></label><br />
+                }
+                else
+                {
+                    <label class="control-label"><h5>Transfer From <strong>EDSA Vet</strong> to <strong>LKG Makati</strong></h5></label><br />
+                }
+                <label class="control-label"><h5> Count: <strong> @Model.Collateral.Count</strong></h5></label><br />
+                <input name="qtyfrom" class="form-control" /> 
+            </div>
+            <hr />
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

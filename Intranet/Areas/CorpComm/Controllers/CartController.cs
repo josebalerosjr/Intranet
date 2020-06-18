@@ -8,8 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics.Tracing;
 using System.DirectoryServices.AccountManagement;
 using System.Linq;
 
@@ -46,7 +44,6 @@ namespace Intranet.Areas.CorpComm.Controllers
                     Text = i.Name,
                     Value = i.BudgetLimit.ToString(),
                 })
-
             };
 
             ShoppingCartVM.OrderHeader.OrderTotal = 0;
@@ -104,7 +101,7 @@ namespace Intranet.Areas.CorpComm.Controllers
             ShoppingCartVM = new ShoppingCartVM()
             {
                 OrderHeader = new OrderHeader(),
-                ListCart = _unitOfWork.ShoppingCart.GetAll(c=>c.LoginUser == loginUser, includeProperties: "Collateral,Event")
+                ListCart = _unitOfWork.ShoppingCart.GetAll(c => c.LoginUser == loginUser, includeProperties: "Collateral,Event")
             };
             ShoppingCartVM.OrderHeader.LoginUser = _unitOfWork.ShoppingCart.GetFirstOrDefault(c => c.LoginUser == loginUser, includeProperties: "Event").ToString();
 
@@ -117,11 +114,18 @@ namespace Intranet.Areas.CorpComm.Controllers
             return View(ShoppingCartVM);
         }
 
+        public IActionResult PendingOrder() {
+            UserDetails();
+            CartCount();
+            return View();
+        }
+
         [HttpPost]
         [ActionName("Summary")]
         [ValidateAntiForgeryToken]
         public IActionResult SummaryPost()
         {
+
             UserDetails();
             CartCount();
             string loginUser = ViewBag.DisplayName;
@@ -129,45 +133,60 @@ namespace Intranet.Areas.CorpComm.Controllers
             ShoppingCartVM = new ShoppingCartVM()
             {
                 OrderHeader = new OrderHeader(),
-                ListCart = _unitOfWork.ShoppingCart.GetAll(c => c.LoginUser == loginUser, includeProperties: "Collateral,Event")
+                ListCart = _unitOfWork.ShoppingCart.GetAll(c => c.LoginUser == loginUser, includeProperties: "Collateral,Event"),
+                ListOrderHeader = _unitOfWork.OrderHeader.GetAll(c => c.LoginUser == loginUser && 
+                                    (c.OrderStatus.Contains(SD.StatusForAcknowledgement) || c.OrderStatus.Contains(SD.StatusForRating)))
             };
 
-            ShoppingCartVM.ListCart = _unitOfWork.ShoppingCart.GetAll(c => c.LoginUser == loginUser);
+            var pendingCount = 0;
 
-            //ShoppingCartVM.OrderHeader.PaymentStatus = SD.PaymentStatusPending;
-            ShoppingCartVM.OrderHeader.OrderStatus = SD.StatusRequestSent;
-            ShoppingCartVM.OrderHeader.LoginUser = ViewBag.DisplayName;
-            ShoppingCartVM.OrderHeader.OrderDate = DateTime.Now;
-            string UserEmail =  User.Identity.Name.Substring(7);
-            ShoppingCartVM.OrderHeader.RequestorEmail = UserEmail + "@pttphils.com";
-
-            _unitOfWork.OrderHeader.Add(ShoppingCartVM.OrderHeader);
-            _unitOfWork.Save();
-            foreach (var item in ShoppingCartVM.ListCart) 
+            foreach (var stat in ShoppingCartVM.ListOrderHeader)
             {
-                OrderDetails orderDetails = new OrderDetails()
-                {
-                    CollateralId = item.CollateralId,
-                    OrderId = ShoppingCartVM.OrderHeader.Id,
-                    Price = item.Collateral.Price,
-                    Count = item.Count
-                };
-
-                ShoppingCartVM.OrderHeader.OrderTotal += orderDetails.Count * orderDetails.Price;
-                _unitOfWork.OrderDetails.Add(orderDetails);
+                pendingCount = ShoppingCartVM.ListOrderHeader.Count();
             }
-            _unitOfWork.ShoppingCart.RemoveRange(ShoppingCartVM.ListCart);
-            _unitOfWork.Save();
-            HttpContext.Session.SetInt32(SD.ssShoppingCart, 0);
 
-            return RedirectToAction("OrderConfirmation","Cart", new { id = ShoppingCartVM.OrderHeader.Id});
+            if (pendingCount != 0)
+            {
+                return RedirectToAction(nameof(PendingOrder));
+            }
+            else
+            {
+                ShoppingCartVM.ListCart = _unitOfWork.ShoppingCart.GetAll(c => c.LoginUser == loginUser);
+
+                ShoppingCartVM.OrderHeader.OrderStatus = SD.StatusRequestSent;
+                ShoppingCartVM.OrderHeader.LoginUser = ViewBag.DisplayName;
+                ShoppingCartVM.OrderHeader.OrderDate = DateTime.Now;
+
+                string UserEmail = User.Identity.Name.Substring(7);
+                ShoppingCartVM.OrderHeader.RequestorEmail = UserEmail + "@pttphils.com";
+
+                _unitOfWork.OrderHeader.Add(ShoppingCartVM.OrderHeader);
+                _unitOfWork.Save();
+                foreach (var item in ShoppingCartVM.ListCart)
+                {
+                    OrderDetails orderDetails = new OrderDetails()
+                    {
+                        CollateralId = item.CollateralId,
+                        OrderId = ShoppingCartVM.OrderHeader.Id,
+                        Price = item.Collateral.Price,
+                        Count = item.Count
+                    };
+
+                    ShoppingCartVM.OrderHeader.OrderTotal += orderDetails.Count * orderDetails.Price;
+                    _unitOfWork.OrderDetails.Add(orderDetails);
+                }
+                _unitOfWork.ShoppingCart.RemoveRange(ShoppingCartVM.ListCart);
+                _unitOfWork.Save();
+                HttpContext.Session.SetInt32(SD.ssShoppingCart, 0);
+
+                return RedirectToAction("OrderConfirmation", "Cart", new { id = ShoppingCartVM.OrderHeader.Id });
+            }
         }
 
         public IActionResult OrderConfirmation(int id)
         {
             return View(id);
         }
-
 
         #region UserDetails function
 
@@ -188,7 +207,7 @@ namespace Intranet.Areas.CorpComm.Controllers
             string UserCart = ViewBag.DisplayName;
             if (UserCart != null)
             {
-                var count = _unitOfWork.ShoppingCart.GetAll(c => c.LoginUser == UserCart,includeProperties: "Collateral").ToList().Count();
+                var count = _unitOfWork.ShoppingCart.GetAll(c => c.LoginUser == UserCart, includeProperties: "Collateral").ToList().Count();
                 HttpContext.Session.SetObject(SD.ssShoppingCart, count);
                 ViewBag.ItemCount = count;
             }

@@ -36,7 +36,7 @@ namespace Intranet.Classes
                 var builder = new BodyBuilder();
                 string msgFromDB = string.Empty;
 
-                message.From.Add(new MailboxAddress(_appSettings.SenderName, _appSettings.AuthEmail));
+                message.From.Add(new MailboxAddress(_appSettings.AuthEmail));
                 message.To.Add(new MailboxAddress(invemailadd));
 
                 var items = _context.ItemRegs;      //  TODO: gets the list of ItemRegs in database and put in the items variable

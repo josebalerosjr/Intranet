@@ -7,10 +7,10 @@ namespace Intranet.Utilities
 {
     public static class SD
     {
-
         #region CorpComm
         // Connection String
         public static string ConString = "Server=(LocalDb)\\MSSQLLocalDB;Database=CorpComm;User Id=sa;Password=mis@2019;MultipleActiveResultSets=True";
+        //public static string ConString = "Server=192.168.10.43;Database=CorpComm;User Id=sa;Password=mis@2019;MultipleActiveResultSets=True";
 
         // Cart Session
         public const string ssShoppingCart = "Shopping Cart Session";
@@ -27,6 +27,11 @@ namespace Intranet.Utilities
         // Drop-Off Location
         public const string DO_Edsa = "EDSA Vet";
         public const string DO_LKG = "LKG Makati";
+
+        // item value
+        public static string collateralLoc;
+        public static string collateralName;
+        public static int collateralLocId;
 
         // Request type
         public const string ReqUrgent = "Urgent";

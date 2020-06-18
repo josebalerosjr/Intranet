@@ -34,12 +34,8 @@ function loadDataTable() {
                                 <a onclick=Delete("/CorpComm/Collateral/Delete/${data}") class="text-danger" style="cursor:pointer">
                                     <i class="fas fa-trash-alt"></i> 
                                 </a>
-                                <!--<a onclick=Delete("/CorpComm/Collateral/Withdraw/${data}") class="text-warning" style="cursor:pointer">
-                                    <i class="fas fa-cart-arrow-down"></i>
-                                </a>
-                                <a onclick=Delete("/CorpComm/Collateral/AddStocks/${data}") class="text-info" style="cursor:pointer">
-                                    <i class="fas fa-cart-plus"></i>
-                                </a>-->
+                                <a href="/CorpComm/Collateral/Transfer/${data}" asp-route-id="${data}" class="text-success" style="cursor:pointer">
+                                    <i class="fas fa-edit"></i> 
                             </div>
                            `;
                 }, "width": "7%"

@@ -48,10 +48,6 @@ namespace Intranet.Models.CorpComm
         public string ImgUrl { get; set; }
 
         [Required]
-        [Range(1, 1000000)]
-        public int CritCount { get; set; }
-
-        [Required]
         [DisplayName("isActive")]
         public bool isActive { get; set; }
 

@@ -13,9 +13,9 @@
         <input type="hidden" asp-for="UserIP" value="@HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString()" />
         <input type="hidden" asp-for="UserDate" value="@DateTime.Now.ToString("MM/dd/yyyy")" />
         @if (Model.Id != 0)
-            {
-                title = "Edit Size";
-            }
+        {
+            title = "Edit Size";
+        }
         <div class="col-12 border-bottom">
             <h2 class="text-primary">@title</h2>
         </div>
