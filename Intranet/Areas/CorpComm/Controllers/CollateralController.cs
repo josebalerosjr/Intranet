@@ -267,7 +267,6 @@ namespace Intranet.Areas.CorpComm.Controllers
                 //collateral = _unitOfWork.Collateral.Get();
                 collateral.Count += qtyfrom;
                 _unitOfWork.Save();
-                
             }
 
             if (SD.collateralName == SD.DO_LKG)

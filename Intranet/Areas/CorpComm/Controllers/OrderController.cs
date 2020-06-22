@@ -71,8 +71,17 @@ namespace Intranet.Areas.CorpComm.Controllers
             OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == OrderVM.OrderHeader.Id);
             orderHeader.OrderStatus = SD.StatusForApproval;
             orderHeader.RequestType = OrderVM.OrderHeader.RequestType;
-
             _unitOfWork.Save();
+
+            var orderDetails = _unitOfWork.OrderDetails.GetAll(u => u.OrderId == OrderVM.OrderHeader.Id);
+
+            foreach (var order in orderDetails)
+            {
+                Collateral collateral = _unitOfWork.Collateral.Get(order.CollateralId.Value);
+                collateral.Count -= order.Count;
+                _unitOfWork.Save();
+            }
+
             return RedirectToAction(nameof(Index));
         }
 

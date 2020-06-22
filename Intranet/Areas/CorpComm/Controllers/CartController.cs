@@ -162,6 +162,7 @@ namespace Intranet.Areas.CorpComm.Controllers
 
                 _unitOfWork.OrderHeader.Add(ShoppingCartVM.OrderHeader);
                 _unitOfWork.Save();
+
                 foreach (var item in ShoppingCartVM.ListCart)
                 {
                     OrderDetails orderDetails = new OrderDetails()
@@ -174,6 +175,8 @@ namespace Intranet.Areas.CorpComm.Controllers
 
                     ShoppingCartVM.OrderHeader.OrderTotal += orderDetails.Count * orderDetails.Price;
                     _unitOfWork.OrderDetails.Add(orderDetails);
+
+
                 }
                 _unitOfWork.ShoppingCart.RemoveRange(ShoppingCartVM.ListCart);
                 _unitOfWork.Save();
