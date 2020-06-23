@@ -29,7 +29,6 @@ $(document).ready(function () {
     }
 });
 
-
 function loadDataTable(url) {
     dataTable = $('#tblData').DataTable({
         "ajax": {
@@ -46,7 +45,7 @@ function loadDataTable(url) {
                     return `
                             <div class="text-center">
                                 <a href="/CorpComm/Order/Details/${data}" class="text-success" style="cursor:pointer">
-                                    <i class="fas fa-edit"></i> 
+                                    <i class="fas fa-edit"></i>
                                 </a>
                             </div>
                            `;

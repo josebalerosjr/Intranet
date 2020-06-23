@@ -278,8 +278,6 @@ namespace Intranet.Areas.CorpComm.Controllers
                 default:
                     break;
             }
-
-            //orderHeadersList = _unitOfWork.OrderHeader.GetAll();
             return Json(new { data = orderHeadersList });
         }
 
@@ -304,7 +302,8 @@ namespace Intranet.Areas.CorpComm.Controllers
             string UserCart = ViewBag.DisplayName;
             if (UserCart != null)
             {
-                var count = _unitOfWork.ShoppingCart.GetAll(c => c.LoginUser == UserCart, includeProperties: "Collateral").ToList().Count();
+                var count = _unitOfWork.ShoppingCart.GetAll(c => c.LoginUser == UserCart, 
+                    includeProperties: "Collateral").ToList().Count();
                 HttpContext.Session.SetObject(SD.ssShoppingCart, count);
                 ViewBag.ItemCount = count;
             }

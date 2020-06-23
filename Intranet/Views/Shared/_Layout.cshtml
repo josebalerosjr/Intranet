@@ -18,6 +18,26 @@
 </head>
 <body>
     <header>
+        <style>
+            .navbar-nav li:hover > ul.dropdown-menu {
+                display: block;
+            }
+
+            .dropdown-submenu {
+                position: relative;
+            }
+
+                .dropdown-submenu > .dropdown-menu {
+                    top: 0;
+                    left: 100%;
+                    margin-top: -6px;
+                }
+            /* rotate caret on hover */
+            .dropdown-menu > li > a:hover:after {
+                text-decoration: underline;
+                transform: rotate(-90deg);
+            }
+        </style>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
                 <div class="row-fluid">
@@ -90,7 +110,7 @@
                                      */
                                     if (User.Identity.IsAuthenticated)
                                     {
-                                        if (User.IsInRole("Office of the Chief Information Officers"))
+                                        if (User.IsInRole(SD.CIOAdminFake))
                                         {
                                             <li class="nav-item">
                                                 <a class="nav-link" asp-area="" asp-controller="Email" asp-action="Index">
@@ -117,7 +137,7 @@
                                      */
                                     if (User.Identity.IsAuthenticated)
                                     {
-                                        if (User.IsInRole("Office of the Chief Information Officers"))
+                                        if (User.IsInRole(SD.CIOAdminFake))
                                         {
                                             <li class="nav-item">
                                                 <a class="nav-link" asp-area="" asp-controller="Suggestion" asp-action="Create">
@@ -144,20 +164,20 @@
                                         <li class="dropdown-submenu small">
 
                                             <!--Office 365 link-->
-                                            <a class="dropdown-item" target="_blank" href="https://www.office.com/">
+                                            <a class="dropdown-item" target="_blank" href="@SD.Office365">
                                                 Office 365
                                             </a>
 
                                             <!--DxCare Link-->
-                                            <a class="dropdown-item" target="_blank" href="https://dxcare.pttdigital.com/">
+                                            <a class="dropdown-item" target="_blank" href="@SD.DxCare">
                                                 DxCare
                                             </a>
 
                                             <!--
-                                            <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item small float-md-left" asp-controller="ItemReg" asp-action="Index">Quality</a></li>
-                                            </ul>
-                                            -->
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item small float-md-left" asp-controller="ItemReg" asp-action="Index">Quality</a></li>
+                </ul>
+                -->
                                         </li>
                                     </ul>
                                 </li>
@@ -173,7 +193,7 @@
                                      */
                                     if (User.Identity.IsAuthenticated)
                                     {
-                                        if (User.IsInRole("Office of the Chief Information Officer") || User.IsInRole("MIS Intranet") || User.IsInRole("ICT Intranet") || User.IsInRole("SAP Consultant Intranet"))
+                                        if (User.IsInRole(SD.CIOAdmin) || User.IsInRole(SD.MISIntranet) || User.IsInRole(SD.ICTIntranet) || User.IsInRole(SD.SAPConsult))
                                         {
                                             <li class="nav-item dropdown">
                                                 <a class="nav-link" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -182,7 +202,7 @@
 
                                                 <!--MIS Primary Sub-menu-->
                                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                                    @if (User.IsInRole("Office of the Chief Information Officer") || User.IsInRole("MIS Intranet"))
+                                                    @if (User.IsInRole(SD.CIOAdmin) || User.IsInRole(SD.MISIntranet))
                                                     {
                                                         <li class="dropdown-submenu small">
                                                             <a class="dropdown-item" href="#">
@@ -192,7 +212,7 @@
                                                             <!-- Secondary Sub-menu -->
                                                             <ul class="dropdown-menu">
                                                                 <li>
-                                                                    <a class="dropdown-item small float-md-left" href="https://pttadmin.sharepoint.com/sites/mis-ict-ticket/Lists/MIS%20Ticket%202019/AllItems.aspx">
+                                                                    <a class="dropdown-item small float-md-left" href="@SD.MISTicketing">
                                                                         MIS Ticketing
                                                                     </a>
                                                                 </li>
@@ -200,7 +220,7 @@
                                                         </li>
                                                     }
                                                     <!--ICT Primary Sub-menu-->
-                                                    @if (User.IsInRole("Office of the Chief Information Officer") || User.IsInRole("ICT Intranet"))
+                                                    @if (User.IsInRole(SD.CIOAdmin) || User.IsInRole(SD.ICTIntranet))
                                                     {
                                                         <li class="dropdown-submenu small">
                                                             <a class="dropdown-item" target="_blank" href="@ViewBag.ChangeRequestLog">
@@ -210,14 +230,14 @@
                                                             <!--Seondary Sub-menu-->
                                                             <ul class="dropdown-menu">
                                                                 <li>
-                                                                    <a class="dropdown-item small float-md-left" href="https://pttadmin.sharepoint.com/sites/mis-ict-ticket/ict/SitePages/Home.aspx">
+                                                                    <a class="dropdown-item small float-md-left" href="@SD.ICTTicketing">
                                                                         ICT Ticketing
                                                                     </a>
                                                                 </li>
 
                                                                 <!--Mobile Refresh menu-->
                                                                 <li>
-                                                                    <a class="dropdown-item small float-md-left" href="https://pttadmin.sharepoint.com/sites/mis-ict-ticket/ict/Lists/PTT%20Mobile%20Phone%20Refresh%20Monitoring/AllItems.aspx?viewpath=%2Fsites%2Fmis-ict-ticket%2Fict%2FLists%2FPTT%20Mobile%20Phone%20Refresh%20Monitoring%2FAllItems.aspx">
+                                                                    <a class="dropdown-item small float-md-left" href="@SD.PTTMobilePhoneRefreshMonitoring">
                                                                         PTT Mobile Phone Refresh Monitoring
                                                                     </a>
                                                                 </li>
@@ -227,14 +247,14 @@
 
                                                     <!--Primary Document Monitoring-->
                                                     <li class="dropdown-submenu small">
-                                                        <a class="dropdown-item" target="_blank" href="https://pttadmin.sharepoint.com/:x:/r/MIS-ICT/_layouts/15/Doc.aspx?sourcedoc=%7BB22F3651-FDA7-402E-9441-DD583A428A6A%7D&file=MIS%20ICT%20Document%20Monitoring%20Schedule%20Updated.xlsx&action=default&mobileredirect=true&cid=6df4a096-9dd6-45df-98f0-c02b37ed0a22">
+                                                        <a class="dropdown-item" target="_blank" href="@SD.DocumentMonitoring">
                                                             Document Monitoring
                                                         </a>
                                                     </li>
 
                                                     <!--Change Request Log-->
                                                     <li class="dropdown-submenu small">
-                                                        <a class="dropdown-item" target="_blank" href="https://pttadmin.sharepoint.com/:x:/r/MIS-ICT/_layouts/15/Doc.aspx?sourcedoc=%7BCF17F927-7CC5-4F98-8196-6F534A8D56BC%7D&file=Change%20Request%20Log.Request%20Number.2014.xlsx&action=default&mobileredirect=true&cid=a7069a15-c2b7-4f0a-8352-2fde6e0765cf">
+                                                        <a class="dropdown-item" target="_blank" href="@SD.ChangeRequestLog">
                                                             Change Request Log
                                                         </a>
                                                     </li>
@@ -262,8 +282,8 @@
                                      */
                                     if (User.Identity.IsAuthenticated)
                                     {
-                                        if (User.IsInRole("Office of the Chief Information Officer") ||
-                                            User.IsInRole("QSHE Intranet"))
+                                        if (User.IsInRole(SD.CIOAdmin) ||
+                                            User.IsInRole(SD.QSHEIntranet))
                                         {
                                             <li class="nav-item dropdown">
                                                 <a class="nav-link" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -283,8 +303,8 @@
                                                          */
                                                         if (User.Identity.IsAuthenticated)
                                                         {
-                                                            if (User.IsInRole("Office of the Chief Information Officer") ||
-                                                                User.IsInRole("QSHE Intranet"))
+                                                            if (User.IsInRole(SD.CIOAdmin) ||
+                                                                User.IsInRole(SD.QSHEIntranet))
                                                             {
                                                                 <li class="dropdown-submenu small">
                                                                     <a class="dropdown-item">Inventory <i class="fas fa-chevron-circle-right float-right"></i></a>
@@ -304,9 +324,9 @@
                                                                              */
                                                                             if (User.Identity.IsAuthenticated)
                                                                             {
-                                                                                if (User.IsInRole("Office of the Chief Information Officer") ||
-                                                                                    User.IsInRole("QSHE QtyAdmin") ||
-                                                                                    User.IsInRole("QSHE QtyUser"))
+                                                                                if (User.IsInRole(SD.CIOAdmin) ||
+                                                                                    User.IsInRole(SD.QSHEQtyAdmin) ||
+                                                                                    User.IsInRole(SD.QSHEQtyUser))
                                                                                 {
                                                                                     <li><a class="dropdown-item small float-md-left" asp-controller="ItemReg" asp-action="Index">Quality</a></li>
                                                                                 }
@@ -333,9 +353,9 @@
                                                                              */
                                                                             if (User.Identity.IsAuthenticated)
                                                                             {
-                                                                                if (User.IsInRole("Office of the Chief Information Officer") ||
-                                                                                    User.IsInRole("SSHE Admin") ||
-                                                                                    User.IsInRole("SSHE User"))
+                                                                                if (User.IsInRole(SD.CIOAdmin) ||
+                                                                                    User.IsInRole(SD.QSHESHEAdmin) ||
+                                                                                    User.IsInRole(SD.QSHESHEUser))
                                                                                 {
                                                                                     <li><a class="dropdown-item small" asp-controller="ItemRegSHE" asp-action="Index">SSHE</a></li>
                                                                                 }
@@ -372,8 +392,8 @@
                                                          */
                                                         if (User.Identity.IsAuthenticated)
                                                         {
-                                                            if (User.IsInRole("Office of the Chief Information Officer") ||
-                                                                User.IsInRole("QSHE Intranet"))
+                                                            if (User.IsInRole(SD.CIOAdmin) ||
+                                                                User.IsInRole(SD.QSHEIntranet))
                                                             {
                                                                 <li class="dropdown-submenu small">
                                                                     <a class="dropdown-item">Reports <i class="fas fa-chevron-circle-right float-right"></i></a>
@@ -394,9 +414,9 @@
                                                                              */
                                                                             if (User.Identity.IsAuthenticated)
                                                                             {
-                                                                                if (User.IsInRole("Office of the Chief Information Officer") ||
-                                                                                    User.IsInRole("QSHE QtyAdmin") ||
-                                                                                    User.IsInRole("QSHE QtyUser"))
+                                                                                if (User.IsInRole(SD.CIOAdmin) ||
+                                                                                    User.IsInRole(SD.QSHEQtyAdmin) ||
+                                                                                    User.IsInRole(SD.QSHEQtyUser))
                                                                                 {
                                                                                     <li><a class="dropdown-item small" asp-controller="Report" asp-action="Index">Quality</a></li>
                                                                                 }
@@ -423,9 +443,9 @@
                                                                              */
                                                                             if (User.Identity.IsAuthenticated)
                                                                             {
-                                                                                if (User.IsInRole("Office of the Chief Information Officer") ||
-                                                                                    User.IsInRole("SSHE Admin") ||
-                                                                                    User.IsInRole("SSHE User"))
+                                                                                if (User.IsInRole(SD.CIOAdmin) ||
+                                                                                    User.IsInRole(SD.QSHESHEAdmin) ||
+                                                                                    User.IsInRole(SD.QSHESHEUser))
                                                                                 {
                                                                                     <li><a class="dropdown-item small" asp-controller="ReportSHE" asp-action="Index">SSHE</a></li>
                                                                                 }
@@ -463,7 +483,7 @@
                                                          */
                                                         @if (User.Identity.IsAuthenticated)
                                                         {
-                                                            if (User.IsInRole("Office of the Chief Information Officer") || User.IsInRole("QSHE QtyAdmin") || User.IsInRole("SSHE Admin"))
+                                                            if (User.IsInRole(SD.CIOAdmin) || User.IsInRole(SD.QSHEQtyAdmin) || User.IsInRole(SD.QSHESHEAdmin))
                                                             {
                                                                 <!--Separator-->
                                                                 <li class="dropdown-divider"></li>
@@ -521,7 +541,7 @@
                                      */
                                     if (User.Identity.IsAuthenticated)
                                     {
-                                        if (User.IsInRole("Office of the Chief Information Officer") || User.IsInRole("CNC Admin") || User.IsInRole("CNC User"))
+                                        if (User.IsInRole(SD.CIOAdmin) || User.IsInRole(SD.CNCAdmin) || User.IsInRole(SD.CNCUser))
                                         {
                                             <li class="nav-item dropdown">
                                                 <a class="nav-link" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -553,7 +573,7 @@
                                                     </li>
 
                                                     <!--Payment Records Primary Menu-->
-                                                    @if (User.IsInRole("Office of the Chief Information Officer") || User.IsInRole("CNC Admin"))
+                                                    @if (User.IsInRole(SD.CIOAdmin) || User.IsInRole(SD.CNCAdmin))
                                                     {
                                                         <li class="dropdown-submenu">
                                                             <a class="dropdown-item small" asp-controller="BdoPE" asp-action="LsmwAdmin">Payment Records</a>
@@ -574,82 +594,76 @@
                                 @{
                                     /**
                                      * ********************************************************************************
-                                     * *                            START OF CNC                                      *
+                                     * *                            START OF CORPCOMM                                 *
                                      * ********************************************************************************
                                      * START OF CNC DROPDOWN MENU
                                      */
                                     if (User.Identity.IsAuthenticated)
                                     {
-                                        if (User.IsInRole("Office of the Chief Information Officer") || User.IsInRole("CNC Admin") || User.IsInRole("CNC User"))
-                                        {
-                                            <li class="nav-item dropdown">
-                                                <a class="nav-link" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    Corp Comm
-                                                </a>
-                                                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                                    <li class="dropdown-submenu small">
-                                                        <a class="dropdown-item" asp-area="CorpComm" asp-controller="Order" asp-action="Index">Orders</a>
-                                                    </li>
-                                                    <li class="dropdown-submenu small">
-                                                        <a class="dropdown-item" asp-area="CorpComm" asp-controller="Collateral" asp-action="Catalog">Catalog</a>
-                                                    </li>
-                                                    <li class="dropdown-submenu small">
-                                                        <a class="dropdown-item" asp-area="CorpComm" asp-controller="Collateral" asp-action="Index">Collateral</a>
-                                                    </li>
+                                        <li class="nav-item dropdown">
+                                            <a class="nav-link" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Corp Comm
+                                            </a>
+                                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                                <li class="dropdown-submenu small">
+                                                    <a class="dropdown-item" asp-area="CorpComm" asp-controller="Order" asp-action="Index">Orders</a>
+                                                </li>
+                                                <li class="dropdown-submenu small">
+                                                    <a class="dropdown-item" asp-area="CorpComm" asp-controller="Collateral" asp-action="Catalog">Catalog</a>
+                                                </li>
+                                                @{
+                                                    if (User.Identity.IsAuthenticated)
+                                                    {
+                                                        if (User.IsInRole(SD.CIOAdmin) || User.IsInRole(SD.CorpCommAdmin))
+                                                        {
+                                                            <li class="dropdown-submenu small">
+                                                                <a class="dropdown-item" asp-area="CorpComm" asp-controller="Collateral" asp-action="Index">Collateral</a>
+                                                            </li>
 
-                                                    <li class="dropdown-divider"></li>
+                                                            <li class="dropdown-divider"></li>
 
-                                                    <li class="dropdown-submenu small">
-                                                        <a class="dropdown-item">Tables <i class="fas fa-chevron-circle-right float-right"></i></a>
-                                                        <a class="dropdown-item" asp-area="CorpComm" asp-controller="Brand" asp-action="Index">Brand</a>
-                                                        <a class="dropdown-item" asp-area="CorpComm" asp-controller="StationType" asp-action="Index">Station Type</a>
-                                                        <a class="dropdown-item" asp-area="CorpComm" asp-controller="Unit" asp-action="Index">Unit</a>
-                                                        <a class="dropdown-item" asp-area="CorpComm" asp-controller="Department" asp-action="Index">Department</a>
-                                                        <a class="dropdown-item" asp-area="CorpComm" asp-controller="Status" asp-action="Index">Status</a>
-                                                        <a class="dropdown-item" asp-area="CorpComm" asp-controller="Size" asp-action="Index">Size</a>
-                                                        <a class="dropdown-item" asp-area="CorpComm" asp-controller="Email" asp-action="Index">Email</a>
-                                                        <a class="dropdown-item" asp-area="CorpComm" asp-controller="Location" asp-action="Index">Location</a>
-                                                        <a class="dropdown-item" asp-area="CorpComm" asp-controller="Event" asp-action="Index">Event</a>
-                                                        <a class="dropdown-item" asp-area="CorpComm" asp-controller="Station" asp-action="Index">Station</a>
-                                                        <!--Secondary Menu-->
-                                                        <ul class="dropdown-menu">
-                                                            <li><a class="dropdown-item small" asp-area="CorpComm" asp-controller="Department" asp-action="Index">Department</a></li>
-                                                            <li><a class="dropdown-item small" asp-area="CorpComm" asp-controller="Email" asp-action="Index">Email</a></li>
-                                                            <li><a class="dropdown-item small" asp-area="CorpComm" asp-controller="Location" asp-action="Index">Location</a></li>
-                                                            <li><a class="dropdown-item small" asp-area="CorpComm" asp-controller="Size" asp-action="Index">Size</a></li>
-                                                            <li><a class="dropdown-item small" asp-area="CorpComm" asp-controller="Station" asp-action="Index">Station</a></li>
-                                                            <li><a class="dropdown-item small" asp-area="CorpComm" asp-controller="Status" asp-action="Index">Type</a></li>
-                                                            <li><a class="dropdown-item small" asp-area="CorpComm" asp-controller="Unit" asp-action="Index">Unit</a></li>
-                                                            <li><a class="dropdown-item small" asp-area="CorpComm" asp-controller="Event" asp-action="Index">Event</a></li>
-                                                        </ul>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                            @if (ViewBag.ItemCount != null)
-                                            {
-                                                <li style="color: white">
-                                                    <a asp-area="CorpComm" asp-controller="Cart" asp-action="Index" class="nav-link">
-                                                        @{
-                                                            //var count = HttContextAccessor.HttpContext.Session.GetInt32(SD.ssShoppingCart);
+                                                            <li class="dropdown-submenu small">
+                                                                <a class="dropdown-item">Tables <i class="fas fa-chevron-circle-right float-right"></i></a>
+                                                                <!--Secondary Menu-->
+                                                                <ul class="dropdown-menu">
+                                                                    <a class="dropdown-item" asp-area="CorpComm" asp-controller="Brand" asp-action="Index">Brand</a>
+                                                                    <a class="dropdown-item" asp-area="CorpComm" asp-controller="StationType" asp-action="Index">Station Type</a>
+                                                                    <a class="dropdown-item" asp-area="CorpComm" asp-controller="Unit" asp-action="Index">Unit</a>
+                                                                    <a class="dropdown-item" asp-area="CorpComm" asp-controller="Department" asp-action="Index">Department</a>
+                                                                    <a class="dropdown-item" asp-area="CorpComm" asp-controller="Status" asp-action="Index">Status</a>
+                                                                    <a class="dropdown-item" asp-area="CorpComm" asp-controller="Size" asp-action="Index">Size</a>
+                                                                    <a class="dropdown-item" asp-area="CorpComm" asp-controller="Email" asp-action="Index">Email</a>
+                                                                    <a class="dropdown-item" asp-area="CorpComm" asp-controller="Location" asp-action="Index">Location</a>
+                                                                    <a class="dropdown-item" asp-area="CorpComm" asp-controller="Event" asp-action="Index">Event</a>
+                                                                    <a class="dropdown-item" asp-area="CorpComm" asp-controller="Station" asp-action="Index">Station</a>
+                                                                </ul>
+                                                            </li>
                                                         }
-                                                        <i class="fas fa-shopping-cart"></i> &nbsp; (@ViewBag.ItemCount)
-                                                    </a>
-                                                </li>
-                                            }
-                                            else
-                                            {
-                                                <li style="color: white">
-                                                    <a href="#" class="nav-link">
-                                                        <i class="fas fa-shopping-cart"></i> &nbsp; (0)
-                                                    </a>
-                                                </li>
-                                            }
-
+                                                    }
+                                                }
+                                            </ul>
+                                        </li>
+                                        @if (ViewBag.ItemCount != null)
+                                        {
+                                            <li style="color: white">
+                                                <a asp-area="CorpComm" asp-controller="Cart" asp-action="Index" class="nav-link">
+                                                    <i class="fas fa-shopping-cart"></i> &nbsp; (@ViewBag.ItemCount)
+                                                </a>
+                                            </li>
                                         }
+                                        else
+                                        {
+                                            <li style="color: white">
+                                                <a href="#" class="nav-link">
+                                                    <i class="fas fa-shopping-cart"></i> &nbsp; (0)
+                                                </a>
+                                            </li>
+                                        }
+
                                     }
                                     /**
                                      * ********************************************************************************
-                                     * *                            END OF CNC                                        *
+                                     * *                            END OF CORPCOMM                                   *
                                      * ********************************************************************************
                                      */
                                 }
@@ -663,11 +677,11 @@
                                     <!--Primary menu-->
                                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                                         @{
-                                            @if (User.IsInRole("Office of the Chief Information Officer") || User.IsInRole("Procurement Intranet"))
+                                            @if (User.IsInRole(SD.CIOAdmin) || User.IsInRole(SD.ProcurementIntranet))
                                             {
                                                 <!--Go Pro-->
                                                 <li class="dropdown-submenu small">
-                                                    <a class="dropdown-item" href="https://pttadmin.sharepoint.com/sites/Procurement/Lists/Unable%20to%20Process/AllItems.aspx" target="_blank">
+                                                    <a class="dropdown-item" href="@SD.GoPro" target="_blank">
                                                         Go Pro
                                                     </a>
                                                 </li>
@@ -676,7 +690,7 @@
 
                                         <!--Vendor Evaluation-->
                                         <li class="dropdown-submenu small">
-                                            <a class="dropdown-item" href="https://pttadmin.sharepoint.com/sites/Vendor-Evaluation/VES/SitePages/Home.aspx?CT=1575440268879&OR=OWA-NT&CID=fdf82904-aec6-c146-1ba4-a9d5c3a03499" target="_blank">
+                                            <a class="dropdown-item" href="@SD.VendorEvaluation" target="_blank">
                                                 Vendor Evaluation
                                             </a>
                                         </li>
@@ -684,7 +698,7 @@
                                 </li>
                                 <!--Logistics Tab-->
                                 @{
-                                    @if (User.IsInRole("Office of the Chief Information Officer") || User.IsInRole("Logistics Management Intranet"))
+                                    @if (User.IsInRole(SD.CIOAdmin) || User.IsInRole(SD.LogisticsIntranet))
                                     {
                                         <li class="nav-item dropdown">
                                             <a class="nav-link">
@@ -695,7 +709,7 @@
                                             <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                                                 <!--Manual Delivery Request-->
                                                 <li class="dropdown-submenu small">
-                                                    <a class="dropdown-item" href="https://pttadmin.sharepoint.com/sites/LogisticsManagement/Lists/Manual%20DRLoading%20Request/AllItems.aspx" target="_blank">
+                                                    <a class="dropdown-item" href="@SD.ManualDeliveryRequest" target="_blank">
                                                         Manual Delivery Request
                                                     </a>
                                                 </li>
@@ -706,15 +720,22 @@
 
                                 <!--Ticketing Tab-->
                                 <li class="nav-item">
-                                    <a class="nav-link" href="https://apps.powerapps.com/play/ffa735ea-8496-4cfa-84c2-ab57dbb240a0?tenantId=78db0b1d-e5d5-4f05-af3c-cc72575b1ba3" target="_blank">
+                                    <a class="nav-link" href="@SD.Ticketing" target="_blank">
                                         Ticketing
                                     </a>
                                 </li>
 
                                 <!--ESS Tab-->
                                 <li class="nav-item">
-                                    <a class="nav-link" href="http://sub-ess-prd.pttphils.com:50000/irj/portal" target="_blank">
+                                    <a class="nav-link" href="@SD.ESS" target="_blank">
                                         ESS
+                                    </a>
+                                </li>
+
+                                <!--ESS Tab-->
+                                <li class="nav-item">
+                                    <a class="nav-link" href="@SD.Fiori" target="_blank">
+                                        Fiori
                                     </a>
                                 </li>
 
@@ -726,7 +747,7 @@
                                 </li>
 
                                 @{
-                                    @if (User.IsInRole("Office of the Chief Information Officer") || User.IsInRole("SPEM Intranet"))
+                                    @if (User.IsInRole(SD.CIOAdmin) || User.IsInRole(SD.SPEMIntranet))
                                     {
                                         <!--SPEM Tab-->
                                         <li class="nav-item">
@@ -739,7 +760,7 @@
                                 }
 
                                 @{
-                                    if (User.Identity.Name == "OFFICE\\jose.baleros")
+                                    if (User.IsInRole(SD.CIOAdmin))
                                     {
                                         <li class="nav-item dropdown">
                                             <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -748,8 +769,6 @@
                                             <div class="dropdown-menu small" aria-labelledby="navbarDropdown">
                                                 <a class="dropdown-item" asp-controller="Suggestion" asp-action="Create">Suggestion</a>
                                                 <a class="dropdown-item" asp-controller="ImageCarousel" asp-action="Index">Carousel</a>
-                                                @*<div class="dropdown-divider"></div>
-                                                    <a class="dropdown-item" href="#">Something else here</a>*@
                                             </div>
                                         </li>
                                     }
@@ -805,7 +824,7 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @*<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>*@
+        <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>*@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="https://kit.fontawesome.com/9ca3bb7322.js"></script>

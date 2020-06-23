@@ -1,5 +1,4 @@
 ﻿@model Intranet.Models.ViewModels.CorpComm.ShoppingCartVM
-
 <form method="post">
     <br />
     <div class="backgroundWhiteBorder">
@@ -11,7 +10,8 @@
                         Order Summary
                     </div>
                     <div class="col-6 text-right">
-                        <a asp-area="CorpComm" asp-controller="Cart" asp-action="Index" class="btn btn-outline-info btn-sm">Back to Cart</a>
+                        <a asp-area="CorpComm" asp-controller="Cart" asp-action="Index" class="btn btn-outline-info btn-sm">
+                        Back to Cart</a>
                     </div>
                 </div>
                 <div class="card-body">
@@ -24,52 +24,28 @@
                                     </h4>
                                 </div>
                                 <div class="row my-1">
-                                    <div class="col-3">
-                                        <label>Name</label>
-                                    </div>
-                                    <div class="col-9">
-                                        <input type="text" class="form-control" />
-                                    </div>
+                                    <div class="col-3"><label>Name</label></div>
+                                    <div class="col-9"><input type="text" class="form-control" /></div>
                                 </div>
                                 <div class="row my-1">
-                                    <div class="col-3">
-                                        <label>Phone</label>
-                                    </div>
-                                    <div class="col-9">
-                                        <input type="text" class="form-control" />
-                                    </div>
+                                    <div class="col-3"><label>Phone</label></div>
+                                    <div class="col-9"><input type="text" class="form-control" /></div>
                                 </div>
                                 <div class="row my-1">
-                                    <div class="col-3">
-                                        <label>Street Address</label>
-                                    </div>
-                                    <div class="col-9">
-                                        <input type="text" class="form-control" />
-                                    </div>
+                                    <div class="col-3"><label>Street Address</label></div>
+                                    <div class="col-9"><input type="text" class="form-control" /></div>
                                 </div>
                                 <div class="row my-1">
-                                    <div class="col-3">
-                                        <label>City</label>
-                                    </div>
-                                    <div class="col-9">
-                                        <input type="text" class="form-control" />
-                                    </div>
+                                    <div class="col-3"><label>City</label></div>
+                                    <div class="col-9"><input type="text" class="form-control" /></div>
                                 </div>
                                 <div class="row my-1">
-                                    <div class="col-3">
-                                        <label>State</label>
-                                    </div>
-                                    <div class="col-9">
-                                        <input type="text" class="form-control" />
-                                    </div>
+                                    <div class="col-3"><label>State</label></div>
+                                    <div class="col-9"><input type="text" class="form-control" /></div>
                                 </div>
                                 <div class="row my-1">
-                                    <div class="col-3">
-                                        <label>Postal Code</label>
-                                    </div>
-                                    <div class="col-9">
-                                        <input type="text" class="form-control" />
-                                    </div>
+                                    <div class="col-3"><label>Postal Code</label></div>
+                                    <div class="col-9"><input type="text" class="form-control" /></div>
                                 </div>
                             </div>
                             <div class="col-12 col-lg-5 offset-lg-1">
@@ -100,10 +76,10 @@
                 <div class="card-footer">
                     <div class="row">
                         <div class="col-12 col-md-8 pt-2">
-                            <p style="color:maroon; font-size:14px;">Estimate Arrival Date: @DateTime.Now.AddDays(7).ToShortDateString() - @DateTime.Now.AddDays(14).ToShortDateString()</p>
+                            <p style="color:maroon; font-size:14px;">Estimate Arrival Date: 
+                            @DateTime.Now.AddDays(7).ToShortDateString() - @DateTime.Now.AddDays(14).ToShortDateString()</p>
                         </div>
                         <div class="col-12 col-md-4">
-
                             <button type="submit" value="Place Order" class="btn btn-success form-control">Place Order</button>
                         </div>
                     </div>

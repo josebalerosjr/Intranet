@@ -4,7 +4,6 @@ $(document).ready(function () {
     loadDataTable();
 });
 
-
 function loadDataTable() {
     dataTable = $('#tblData').DataTable({
         "displayLength": 10,
@@ -29,13 +28,14 @@ function loadDataTable() {
                     return `
                             <div class="text-center">
                                 <a href="/CorpComm/Collateral/Upsert/${data}" class="text-success" style="cursor:pointer">
-                                    <i class="fas fa-edit"></i> 
+                                    <i class="fas fa-edit"></i>
                                 </a>
                                 <a onclick=Delete("/CorpComm/Collateral/Delete/${data}") class="text-danger" style="cursor:pointer">
-                                    <i class="fas fa-trash-alt"></i> 
+                                    <i class="fas fa-trash-alt"></i>
                                 </a>
-                                <a href="/CorpComm/Collateral/Transfer/${data}" asp-route-id="${data}" class="text-success" style="cursor:pointer">
-                                    <i class="fas fa-edit"></i> 
+                                <a href="/CorpComm/Collateral/Transfer/${data}" asp-route-id="${data}" 
+                                class="text-success" style="cursor:pointer">
+                                    <i class="fas fa-edit"></i>
                             </div>
                            `;
                 }, "width": "7%"

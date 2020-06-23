@@ -3,6 +3,7 @@ using CsvUploader.Helpers;
 using Intranet.Classes;
 using Intranet.Data;
 using Intranet.Models;
+using Intranet.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +23,9 @@ using System.Threading.Tasks;
 
 namespace Intranet.Controllers
 {
-    [Authorize(Roles = "Office of the Chief Information Officer, CNC Admin, CNC User")]
+    [Authorize(Roles = SD.CIOAdmin)]
+    [Authorize(Roles = SD.CNCAdmin)]
+    [Authorize(Roles = SD.CNCUser)]
     public class BdoPEController : Controller
     {
         private readonly BdoPEContext _context;
@@ -60,7 +63,7 @@ namespace Intranet.Controllers
             return View(await _context.bdoPEs.Where(c => c.isDownloaded == false && c.MarketerZ2 == cncuser).OrderByDescending(s => s.Id).ToListAsync());
         }
 
-        [Authorize(Roles = "Office of the Chief Information Officer")]
+        [Authorize(Roles = SD.CIOAdmin)]
         public async Task<IActionResult> CustomerNumChecker()
         {
             UserDetails();
@@ -73,7 +76,7 @@ namespace Intranet.Controllers
 
         // GET: BdoPE/Edit
         [HttpGet]
-        [Authorize(Roles = "Office of the Chief Information Officer")]
+        [Authorize(Roles = SD.CIOAdmin)]
         public IActionResult CustomerNumCheckerEdit(int id)
         {
             UserDetails();
@@ -82,7 +85,7 @@ namespace Intranet.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Office of the Chief Information Officer")]
+        [Authorize(Roles = SD.CIOAdmin)]
         public async Task<IActionResult> CustomerNumCheckerEdit(int id, [Bind("Id,DocDateInDoc,DocType,CompanyCode,PosDateInDoc,FiscalPeriod,CurrentKey,RefDocNum,DocHeadT,PosKeyInNextLine,AccMatNextLine,AmountDocCur,ValDate,AssignNum,ItemText,PosKeyInNextLine2,AccMatNextLine2,AmountDocCur2,BaseDateDueCal,ItemText2,MarketerZ2,isDownloaded,UserName,UserIP,UserDate")] BdoPE bdoPE)
         {
             UserDetails();
@@ -115,7 +118,8 @@ namespace Intranet.Controllers
         }
 
         // GET: BdoPE/Create
-        [Authorize(Roles = "Office of the Chief Information Officer, CNC Admin")]
+        [Authorize(Roles = SD.CIOAdmin)]
+        [Authorize(Roles = SD.CNCAdmin)]
         public async Task<IActionResult> DownloadRecord()
         {
             UserDetails();
@@ -772,7 +776,8 @@ namespace Intranet.Controllers
 
         // GET: BdoPE/Edit
         [HttpGet]
-        [Authorize(Roles = "Office of the Chief Information Officer, CNC Admin")]
+        [Authorize(Roles = SD.CIOAdmin)]
+        [Authorize(Roles = SD.CNCAdmin)]
         public IActionResult EditAdmin(int id)
         {
             UserDetails();
@@ -781,7 +786,8 @@ namespace Intranet.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Office of the Chief Information Officer, CNC Admin")]
+        [Authorize(Roles = SD.CIOAdmin)]
+        [Authorize(Roles = SD.CNCAdmin)]
         public async Task<IActionResult> EditAdmin(int id, [Bind("Id,DocDateInDoc,DocType,CompanyCode,PosDateInDoc,FiscalPeriod,CurrentKey,RefDocNum,DocHeadT,PosKeyInNextLine,AccMatNextLine,AmountDocCur,ValDate,AssignNum,ItemText,PosKeyInNextLine2,AccMatNextLine2,AmountDocCur2,BaseDateDueCal,ItemText2,MarketerZ2,isDownloaded,UserName,UserIP,UserDate")] BdoPE bdoPE)
         {
             UserDetails();
@@ -813,14 +819,16 @@ namespace Intranet.Controllers
             return View(bdoPE);
         }
 
-        [Authorize(Roles = "Office of the Chief Information Officer, CNC Admin")]
+        [Authorize(Roles = SD.CIOAdmin)]
+        [Authorize(Roles = SD.CNCAdmin)]
         public async Task<IActionResult> LsmwAdmin()
         {
             UserDetails();
             return View(await _context.bdoPEs.OrderByDescending(s => s.Id).ToListAsync());
         }
 
-        [Authorize(Roles = "Office of the Chief Information Officer, CNC Admin")]
+        [Authorize(Roles = SD.CIOAdmin)]
+        [Authorize(Roles = SD.CNCAdmin)]
         public async Task<IActionResult> DownloadList([Bind("Id,isDownload")] BdoPE bdoPE)
         {
             #region download process

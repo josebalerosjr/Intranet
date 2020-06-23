@@ -4,7 +4,6 @@ $(document).ready(function () {
     loadDataTable();
 });
 
-
 function loadDataTable() {
     dataTable = $('#tblData').DataTable({
         "ajax": {
@@ -18,10 +17,10 @@ function loadDataTable() {
                     return `
                             <div class="text-center">
                                 <a href="/CorpComm/Size/Upsert/${data}" class="text-success" style="cursor:pointer">
-                                    <i class="fas fa-edit"></i> 
+                                    <i class="fas fa-edit"></i>
                                 </a>
                                 <a onclick=Delete("/CorpComm/Size/Delete/${data}") class="text-danger" style="cursor:pointer">
-                                    <i class="fas fa-trash-alt"></i> 
+                                    <i class="fas fa-trash-alt"></i>
                                 </a>
                             </div>
                            `;

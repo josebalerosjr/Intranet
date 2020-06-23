@@ -18,8 +18,8 @@ function compareVal() {
     var totalRequest = document.getElementById("txtOrderTotal").innerText;
 
     if (parseInt(budgetLim) > parseInt(totalRequest)) {
-        document.getElementById("summaryButton").disabled = false; 
+        document.getElementById("summaryButton").disabled = false;
     } else {
-        document.getElementById("summaryButton").disabled = true; 
+        document.getElementById("summaryButton").disabled = true;
     }
 }

@@ -133,7 +133,6 @@ namespace Intranet
             services.Configure<MtrInfo>(mtrInfo);
             services.Configure<AppLinks>(appLinks);
             services.Configure<OnlineImageLinks>(onlineimagelinks);
-            services.Configure<ConnectionString>(Configuration.GetSection("ConnectionStrings"));
 
             #endregion appsettings service
 

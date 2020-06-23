@@ -1,13 +1,12 @@
 ﻿using Dapper;
 using Intranet.DataAccess.Data;
+using Intranet.DataAccess.Repository.IRepository;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Data;
 using System.Collections.Generic;
-using System.Text;
+using System.Data;
 using System.Linq;
-using Intranet.DataAccess.Repository.IRepository;
 
 namespace Intranet.DataAccess.Repository
 {
@@ -50,7 +49,7 @@ namespace Intranet.DataAccess.Repository
             using (SqlConnection sqlCon = new SqlConnection(ConnectionString))
             {
                 sqlCon.Open();
-                var result = SqlMapper.QueryMultiple(sqlCon, procedureName, param , commandType: CommandType.StoredProcedure);
+                var result = SqlMapper.QueryMultiple(sqlCon, procedureName, param, commandType: CommandType.StoredProcedure);
                 var item1 = result.Read<T1>().ToList();
                 var item2 = result.Read<T2>().ToList();
 
@@ -68,7 +67,7 @@ namespace Intranet.DataAccess.Repository
             using (SqlConnection sqlCon = new SqlConnection(ConnectionString))
             {
                 sqlCon.Open();
-                var value =  sqlCon.Query<T>(procedureName, param, commandType: CommandType.StoredProcedure);
+                var value = sqlCon.Query<T>(procedureName, param, commandType: CommandType.StoredProcedure);
                 return (T)Convert.ChangeType(value.FirstOrDefault(), typeof(T));
             }
         }
@@ -78,7 +77,8 @@ namespace Intranet.DataAccess.Repository
             using (SqlConnection sqlCon = new SqlConnection(ConnectionString))
             {
                 sqlCon.Open();
-                return (T)Convert.ChangeType(sqlCon.ExecuteScalar<T>(procedureName, param, commandType: CommandType.StoredProcedure), typeof(T));
+                return (T)Convert.ChangeType(sqlCon.ExecuteScalar<T>(procedureName, param, 
+                    commandType: CommandType.StoredProcedure), typeof(T));
             }
         }
     }
