@@ -43,7 +43,6 @@
     <Folder Include="Migrations\" />
     <Folder Include="Properties\" />
     <Folder Include="wwwroot\img\CorpComm\Collaterals\" />
-    <Folder Include="wwwroot\img\test\" />
   </ItemGroup>
 
 </Project>
