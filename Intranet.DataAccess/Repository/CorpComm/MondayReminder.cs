@@ -80,7 +80,7 @@ namespace Intranet.DataAccess.Repository.CorpComm
                     "                                   <b>" +
                     "                                       <center style='font-size: medium'>" +
                     "                                           Hi " + loginUser + ", you have a pending " + subject + ", complete it by clicking" +
-                    "                                           <a href='https://localhost:44301/CorpComm/Order/Details/" + orderId + "'>Here</a>" +
+                    "                                           <a href='http://qas.intranet.pttphils.com/CorpComm/Order/Details/'" + orderId + "'>Here</a>" +
                     "                                       </center>" +
                     "                                   </br>" +
                     "                                   <hr>" +

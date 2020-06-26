@@ -34,8 +34,8 @@ function loadDataTable() {
                                     <i class="fas fa-trash-alt"></i>
                                 </a>
                                 <a href="/CorpComm/Collateral/Transfer/${data}" asp-route-id="${data}" 
-                                class="text-success" style="cursor:pointer">
-                                    <i class="fas fa-edit"></i>
+                                class="text-primary" style="cursor:pointer">
+                                    <i class="fa fa-exchange" aria-hidden="true"></i>
                             </div>
                            `;
                 }, "width": "7%"

@@ -37,8 +37,9 @@ function loadDataTable(url) {
         "columns": [
             { "data": "id", "width": "10%" },
             { "data": "loginUser", "width": "25%" },
-            { "data": "orderTotal", "width": "25%" },
+            { "data": "orderTotal", "width": "15%" },
             { "data": "orderStatus", "width": "25%" },
+            { "data": "orderRating", "width": "10%" },
             {
                 "data": "id",
                 "render": function (data) {

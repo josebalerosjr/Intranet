@@ -51,6 +51,7 @@ namespace Intranet.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [System.Obsolete]
         public async Task<IActionResult> Create([Bind("SuggId,SuggName,SuggEmail,SuggSubject,SuggMessage,UserName,UserIP,UserDate")] Suggestion suggestion)
         {
             UserDetails();
@@ -127,6 +128,7 @@ namespace Intranet.Controllers
 
         #region SendEmail function
 
+        [System.Obsolete]
         public void SendEmail(string FromName, string FromEmail, string ToName, string FromMessage, string FromTitle)
         {
             var message = new MimeMessage();

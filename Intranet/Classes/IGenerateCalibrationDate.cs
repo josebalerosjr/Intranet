@@ -25,7 +25,6 @@ namespace Intranet.Classes
             _appSettings = appSettings.Value;
             _contextInvEmail = contextInvEmail;
         }
-
         public void SendMail()     // SendEmail function
         {
             var invemails = _contextInvEmail.invEmails;

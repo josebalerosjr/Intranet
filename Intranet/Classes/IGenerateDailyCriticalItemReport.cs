@@ -24,7 +24,6 @@ namespace Intranet.Classes
             _appSettings = appSettings.Value;
             _contextInvEmail = contextInvEmail;
         }
-
         public void SendEmail()     // SendEmail function
         {
             var invemails = _contextInvEmail.invEmails;     //  TODO: gets the list of emails in database and put in the invemails variable

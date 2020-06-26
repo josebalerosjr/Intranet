@@ -191,7 +191,8 @@ namespace Intranet.Areas.CorpComm.Controllers
             string messageBody = string.Format(HtmlBody,
                 subject,
                 datetime,
-                LoginUser
+                LoginUser,
+                OrderVM.OrderHeader.Id
                 );
 
             #endregion EmailTemplate

@@ -1,4 +1,5 @@
 ﻿using CsvHelper;
+using CsvHelper.Configuration;
 using CsvUploader.Helpers;
 using Intranet.Classes;
 using Intranet.Data;
@@ -23,9 +24,7 @@ using System.Threading.Tasks;
 
 namespace Intranet.Controllers
 {
-    [Authorize(Roles = SD.CIOAdmin)]
-    [Authorize(Roles = SD.CNCAdmin)]
-    [Authorize(Roles = SD.CNCUser)]
+    [Authorize(Roles = SD.CIOAdmin + "," + SD.CNCAdmin + "," + SD.CNCUser)]
     public class BdoPEController : Controller
     {
         private readonly BdoPEContext _context;
@@ -118,8 +117,7 @@ namespace Intranet.Controllers
         }
 
         // GET: BdoPE/Create
-        [Authorize(Roles = SD.CIOAdmin)]
-        [Authorize(Roles = SD.CNCAdmin)]
+        [Authorize(Roles = SD.CIOAdmin + "," + SD.CNCAdmin)]
         public async Task<IActionResult> DownloadRecord()
         {
             UserDetails();
@@ -776,8 +774,7 @@ namespace Intranet.Controllers
 
         // GET: BdoPE/Edit
         [HttpGet]
-        [Authorize(Roles = SD.CIOAdmin)]
-        [Authorize(Roles = SD.CNCAdmin)]
+        [Authorize(Roles = SD.CIOAdmin + "," + SD.CNCAdmin)]
         public IActionResult EditAdmin(int id)
         {
             UserDetails();
@@ -786,8 +783,7 @@ namespace Intranet.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = SD.CIOAdmin)]
-        [Authorize(Roles = SD.CNCAdmin)]
+        [Authorize(Roles = SD.CIOAdmin + "," + SD.CNCAdmin)]
         public async Task<IActionResult> EditAdmin(int id, [Bind("Id,DocDateInDoc,DocType,CompanyCode,PosDateInDoc,FiscalPeriod,CurrentKey,RefDocNum,DocHeadT,PosKeyInNextLine,AccMatNextLine,AmountDocCur,ValDate,AssignNum,ItemText,PosKeyInNextLine2,AccMatNextLine2,AmountDocCur2,BaseDateDueCal,ItemText2,MarketerZ2,isDownloaded,UserName,UserIP,UserDate")] BdoPE bdoPE)
         {
             UserDetails();
@@ -819,24 +815,26 @@ namespace Intranet.Controllers
             return View(bdoPE);
         }
 
-        [Authorize(Roles = SD.CIOAdmin)]
-        [Authorize(Roles = SD.CNCAdmin)]
+        [Authorize(Roles = SD.CIOAdmin + "," + SD.CNCAdmin)]
         public async Task<IActionResult> LsmwAdmin()
         {
             UserDetails();
             return View(await _context.bdoPEs.OrderByDescending(s => s.Id).ToListAsync());
         }
 
-        [Authorize(Roles = SD.CIOAdmin)]
-        [Authorize(Roles = SD.CNCAdmin)]
+        [Authorize(Roles = SD.CIOAdmin + "," + SD.CNCAdmin)]
         public async Task<IActionResult> DownloadList([Bind("Id,isDownload")] BdoPE bdoPE)
         {
             #region download process
 
             UserDetails();
             string cncuser = ViewBag.DisplayName;
-            var config = new CsvHelper.Configuration.Configuration();
-            config.Delimiter = "\t";
+
+            var config = new CsvConfiguration(CultureInfo.CurrentCulture)
+            {
+                Delimiter = "\t"
+            };
+
             var records = new List<BdoRpt>();
             var record = _context.bdoPEs.Where(
             c => c.DocType != null &&
