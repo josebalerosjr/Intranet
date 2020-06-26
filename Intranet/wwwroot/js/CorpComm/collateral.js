@@ -13,32 +13,46 @@ function loadDataTable() {
             "url": "/CorpComm/Collateral/GetAll"
         },
         "columns": [
-            { "data": "name", "width": "15%" },
-            { "data": "description", "width": "38%" },
-            { "data": "size.name", "width": "5%" },
+            { "data": "name", "width": "20%" },
+            { "data": "size.name", "width": "10%" },
             { "data": "unit.name", "width": "5%" },
-            { "data": "brand.name", "width": "5%" },
+            { "data": "brand.name", "width": "15%" },
             { "data": "location.name", "width": "10%" },
-            { "data": "count", "width": "5%" },
-            { "data": "price", "width": "5%" },
-            { "data": "isActive", "width": "5%" },
+            { "data": "count", "width": "10%" },
+            { "data": "price", "width": "10%" },
+            {
+                "data": "isActive",
+                "render": function (data) {
+                    if (data) {
+                        return `<div class="text-center">
+                                    <input type="checkbox" disabled checked class="form-check-input" />
+                                </div>`
+                    }
+                    else {
+                        return `<div class="text-center">
+                                    <input type="checkbox" disabled class="form-check-input" />
+                                </div>`
+                    }
+                },
+                "width": "10%"
+            },
             {
                 "data": "id",
                 "render": function (data) {
                     return `
                             <div class="text-center">
                                 <a href="/CorpComm/Collateral/Upsert/${data}" class="text-success" style="cursor:pointer">
-                                    <i class="fas fa-edit"></i>
+                                    <i class="fas fa-edit" title="Edit"></i>
                                 </a>
                                 <a onclick=Delete("/CorpComm/Collateral/Delete/${data}") class="text-danger" style="cursor:pointer">
-                                    <i class="fas fa-trash-alt"></i>
+                                    <i class="fas fa-trash-alt" title="Delete"></i>
                                 </a>
                                 <a href="/CorpComm/Collateral/Transfer/${data}" asp-route-id="${data}" 
                                 class="text-primary" style="cursor:pointer">
-                                    <i class="fa fa-exchange" aria-hidden="true"></i>
+                                    <i class="fa fa-exchange" aria-hidden="true" title="Transfer"></i>
                             </div>
                            `;
-                }, "width": "7%"
+                }, "width": "10%"
             }
         ]
     });
