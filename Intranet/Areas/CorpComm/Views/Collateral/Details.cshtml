@@ -64,10 +64,10 @@
                 <div class="row">
                     <div class="col-12 col-md-6 pb-1">
                         <a asp-action="Catalog" class="btn btn-success form-control  btn-square btn-lg" style="height:50px;">
-                        Back to List</a>
+                        Back to Catalog</a>
                     </div>
                     <div class="col-12 col-md-6 pb-1">
-                        <button id="add2cart" type="submit" value="Add to Cart"
+                        <button id="add2cart" onclick="return pointsCheckers()" asp-area="CorpComm" asp-controller="Collateral" asp-action="Details"
                                 class="btn btn-primary btn-square btn-lg form-control" style="height:50px;">
                             Add to Cart
                         </button>
@@ -78,8 +78,6 @@
     </div>
 </form>
 @section Scripts {
-    <script src="~/js/CorpComm/collateral_details.js"></script>
-
     <style type="text/css">
         input[type=number] {
             -moz-appearance: textfield;
@@ -89,4 +87,17 @@
                 -webkit-appearance: none;
             }
     </style>
+    <script type="text/javascript">
+        function pointsCheckers() {
+            var itemcount = parseInt($('#itemCount').val());
+            var itemqty = parseInt($('#itemQty').val());
+
+            if (itemqty <= itemcount) {
+                swal("Error", "The count must not exceed the available quantity.")
+                return false;
+            } else {
+                return true;
+            }
+        }
+    </script>
 }

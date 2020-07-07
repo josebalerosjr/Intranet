@@ -1,13 +1,16 @@
 ﻿@model int
+@using Intranet.Utilities
+
 <div class="container row">
     <div class="col-12 text-center">
-        <h1 class="text-primary text-center">Order Submitted Successfully</h1><br />
+        <h1 class="text-primary text-center">Request Submitted Successfully</h1><br />
         <img src="~/img/lawn_leaf.jpg" width="50%" />
     </div>
     <div class="col-12 text-center" style="color:maroon">
         <br />
-        Thank you for your order! <br />
-        We have received your order and we will send a follow up email shortly!
+        Thank you for your request! <br />
+        We will get back to you shortly. For updates, you can view the status of your request by clicking
+        <a asp-area="CorpComm" asp-controller="Order" asp-action="Details" asp-route-id="@Model">here</a>
         <br />
         Your Order Number is : @Model
     </div>

@@ -65,7 +65,7 @@ namespace Intranet.Areas.CorpComm.Controllers
         // Step 01
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = SD.CIOAdmin)]
+        [Authorize(Roles = SD.CIOAdmin + "," + SD.CorpCommAdmin)]
         public IActionResult ReceiveRequestAndForApproval()
         {
             OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == OrderVM.OrderHeader.Id);
@@ -85,7 +85,7 @@ namespace Intranet.Areas.CorpComm.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [Authorize(Roles = SD.CIOAdmin)]
+        [Authorize(Roles = SD.CIOAdmin + "," + SD.CorpCommAdmin)]
         public IActionResult ReceiveRequestAndReject(int id)
         {
             OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == id);
@@ -98,7 +98,7 @@ namespace Intranet.Areas.CorpComm.Controllers
         // Step 02
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = SD.CIOAdmin)]
+        [Authorize(Roles = SD.CIOAdmin + "," + SD.CorpCommAdmin)]
         public IActionResult ProcessOrderAndForDelivery()
         {
             OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == OrderVM.OrderHeader.Id);
@@ -107,19 +107,58 @@ namespace Intranet.Areas.CorpComm.Controllers
             orderHeader.ShippingDate = OrderVM.OrderHeader.ShippingDate;
             orderHeader.PickUpPoints = OrderVM.OrderHeader.PickUpPoints;
 
-            #region EmailTemplate
-
             var PathToFile = _hostEnvironment.WebRootPath + Path.DirectorySeparatorChar.ToString()
                 + "Templates" + Path.DirectorySeparatorChar.ToString() + "EmailTemplates"
                 + Path.DirectorySeparatorChar.ToString() + "Email_Notifications_ForDelivery.html";
 
-            var subject = "For delivery";
+            var subject = "PTT COLLATERALS: Your request is now for delivery!";
+            var subject2 = "For delivery";
             var datetime = String.Format(DateTime.Now.ToShortDateString());
             var OrderId = OrderVM.OrderHeader.Id;
             var ShippingDate = OrderVM.OrderHeader.ShippingDate.ToShortDateString();
             var PickUpPoints = OrderVM.OrderHeader.PickUpPoints;
             var LoginUser = OrderVM.OrderHeader.LoginUser;
             var RequestorEmail = OrderVM.OrderHeader.RequestorEmail;
+
+            #region get order details for email
+
+            OrderVM = new OrderDetailsVM()
+            {
+                OrderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == OrderId),
+                OrderDetails = _unitOfWork.OrderDetails.GetAll(o => o.OrderId == OrderId, includeProperties: "Collateral")
+            };
+            string itemlist = "";
+            var itemname = "";
+            int itemcount;
+
+            foreach (var item in OrderVM.OrderDetails)
+            {
+                itemname = item.Collateral.Name;
+                itemcount = item.Count;
+                itemlist +=
+                    "<tr>" +
+                    "   <td align='center'>" + itemname + "</td>" +
+                    "   <td align='center'>" + itemcount + "</td>" +
+                    "</tr>";
+            }
+
+            string listfinal =
+            "   <table align='center' border='1' width='100%'>" +
+            "       <tr>" +
+            "           <td colspan='2' align='center'><strong> COLLATERALS </strong></td>" +
+            "       </tr>" +
+            "       <tr>" +
+            "           <td align='center'> " +
+            "                <strong>ITEM</strong>        " +
+            "           </td>               " +
+            "           <td align='center'> " +
+            "               <strong>QUANTITY</strong>     " +
+            "           </td>               " +
+            "       </tr>                   " +
+                    itemlist +
+            "   </table> ";
+
+            #endregion get order details for email
 
             string HtmlBody = "";
 
@@ -128,25 +167,15 @@ namespace Intranet.Areas.CorpComm.Controllers
                 HtmlBody = streamReader.ReadToEnd();
             }
 
-            // {0} : for Delivery
-            // {1} : DateTime
-            // {2} : Request Number
-            // {3} : Shipping Date
-            // {4} : Drop-off Location
-            // {5} : Requestor Name
-            // {6} : Email
+            // [0] subject
+            // [1] date
+            // [2] request number
+            // [3] shipping date
+            // [4] drop - off location
+            // [5] requestor name
+            // [6] item and count
 
-            string messageBody = string.Format(HtmlBody,
-                subject,
-                datetime,
-                OrderId,
-                ShippingDate,
-                PickUpPoints,
-                LoginUser,
-                RequestorEmail
-                );
-
-            #endregion EmailTemplate
+            string messageBody = string.Format(HtmlBody, subject2, datetime, OrderId, ShippingDate, PickUpPoints, LoginUser, listfinal);
 
             EmailSender(
                 RequestorEmail,
@@ -166,16 +195,59 @@ namespace Intranet.Areas.CorpComm.Controllers
             OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == OrderVM.OrderHeader.Id);
             orderHeader.OrderStatus = SD.StatusForAcknowledgement;
 
-            #region EmailTemplate
-
             var PathToFile = _hostEnvironment.WebRootPath + Path.DirectorySeparatorChar.ToString()
                 + "Templates" + Path.DirectorySeparatorChar.ToString() + "EmailTemplates"
                 + Path.DirectorySeparatorChar.ToString() + "Email_Notifications_ForAcknowledment.html";
 
-            var subject = "For Acknowledgement";
+            var subject = "PTT COLLATERALS: Your request is now for acknowledgement!";
+            var subject2 = "For Acknowledgement";
             var datetime = String.Format(DateTime.Now.ToShortDateString());
+            var OrderId = OrderVM.OrderHeader.Id;
             var LoginUser = OrderVM.OrderHeader.LoginUser;
             var RequestorEmail = OrderVM.OrderHeader.RequestorEmail;
+            var ShippingDate = OrderVM.OrderHeader.ShippingDate.ToShortDateString();
+            var PickUpPoints = OrderVM.OrderHeader.PickUpPoints;
+            var clickhere = SD.IntranetLink + "CorpComm/Order/Details/" + OrderId;
+
+            #region get order details for email
+
+            OrderVM = new OrderDetailsVM()
+            {
+                OrderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == OrderId),
+                OrderDetails = _unitOfWork.OrderDetails.GetAll(o => o.OrderId == OrderId, includeProperties: "Collateral")
+            };
+            string itemlist = "";
+            var itemname = "";
+            int itemcount;
+
+            foreach (var item in OrderVM.OrderDetails)
+            {
+                itemname = item.Collateral.Name;
+                itemcount = item.Count;
+                itemlist +=
+                    "<tr>" +
+                    "   <td align='center'>" + itemname + "</td>" +
+                    "   <td align='center'>" + itemcount + "</td>" +
+                    "</tr>";
+            }
+
+            string listfinal =
+            "   <table align='center' border='1' width='100%'>" +
+            "       <tr>" +
+            "           <td colspan='2' align='center'><strong> COLLATERALS </strong></td>" +
+            "       </tr>" +
+            "       <tr>" +
+            "           <td align='center'> " +
+            "                <strong>ITEM</strong>        " +
+            "           </td>               " +
+            "           <td align='center'> " +
+            "               <strong>QUANTITY</strong>     " +
+            "           </td>               " +
+            "       </tr>                   " +
+                    itemlist +
+            "   </table> ";
+
+            #endregion get order details for email
 
             string HtmlBody = "";
 
@@ -184,18 +256,18 @@ namespace Intranet.Areas.CorpComm.Controllers
                 HtmlBody = streamReader.ReadToEnd();
             }
 
-            // {0} : for Delivery
-            // {1} : DateTime
-            // {2} : Request Number
+            // [0] subject
+            // [1] date
+            // [2] request number
+            // [3] shipping date
+            // [4] drop - off location
+            // [5] requestor name
+            // [6] item and count
+            // [7] click here
 
-            string messageBody = string.Format(HtmlBody,
-                subject,
-                datetime,
-                LoginUser,
-                OrderVM.OrderHeader.Id
-                );
+            //string messageBody = string.Format(HtmlBody, subject,datetime,LoginUser,OrderVM.OrderHeader.Id);
 
-            #endregion EmailTemplate
+            string messageBody = string.Format(HtmlBody, subject2, datetime, OrderId, ShippingDate, PickUpPoints, LoginUser, listfinal, clickhere);
 
             EmailSender(
                 RequestorEmail,
@@ -241,7 +313,7 @@ namespace Intranet.Areas.CorpComm.Controllers
 
             IEnumerable<OrderHeader> orderHeadersList;
 
-            if (User.IsInRole(SD.CIOAdmin))
+            if (User.IsInRole(SD.CIOAdmin + "," + SD.CorpCommAdmin))
             {
                 orderHeadersList = _unitOfWork.OrderHeader.GetAll();
             }
@@ -303,7 +375,7 @@ namespace Intranet.Areas.CorpComm.Controllers
             string UserCart = ViewBag.DisplayName;
             if (UserCart != null)
             {
-                var count = _unitOfWork.ShoppingCart.GetAll(c => c.LoginUser == UserCart, 
+                var count = _unitOfWork.ShoppingCart.GetAll(c => c.LoginUser == UserCart,
                     includeProperties: "Collateral").ToList().Count();
                 HttpContext.Session.SetObject(SD.ssShoppingCart, count);
                 ViewBag.ItemCount = count;

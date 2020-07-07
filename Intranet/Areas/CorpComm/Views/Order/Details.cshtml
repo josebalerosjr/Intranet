@@ -10,10 +10,10 @@
         <div class="card">
             <div class="card-header bg-dark text-light ml-0 row container">
                 <div class="col-12 d-none d-md-block col-md-6 pb-1">
-                    <i class="fas fa-shopping-cart"></i> &nbsp; Order Summary
+                    <i class="fas fa-shopping-cart"></i> &nbsp; Request Summary
                 </div>
                 <div class="col-12 col-md-4 offset-md-2 text-right">
-                    <a asp-area="CorpComm" asp-controller="Order" asp-action="Index" class="btn btn-outline-info form-control btn-sm">Back to Orders</a>
+                    <a asp-area="CorpComm" asp-controller="Order" asp-action="Index" class="btn btn-outline-info form-control btn-sm">Back to Requests</a>
                 </div>
             </div>
             <div class="card-body">
@@ -22,13 +22,13 @@
                         <div class="col-12 col-lg-6 pb-4">
                             <div class="row">
                                 <h4 class="d-flex justify-content-between align-items-center mb-3">
-                                    <span class="text-primary">Status Details:</span>
+                                    <span class="text-primary">Request Details:</span>
                                 </h4>
                             </div>
                             <div class="row my-1">
-                                <div class="col-3">Order Date</div>
+                                <div class="col-3">Request Date</div>
                                 <div class="col-9">
-                                    @if (User.IsInRole(SD.CIOAdmin))
+                                    @if (User.IsInRole(SD.CIOAdmin) || User.IsInRole(SD.CorpCommAdmin))
                                     {
                                         <input value="@Model.OrderHeader.OrderDate.ToShortDateString()" type="text" class="form-control" />
                                     }
@@ -43,7 +43,7 @@
                                 <div class="row my-1">
                                     <div class="col-3">Shipping Date</div>
                                     <div class="col-9">
-                                        @if (User.IsInRole(SD.CIOAdmin))
+                                        @if (User.IsInRole(SD.CIOAdmin) || User.IsInRole(SD.CorpCommAdmin))
                                         {
                                             <input id="shippingDate" asp-for="OrderHeader.ShippingDate" type="date" class="form-control" />
                                         }
@@ -60,7 +60,7 @@
                                 <div class="row my-1">
                                     <div class="col-3">Drop-off Point</div>
                                     <div class="col-9">
-                                        @if (User.IsInRole(SD.CIOAdmin))
+                                        @if (User.IsInRole(SD.CIOAdmin) || User.IsInRole(SD.CorpCommAdmin))
                                         {
                                             <select id="pickupPoint" class="form-control" asp-for="OrderHeader.PickUpPoints">
                                                 <option>-Drop-off Point</option>
@@ -79,7 +79,7 @@
                             <div class="row my-1">
                                 <div class="col-3">Request Type</div>
                                 <div class="col-9">
-                                    @if (User.IsInRole(SD.CIOAdmin))
+                                    @if (User.IsInRole(SD.CIOAdmin) || User.IsInRole(SD.CorpCommAdmin))
                                     {
                                         <select class="form-control" asp-for="OrderHeader.RequestType">
                                             <option value="@SD.ReqRegular">@SD.ReqRegular</option>
@@ -94,9 +94,9 @@
                             </div>
 
                             <div class="row my-1">
-                                <div class="col-3">Order Status</div>
+                                <div class="col-3">Request Status</div>
                                 <div class="col-9">
-                                    @if (User.IsInRole(SD.CIOAdmin))
+                                    @if (User.IsInRole(SD.CIOAdmin) || User.IsInRole(SD.CorpCommAdmin))
                                     {
                                         <input asp-for="OrderHeader.OrderStatus" type="text" class="form-control" />
                                     }
@@ -109,7 +109,7 @@
                         </div>
                         <div class="col-12 col-lg-5 offset-lg-1">
                             <h4 class="d-flex justify-content-between align-items-center mb-3">
-                                <span class="text-primary">Order Summary</span>
+                                <span class="text-primary">Request Summary</span>
                             </h4>
                             <ul class="list-group mb-3">
                                 @foreach (var details in Model.OrderDetails)
@@ -141,17 +141,17 @@
                             </ul>
 
                             <!--ADMIN ONLY-->
-                            @if (User.IsInRole(SD.CIOAdmin))
+                            @if (User.IsInRole(SD.CIOAdmin) || User.IsInRole(SD.CorpCommAdmin))
                             {
                                 
                                 @if (Model.OrderHeader.OrderStatus == SD.StatusRequestSent)
                                 {
                                     // Receive Order
-                                    <input value="Receive Order" class="btn btn-primary form-control" type="submit"
+                                    <input value="Approve Request" class="btn btn-primary form-control" type="submit"
                                            formaction="/CorpComm/Order/ReceiveRequestAndForApproval" formmethod="post" /><br /><br />
                                     // Reject Order
                                     <a asp-area="CorpComm" asp-controller="Order" asp-action="ReceiveRequestAndReject"
-                                       asp-route-id="@Model.OrderHeader.Id" class="btn btn-primary form-control">Reject Order</a>
+                                       asp-route-id="@Model.OrderHeader.Id" class="btn btn-primary form-control">Reject Request</a>
                                 }
 
                                 @if (Model.OrderHeader.OrderStatus == SD.StatusForApproval)
@@ -163,7 +163,7 @@
                             }
 
                             <!--USER ONLY-->
-                            @if (!User.IsInRole(SD.CIOAdmin))
+                            @if (!User.IsInRole(SD.CIOAdmin) || User.IsInRole(SD.CorpCommAdmin))
                             {
                                 if (Model.OrderHeader.OrderStatus == SD.StatusForDelivery)
                                 {   
@@ -176,7 +176,7 @@
                                 {
                                     // Confirm Receipt
                                     <a asp-area="CorpComm" asp-controller="Order" asp-action="AcknowledgeAndConfirmReceipt"
-                                       asp-route-id="@Model.OrderHeader.Id" class="btn btn-primary form-control">Confirm Receipt</a>
+                                       asp-route-id="@Model.OrderHeader.Id" class="btn btn-primary form-control">Acknowledge Receipt</a>
                                 }
 
 
@@ -189,11 +189,11 @@
                                                 Choose a rating:
                                             </label>
                                             <select class="form-control" asp-for="OrderHeader.OrderRating">
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
                                                 <option value="5">5</option>
+                                                <option value="4">4</option>
+                                                <option value="3">3</option>
+                                                <option value="2">2</option>
+                                                <option value="1">1</option>
                                             </select>
                                         </div>
                                         <br /> <br />

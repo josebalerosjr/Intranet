@@ -25,8 +25,12 @@ namespace Intranet.Utilities
 
         // Drop-Off Location
         public const string DO_Edsa = "EDSA Vet";
-
         public const string DO_LKG = "LKG Makati";
+
+        // App URL
+        //public const string IntranetLink = "http://qas.intranet.pttphils.com/";
+        public const string IntranetLink = "http://localhost:44322/";
+        //public const string IntranetLink = "http://intranet.pttphils.com/";
 
         // item value
         public static string collateralLoc;
@@ -36,17 +40,16 @@ namespace Intranet.Utilities
 
         // Request type
         public const string ReqUrgent = "Urgent";
-
         public const string ReqRegular = "Regular";
 
         // Autorization
-        public const string CorpCommAdmin = "CorpComm Intranet Admin";
+        public const string CorpCommAdmin = "CorpComm Admin";
 
         #endregion CorpComm
 
         #region MIS/ICT
 
-        public const string CIOAdmin = "Office of the Chief Information Officer";
+        public const string CIOAdmin = "1Office of the Chief Information Officer";
         public const string CIOAdminFake = "1Office of the Chief Information Officer";
         public const string ICTIntranet = "ICT Intranet";
         public const string MISIntranet = "MIS Intranet";

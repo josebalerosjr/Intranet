@@ -5,6 +5,8 @@ using MailKit.Net.Smtp;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using System;
+using Intranet.Models.ViewModels.CorpComm;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Intranet.DataAccess.Repository.CorpComm
 {
@@ -12,6 +14,9 @@ namespace Intranet.DataAccess.Repository.CorpComm
     {
         private readonly EmailOptions _emailOptions;
         private readonly IUnitOfWork _unitOfWork;
+
+        [BindProperty]
+        public OrderDetailsVM OrderVM { get; set; }
 
         public MondayReminder(
             IOptions<EmailOptions> emailOptions,
@@ -21,17 +26,62 @@ namespace Intranet.DataAccess.Repository.CorpComm
             _emailOptions = emailOptions.Value;
         }
 
+        [Obsolete]
         public void SendEmail()
         {
             var orderHeader = _unitOfWork.OrderHeader.GetAll(c => c.OrderStatus == SD.StatusForAcknowledgement || c.OrderStatus == SD.StatusForRating);
 
             foreach (var order in orderHeader)
             {
-                var subject = order.OrderStatus;
+                var subject = "PTT COLLATERALS: You have a pending request!";
+                var subject2 = order.OrderStatus.ToUpper();
                 var loginUser = order.LoginUser;
                 var datetime = String.Format(DateTime.Now.ToShortDateString());
                 var orderId = order.Id;
                 var requestorEmail = order.RequestorEmail;
+                var ShippingDate = order.ShippingDate.ToShortDateString();
+                var PickUpPoints = order.PickUpPoints;
+                var RequestorEmail = order.RequestorEmail;
+
+                #region get order details for email
+
+                OrderVM = new OrderDetailsVM()
+                {
+                    OrderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == orderId),
+                    OrderDetails = _unitOfWork.OrderDetails.GetAll(o => o.OrderId == orderId, includeProperties: "Collateral")
+                };
+                string itemlist = "";
+                var itemname = "";
+                int itemcount;
+
+                foreach (var item in OrderVM.OrderDetails)
+                {
+                    itemname = item.Collateral.Name;
+                    itemcount = item.Count;
+                    itemlist +=
+                        "<tr>" +
+                        "   <td align='center'>" + itemname + "</td>" +
+                        "   <td align='center'>" + itemcount + "</td>" +
+                        "</tr>";
+                }
+
+                string listfinal =
+                "   <table align='center' border='1' width='100%'>" +
+                "       <tr>" +
+                "           <td colspan='2' align='center'><strong> COLLATERALS </strong></td>" +
+                "       </tr>" +
+                "       <tr>" +
+                "           <td align='center'> " +
+                "                <strong>ITEM</strong>        " +
+                "           </td>               " +
+                "           <td align='center'> " +
+                "               <strong>QUANTITY</strong>     " +
+                "           </td>               " +
+                "       </tr>                   " +
+                        itemlist +
+                "   </table> ";
+
+                #endregion get order details for email
 
                 #region HTML Body
 
@@ -52,9 +102,10 @@ namespace Intranet.DataAccess.Repository.CorpComm
                     "                   <td height='70' align='left' valign='middle'></td>" +
                     "               </tr>" +
                     "               <tr>" +
-                    "                   <td align='left' valign='top' bgcolor='#564319' style='background-color:darkcyan; font-family:Arial, Helvetica, sans-serif; padding:10px;'>" +
+                    "                   <td align='left' valign='top' bgcolor='#564319' style='background-color:darkcyan; " +
+                    "                       font-family:Arial, Helvetica, sans-serif; padding:10px;'>" +
                     "                       <div style='font-size:36px; color:#ffffff;'>" +
-                    "                           <b>" + subject + "</b>" +
+                    "                           <b>" + subject2 + "</b>" +
                     "                       </div>" +
                     "                   <div style='font-size:13px; color:lightcyan;'>" +
                     "                       <b>" + DateTime.Now.ToShortDateString() + " : Collateral Request Application </b>" +
@@ -65,28 +116,43 @@ namespace Intranet.DataAccess.Repository.CorpComm
                     "               <td align='left' valign='top' bgcolor='#ffffff' style='background-color:#ffffff;'>" +
                     "                   <table width='100%' border='0' cellspacing='0' cellpadding='0'>" +
                     "                       <tr>" +
-                    "                           <td align='center' valign='middle' style='padding:10px; color:#564319; font-size:28px; font-family:Georgia, 'Times New Roman', Times, serif;'>" +
-                    "                               Reminder! <br />" +
+                    "                           <td align='center' valign='middle' style='padding:10px; color:#564319; font-size:28px; " +
+                    "                               font-family:Georgia, 'Times New Roman', Times, serif;'>" +
                     "                           </td>" +
                     "                       </tr>" +
                     "                   </table>" +
                     "                   <table width='95%' border='0' align='center' cellpadding='0' cellspacing='0'>" +
                     "                       <tr>" +
-                    "                           <td width='100%' style='color:darkslategrey; font-family:Arial, Helvetica, sans-serif; padding:10px;'>" +
+                    "                           <td width='100%' " +
+                    "                               style='color:darkslategrey; font-family:Arial, Helvetica, sans-serif; padding:10px;'>" +
                     "                               <div style='font-size:16px;'>" +
                     "                               </div>" +
-                    "                               <div style='font-size:12px;'>" +
-                    "                                   <hr>" +
-                    "                                   <b>" +
-                    "                                       <center style='font-size: medium'>" +
-                    "                                           Hi " + loginUser + ", you have a pending " + subject + ", complete it by clicking" +
-                    "                                           <a href='http://qas.intranet.pttphils.com/CorpComm/Order/Details/'" + orderId + "'>Here</a>" +
-                    "                                       </center>" +
-                    "                                   </br>" +
-                    "                                   <hr>" +
-                    "                               </div>" +
-                    "                           </td>" +
-                    "                       </tr>" +
+                    "                               <div style='font-size:14px;'>" +
+                    "                               <!--<hr>-->" +
+                    "                               <!--<b>-->" +
+                    "                               Dear, <strong>" + loginUser + "</strong> <br />" +
+                    "                               <table align='center'>" +
+                    "                                   <tr>" +
+                    "                                       <td align='center'>" +
+                    "                                           <strong> You have a pending request " + order.OrderStatus.ToLower() + ", complete your request by clicking " +
+                    "                                           <a href='" + SD.IntranetLink + "CorpComm/Order/Details/" + orderId + "'>here</a>.</strong>" +
+                    "                                       </td>" +
+                    "                                   </tr>" +
+                    "                               </table><br />" +
+                    "                               Please see request details below: <br /> <br />" +
+                    "                               Request Number: <strong>" + orderId + "</strong> <br />" +
+                    "                               Shipping Date: <strong>" + ShippingDate + "</strong> <br />" +
+                    "                               Drop-off location: <strong>" + PickUpPoints + "</strong> <br /> <br />" + 
+                                                    listfinal +  
+                    "                               <br />" +
+                    "                               Thank you! <br /> <br />" +
+                    "                               Best Regards, <br /><br />" +
+                    "                               <strong> CORPORATE COMMUNICATIONS DEPARTMENT</strong>" +
+                    "                               <!--</b> -->" +
+                    "                               <!--<hr> -->" +
+                    "                           </div>" +
+                    "                       </td>" +
+                    "                   </tr> " +
                     "                   </table>" +
                     "                   <table width='100%' border='0' align='center' cellpadding='0' cellspacing='0' style='margin-bottom:15px;'>" +
                     "                       <tr>" +
@@ -144,7 +210,7 @@ namespace Intranet.DataAccess.Repository.CorpComm
                     client.Send(message);
                     client.Disconnect(true);
                 }
-            }           
+            }
         }
     }
 }

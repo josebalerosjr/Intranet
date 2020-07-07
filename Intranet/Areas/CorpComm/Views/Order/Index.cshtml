@@ -42,7 +42,7 @@
 <div class="border p-3">
     <div class="d-flex justify-content-between mb-3">
         <div class="p-2">
-            <h2 class="text-primary">Orders List</h2>
+            <h2 class="text-primary">Request List</h2>
         </div>
         <div class="p-2">
             <ul class="list-group list-group-horizontal-sm">
@@ -53,7 +53,7 @@
                 <a style="text-decoration:none;" class="btn border @fordelivery" asp-controller="Order" 
                    asp-action="Index" asp-route-status="fordelivery">For Delivery</a>
                 <a style="text-decoration:none;" class="btn border @foracknowledge" asp-controller="Order" 
-                   asp-action="Index" asp-route-status="foracknowledge">For Acknowledgemet</a>
+                   asp-action="Index" asp-route-status="foracknowledge">For Acknowledgement</a>
                 <a style="text-decoration:none;" class="btn border @forrating" asp-controller="Order" 
                    asp-action="Index" asp-route-status="forrating">For Rating</a>
                 <a style="text-decoration:none;" class="btn border @rejected" asp-controller="Order" 
@@ -72,7 +72,7 @@
                 <th>Id</th>
                 <th>Name</th>
                 <th>Amount</th>
-                <th>Order Status</th>
+                <th>Request Status</th>
                 <th>Rating</th>
                 <th></th>
             </tr>

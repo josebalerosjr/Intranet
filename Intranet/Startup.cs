@@ -230,7 +230,7 @@ namespace Intranet
             );
 
             RecurringJob.AddOrUpdate<IMondayReminder>(
-                MondayReminder => MondayReminder.SendEmail(), Cron.Weekly
+                MondayReminder => MondayReminder.SendEmail(), Cron.Minutely
             ); 
 
             app.UseRouting();
