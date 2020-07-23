@@ -4,14 +4,16 @@ using Intranet.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Intranet.DataAccess.Data.Migrations.CorpComm
 {
     [DbContext(typeof(CorpCommDbContext))]
-    partial class CorpCommDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200707065217_AddEventTypeStationEventDateToOrderHeader")]
+    partial class AddEventTypeStationEventDateToOrderHeader
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -203,60 +205,6 @@ namespace Intranet.DataAccess.Data.Migrations.CorpComm
                     b.ToTable("Events");
                 });
 
-            modelBuilder.Entity("Intranet.Models.CorpComm.History", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("CollateralId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CollateralName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DropOffPoint")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("EventDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("EventType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LoginUser")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ReconRemarks")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RejectMarks")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("RequestDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("RequestId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("ShippingDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("StationEvent")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("rating")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Histories");
-                });
-
             modelBuilder.Entity("Intranet.Models.CorpComm.Location", b =>
                 {
                     b.Property<int>("Id")
@@ -345,9 +293,6 @@ namespace Intranet.DataAccess.Data.Migrations.CorpComm
                         .HasColumnType("int");
 
                     b.Property<string>("PickUpPoints")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RejectReason")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RequestType")

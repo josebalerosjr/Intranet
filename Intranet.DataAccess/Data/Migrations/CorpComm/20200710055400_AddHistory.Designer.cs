@@ -4,14 +4,16 @@ using Intranet.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Intranet.DataAccess.Data.Migrations.CorpComm
 {
     [DbContext(typeof(CorpCommDbContext))]
-    partial class CorpCommDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200710055400_AddHistory")]
+    partial class AddHistory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -209,9 +211,6 @@ namespace Intranet.DataAccess.Data.Migrations.CorpComm
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("CollateralId")
-                        .HasColumnType("int");
 
                     b.Property<string>("CollateralName")
                         .HasColumnType("nvarchar(max)");

@@ -1,0 +1,85 @@
+﻿@model IEnumerable<Intranet.Models.CorpComm.History>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<div class="row">
+    <div class="col-6">
+        <h2 class="text-primary">History</h2>
+    </div>
+</div>
+
+<br />
+@*<div class="p-4 border rounded">
+        <table id="tblData" class="table table-hover border" style="display: block; overflow-x: auto; white-space: nowrap; width:100%;">
+            <thead class="thead-light">
+                <tr class="table-info">
+                    <th>Request Number</th>
+                    <th>Request Date</th>
+                    <th>Requestor</th>
+                    <th>Collateral</th>
+                    <th>Event Type</th>
+                    <th>Quantity</th>
+                    <th>Station Name / Event Name</th>
+                    <th>Event Date</th>
+                    <th>Shipping Date</th>
+                    <th>Drop-Off Point</th>
+                    <th>Rating</th>
+                </tr>
+            </thead>
+        </table>
+    </div>*@
+<div class="p-4 border rounded">
+    <table id="tblData" class="table table-hover border" style="display: block; overflow-x: auto; white-space: nowrap; width:100%;">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.RequestId)</th>
+                <th>@Html.DisplayNameFor(model => model.ReconRemarks)</th>
+                <th>@Html.DisplayNameFor(model => model.LoginUser)</th>
+                <th>@Html.DisplayNameFor(model => model.CollateralName)</th>
+                @*<th>@Html.DisplayNameFor(model => model.EventType)</th>*@
+                <th>@Html.DisplayNameFor(model => model.Quantity)</th>
+                <th>@Html.DisplayNameFor(model => model.StationEvent)</th>
+                @*<th>@Html.DisplayNameFor(model => model.EventDate)</th>
+                <th>@Html.DisplayNameFor(model => model.ShippingDate)</th>*@
+                <th>@Html.DisplayNameFor(model => model.RequestDate)</th>
+                @*<th>@Html.DisplayNameFor(model => model.DropOffPoint)</th>*@
+                @*<th>@Html.DisplayNameFor(model => model.rating)</th>*@
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.RequestId)</td>
+                <td>@Html.DisplayFor(modelItem => item.ReconRemarks)</td>
+                <td>@Html.DisplayFor(modelItem => item.LoginUser)</td>
+                <td>@Html.DisplayFor(modelItem => item.CollateralName)</td>
+                @*<td>@Html.DisplayFor(modelItem => item.EventType)</td>*@
+                <td>@Html.DisplayFor(modelItem => item.Quantity)</td>
+                <td>@Html.DisplayFor(modelItem => item.StationEvent)</td>
+                @*<td>@Html.DisplayFor(modelItem => item.EventDate)</td>
+                <td>@Html.DisplayFor(modelItem => item.ShippingDate)</td>*@
+                <td>@Html.DisplayFor(modelItem => item.RequestDate)</td>
+                @*<td>@Html.DisplayFor(modelItem => item.DropOffPoint)</td>*@
+                @*<td>@Html.DisplayFor(modelItem => item.rating)</td>*@
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('#tblData').DataTable({
+                "displayLength": 10,
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                dom: 'Bfrtip'
+            });
+        });
+    </script>
+}

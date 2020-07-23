@@ -3,12 +3,14 @@
     //var selValue = document.getElementById("singleSelectDD").value;
     var selObj = document.getElementById("singleSelectValueDDJS");
     var selValue = selObj.options[selObj.selectedIndex].value;
+    var dropdown = document.getElementById("textFieldValueJS").text;
     var totalAmount = document.getElementById("txtOrderTotal").innerText;
     //Setting Value
     if (selObj.value === '') {
         document.getElementById("textFieldValueJS").innerText = 0;
     } else {
         document.getElementById("textFieldValueJS").innerText = selValue;
+        $('#eventType').text(dropdown);
     }
     compareVal();
 }

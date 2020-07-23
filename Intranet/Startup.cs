@@ -37,7 +37,8 @@ namespace Intranet
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
+            services.AddControllersWithViews()
+                    .AddRazorRuntimeCompilation();
 
             #region variable declaration for appsettings and connections string
 
@@ -230,7 +231,7 @@ namespace Intranet
             );
 
             RecurringJob.AddOrUpdate<IMondayReminder>(
-                MondayReminder => MondayReminder.SendEmail(), Cron.Minutely
+                MondayReminder => MondayReminder.SendEmail(), Cron.Weekly
             ); 
 
             app.UseRouting();

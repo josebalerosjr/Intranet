@@ -68,10 +68,21 @@
             </div> <!--Location-->
             <div class="form-group row">
                 <div class="col-4"><label asp-for="Collateral.Count"></label></div>
-                <div class="col-8">
-                    <input asp-for="Collateral.Count" class="form-control" />
-                    <span asp-validation-for="Collateral.Count" class="text-danger"></span>
-                </div>
+                @if (Model.Collateral.Id != 0)
+                {
+                    <div class="col-8">
+                        <input asp-for="Collateral.Count" disabled class="form-control" />
+                        <span asp-validation-for="Collateral.Count" class="text-danger"></span>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-8">
+                        <input asp-for="Collateral.Count" class="form-control" />
+                        <span asp-validation-for="Collateral.Count" class="text-danger"></span>
+                    </div>
+                }
+
             </div> <!--Count-->
             <div class="form-group row">
                 <div class="col-4"><label asp-for="Collateral.Price"></label></div>

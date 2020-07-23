@@ -1,4 +1,5 @@
 ﻿using Intranet.Classes;
+using Intranet.DataAccess.Data;
 using Intranet.DataAccess.Repository.IRepository;
 using Intranet.Models.CorpComm;
 using Intranet.Models.ViewModels.CorpComm;
@@ -22,12 +23,14 @@ namespace Intranet.Areas.CorpComm.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly IWebHostEnvironment _hostEnvironment;
         private readonly AppSettings _appSettings;
+        private readonly CorpCommDbContext _context;
 
-        public CollateralController(IUnitOfWork unitOfWork, IOptions<AppSettings> appSettings, IWebHostEnvironment hostEnvironment)
+        public CollateralController(IUnitOfWork unitOfWork, IOptions<AppSettings> appSettings, IWebHostEnvironment hostEnvironment, CorpCommDbContext context)
         {
             _unitOfWork = unitOfWork;
             _appSettings = appSettings.Value;
             _hostEnvironment = hostEnvironment;
+            _context = context;
         }
 
         public IActionResult Index()
@@ -230,8 +233,6 @@ namespace Intranet.Areas.CorpComm.Controllers
             }
         }
 
-
-
         public IActionResult Transfer(int? id)
         {
             UserDetails();
@@ -255,7 +256,6 @@ namespace Intranet.Areas.CorpComm.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-
         public IActionResult Transfer(CollateralVM collateralVM, int qtyfrom)
         {
             Collateral objMinusItem = _unitOfWork.Collateral.Get(collateralVM.Collateral.Id);
@@ -281,7 +281,7 @@ namespace Intranet.Areas.CorpComm.Controllers
 
         #region API CALLS
 
-            [HttpGet]
+        [HttpGet]
         public IActionResult GetAll()
         {
             CartCount();

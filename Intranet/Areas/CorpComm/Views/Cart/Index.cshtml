@@ -10,6 +10,7 @@
     {
         <div class="backgroundWhiteBorder">
             <div class="container">
+                <input type="hidden" id="eventType" value="" />
                 <div class="card">
                     <div class="card-header bg-dark text-light ml-0 row container">
                         <div class="col-6">
@@ -62,21 +63,27 @@
 
                         <div class="row">
                             <div class="col-12 col-md-6 offset-md-6 col-lg-4 offset-lg-8 pr-4">
-                                <ul class="list-group ">
-                                    @Html.DropDownListFor(m => m.Event.Id, Model.EventList,
+                                <ul class="list-group">
+                                    @Html.DropDownListFor(m => m.Event.Name, Model.EventList,
                                             "-Select an Event",
                                             new { @class = "form-control", @onchange = "singleSelectChangeValue()", 
                                                 @id = "singleSelectValueDDJS" })
+                                    @Html.HiddenFor(u => u.SelectedEvent)
                                     <br />
+                                        <input class="form-control" id="StationEvent" asp-for="OrderHeader.StationEvent" type="text" />
+                                        <br />
+                                        <input class="form-control" id="EventDate" asp-for="OrderHeader.EventDate" type="date" value="" />
+                                        <br />
                                     <li class="list-group-item d-flex justify-content-between bg-light">
                                         <span class="text-info"> Budget Limit</span>
-                                        <strong class="text-info">$ <span id="textFieldValueJS">0</span></strong>
+                                        <strong class="text-info"><span id="textFieldValueJS">0</span></strong>
                                     </li>
                                     <li class="list-group-item d-flex justify-content-between bg-light">
                                         <span class="text-info"> Total (USD)</span>
-                                        <strong class="text-info">$ <span id="txtOrderTotal">
+                                        <strong class="text-info"><span id="txtOrderTotal">
                                             @Model.OrderHeader.OrderTotal</span></strong>
                                     </li>
+                                    
                                 </ul>
                             </div>
                         </div>
@@ -100,4 +107,20 @@
 </form>
 @section Scripts {
     <script src="~/js/CorpComm/cart.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            var selEventText = this.getElementById("singleSelectValueDDJS").text;
+            $("form").submit(function () {
+                $("#SelectedType").val(selEventText);
+            })
+        });
+    </script>
+    @*<script>
+        $(function () {
+            $('#singleSelectValueDDJS').change(function () {
+                var dropdown = document.getElementById("textFieldValueJS").text;
+                $('#eventType').text(dropdown);
+            })
+        });
+    </script>*@
 }

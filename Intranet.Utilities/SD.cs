@@ -14,18 +14,28 @@ namespace Intranet.Utilities
         public const string ssShoppingCart = "Shopping Cart Session";
 
         // Request Status
-        public const string StatusRequestSent = "Request Sent";
-
         public const string StatusForApproval = "For Approval";
+        public const string StatusApproved = "Approved";
         public const string StatusForDelivery = "For Delivery";
         public const string StatusForAcknowledgement = "For Acknowledgement";
         public const string StatusForRating = "For Rating";
         public const string StatusRejected = "Rejected";
         public const string StatusCompleted = "Completed";
+        public const string StatusCancelled = "Canceled";
+        //public const string StatusDelivered = "Delivered";
 
         // Drop-Off Location
         public const string DO_Edsa = "EDSA Vet";
         public const string DO_LKG = "LKG Makati";
+
+        // history
+        public static int historyid = 0;
+        public static string histLoginName;
+        public static string histColId;
+        public static string histColName;
+        public static string histQty;
+        public static string histReqDate;
+        public static string histReconRemarks;
 
         // App URL
         //public const string IntranetLink = "http://qas.intranet.pttphils.com/";

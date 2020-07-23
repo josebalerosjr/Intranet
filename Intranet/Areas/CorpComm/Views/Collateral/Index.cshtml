@@ -8,13 +8,13 @@
         <h2 class="text-primary">Collateral List </h2>
     </div>
     <div class="col-6 text-right">
+        <a class="btn btn-primary" asp-area="CorpComm" asp-controller="History" asp-action="Index"><i class="fas fa-plus"></i> &nbsp; History</a>
         <a class="btn btn-primary" asp-action="Upsert"><i class="fas fa-plus"></i> &nbsp; Create New Collateral</a>
     </div>
 </div>
 
-<br />
 <div class="p-4 border rounded">
-    <table id="tblData" class="table table-hover" style="width:100%">
+    <table id="tblData" class="table table-hover border" style="display: block; overflow-x: auto; white-space: nowrap; width:100%;">
         <thead class="thead-dark">
             <tr class="table-info">
                 <th>Name</th>

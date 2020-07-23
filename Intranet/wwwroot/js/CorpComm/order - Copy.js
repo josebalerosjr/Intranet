@@ -12,7 +12,7 @@ $(document).ready(function () {
                 loadDataTable("GetOrderList?status=fordelivery");
             } else {
                 if (url.includes("foracknowledge")) {
-                    loadDataTable("GetOrderList?status=foracknowledgement");
+                    loadDataTable("GetOrderList?status=foracknowledge");
                 } else {
                     if (url.includes("forrating")) {
                         loadDataTable("GetOrderList?status=forrating");

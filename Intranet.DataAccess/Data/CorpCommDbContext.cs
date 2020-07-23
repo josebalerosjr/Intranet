@@ -35,5 +35,6 @@ namespace Intranet.DataAccess.Data
         public DbSet<OrderDetails> OrderDetails { get; set; }
         public DbSet<OrderHeader> OrderHeaders { get; set; }
         public DbSet<ShoppingCart> ShoppingCarts { get; set; }
+        public DbSet<History> Histories { get; set; }
     }
 }

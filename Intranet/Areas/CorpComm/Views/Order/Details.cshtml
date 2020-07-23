@@ -38,7 +38,7 @@
                                     }
                                 </div>
                             </div>
-                            @if (Model.OrderHeader.OrderStatus != SD.StatusRequestSent)
+                            @if (Model.OrderHeader.OrderStatus != SD.StatusForApproval)
                             {
                                 <div class="row my-1">
                                     <div class="col-3">Shipping Date</div>
@@ -55,7 +55,7 @@
                                     </div>
                                 </div>
                             }
-                            @if (Model.OrderHeader.OrderStatus != SD.StatusRequestSent)
+                            @if (Model.OrderHeader.OrderStatus != SD.StatusForApproval)
                             {
                                 <div class="row my-1">
                                     <div class="col-3">Drop-off Point</div>
@@ -75,34 +75,74 @@
                                     </div>
                                 </div>
                             }
-
-                            <div class="row my-1">
-                                <div class="col-3">Request Type</div>
-                                <div class="col-9">
-                                    @if (User.IsInRole(SD.CIOAdmin) || User.IsInRole(SD.CorpCommAdmin))
-                                    {
-                                        <select class="form-control" asp-for="OrderHeader.RequestType">
-                                            <option value="@SD.ReqRegular">@SD.ReqRegular</option>
-                                            <option value="@SD.ReqUrgent">@SD.ReqUrgent</option>
-                                        </select>
-                                    }
-                                    else
-                                    {
-                                        <input class="form-control" asp-for="OrderHeader.RequestType" readonly />
-                                    }
+                            @if (Model.OrderHeader.OrderStatus != SD.StatusForApproval)
+                            {
+                                <div class="row my-1">
+                                    <div class="col-3">Request Type</div>
+                                    <div class="col-9">
+                                        @if (User.IsInRole(SD.CIOAdmin) || User.IsInRole(SD.CorpCommAdmin))
+                                        {
+                                            <select class="form-control" asp-for="OrderHeader.RequestType">
+                                                <option value="@SD.ReqRegular">@SD.ReqRegular</option>
+                                                <option value="@SD.ReqUrgent">@SD.ReqUrgent</option>
+                                            </select>
+                                        }
+                                        else
+                                        {
+                                            <input class="form-control" asp-for="OrderHeader.RequestType" readonly />
+                                        }
+                                    </div>
                                 </div>
-                            </div>
-
+                            }
                             <div class="row my-1">
                                 <div class="col-3">Request Status</div>
                                 <div class="col-9">
                                     @if (User.IsInRole(SD.CIOAdmin) || User.IsInRole(SD.CorpCommAdmin))
                                     {
-                                        <input asp-for="OrderHeader.OrderStatus" type="text" class="form-control" />
+                                        <input asp-for="OrderHeader.OrderStatus" type="text" readonly class="form-control" />
                                     }
                                     else
                                     {
                                         <input asp-for="OrderHeader.OrderStatus" type="text" readonly class="form-control" />
+                                    }
+                                </div>
+                            </div>
+                            <div class="row my-1">
+                                <div class="col-3">Event Type</div>
+                                <div class="col-9">
+                                    @if (User.IsInRole(SD.CIOAdmin) || User.IsInRole(SD.CorpCommAdmin))
+                                    {
+                                        <input asp-for="OrderHeader.EventName" type="text" class="form-control" />
+                                    }
+                                    else
+                                    {
+                                        <input asp-for="OrderHeader.EventName" type="text" readonly class="form-control" />
+                                    }
+                                </div>
+                            </div>
+                            <div class="row my-1">
+                                <div class="col-3">Station / Event</div>
+                                <div class="col-9">
+                                    @if (User.IsInRole(SD.CIOAdmin) || User.IsInRole(SD.CorpCommAdmin))
+                                    {
+                                        <input asp-for="OrderHeader.StationEvent" type="text" class="form-control" />
+                                    }
+                                    else
+                                    {
+                                        <input asp-for="OrderHeader.StationEvent" type="text" readonly class="form-control" />
+                                    }
+                                </div>
+                            </div>
+                            <div class="row my-1">
+                                <div class="col-3">Date of Event</div>
+                                <div class="col-9">
+                                    @if (User.IsInRole(SD.CIOAdmin) || User.IsInRole(SD.CorpCommAdmin))
+                                    {
+                                        <input asp-for="OrderHeader.EventDate" type="date" class="form-control" />
+                                    }
+                                    else
+                                    {
+                                        <input asp-for="OrderHeader.EventDate" type="text" readonly class="form-control" />
                                     }
                                 </div>
                             </div>
@@ -140,68 +180,66 @@
                                 </li>
                             </ul>
 
-                            <!--ADMIN ONLY-->
-                            @if (User.IsInRole(SD.CIOAdmin) || User.IsInRole(SD.CorpCommAdmin))
+                            @*// FOR APPROVAL STATUS*@
+                            @if ((User.IsInRole(SD.CIOAdmin) && Model.OrderHeader.OrderStatus == SD.StatusForApproval) || (User.IsInRole(SD.CorpCommAdmin) && Model.OrderHeader.OrderStatus == SD.StatusForApproval))
                             {
-                                
-                                @if (Model.OrderHeader.OrderStatus == SD.StatusRequestSent)
-                                {
-                                    // Receive Order
-                                    <input value="Approve Request" class="btn btn-primary form-control" type="submit"
-                                           formaction="/CorpComm/Order/ReceiveRequestAndForApproval" formmethod="post" /><br /><br />
-                                    // Reject Order
-                                    <a asp-area="CorpComm" asp-controller="Order" asp-action="ReceiveRequestAndReject"
-                                       asp-route-id="@Model.OrderHeader.Id" class="btn btn-primary form-control">Reject Request</a>
-                                }
+                                <input value="Approve Request" class="btn btn-primary form-control" type="submit"
+                                       formaction="/CorpComm/Order/ApproveRequest" formmethod="post" /><br /><br />
 
-                                @if (Model.OrderHeader.OrderStatus == SD.StatusForApproval)
-                                {
-                                    // Prepare Item
-                                    <input value="Prepare Item" onclick="return validateInput()" class="btn btn-primary form-control" type="submit"
-                                           formaction="/CorpComm/Order/ProcessOrderAndForDelivery" formmethod="post" />
-                                }
+                                <input value="Reject Request" class="btn btn-primary form-control" type="submit"
+                                       formaction="/CorpComm/Order/RejectRequest" formmethod="post" /> <br /><br />
+
+                                <label class="form-check-label"><strong>Reason for Rejection</strong></label>
+                                <textarea class="form-control" asp-for="OrderHeader.RejectReason"></textarea>
                             }
 
-                            <!--USER ONLY-->
-                            @if (!User.IsInRole(SD.CIOAdmin) || User.IsInRole(SD.CorpCommAdmin))
+                            @*// CANCEL REQUEST*@
+                            @if ((!User.IsInRole(SD.CIOAdmin) && Model.OrderHeader.OrderStatus == SD.StatusForApproval) || (User.IsInRole(SD.CorpCommAdmin) && Model.OrderHeader.OrderStatus == SD.StatusForApproval))
                             {
-                                if (Model.OrderHeader.OrderStatus == SD.StatusForDelivery)
-                                {   
-                                    // Receive Item
-                                    <input value="Receive Item" class="btn btn-primary form-control" type="submit"
-                                           formaction="/CorpComm/Order/ReceiveItemAndForAcknowledgement" formmethod="post" />
-                                }
+                                <input value="Cancel Request" class="btn btn-primary form-control" type="submit"
+                                       formaction="/CorpComm/Order/CancelRequest" formmethod="post" />
+                            }
 
-                                if (Model.OrderHeader.OrderStatus == SD.StatusForAcknowledgement)
-                                {
-                                    // Confirm Receipt
-                                    <a asp-area="CorpComm" asp-controller="Order" asp-action="AcknowledgeAndConfirmReceipt"
-                                       asp-route-id="@Model.OrderHeader.Id" class="btn btn-primary form-control">Acknowledge Receipt</a>
-                                }
+                            @*// PREPARE ITEM*@
+                            @if ((User.IsInRole(SD.CIOAdmin) && Model.OrderHeader.OrderStatus == SD.StatusApproved) || (User.IsInRole(SD.CorpCommAdmin) && Model.OrderHeader.OrderStatus == SD.StatusApproved))
+                            {
+                                <input value="Prepare Item" onclick="return validateInput()" class="btn btn-primary form-control" type="submit"
+                                       formaction="/CorpComm/Order/ForDeliveryRequest" formmethod="post" />
+                            }
 
+                            @*// FOR ACKNOWLEDGEMENT*@
+                            @if ((User.IsInRole(SD.CIOAdmin) && Model.OrderHeader.OrderStatus == SD.StatusForDelivery) || (User.IsInRole(SD.CorpCommAdmin) && Model.OrderHeader.OrderStatus == SD.StatusForDelivery))
+                            {
+                                <input value="Delivered" onclick="return validateInput()" class="btn btn-primary form-control" type="submit"
+                                       formaction="/CorpComm/Order/ForAcknowledgementRequest" formmethod="post" />
+                            }
 
-                                if (Model.OrderHeader.OrderStatus == SD.StatusForRating)
-                                {
-                                    // Rating
-                                    <div class="row my-1">
-                                        <div class="col-12">
-                                            <label class=" ">
-                                                Choose a rating:
-                                            </label>
-                                            <select class="form-control" asp-for="OrderHeader.OrderRating">
-                                                <option value="5">5</option>
-                                                <option value="4">4</option>
-                                                <option value="3">3</option>
-                                                <option value="2">2</option>
-                                                <option value="1">1</option>
-                                            </select>
-                                        </div>
-                                        <br /> <br />
+                            @if ((!User.IsInRole(SD.CIOAdmin) && Model.OrderHeader.OrderStatus == SD.StatusForAcknowledgement) || (User.IsInRole(SD.CorpCommAdmin) && Model.OrderHeader.OrderStatus == SD.StatusForAcknowledgement))
+                            {
+                                <input value="Acknowledge Reciept" class="btn btn-primary form-control" type="submit"
+                                       formaction="/CorpComm/Order/AcknowledgeReceipt" formmethod="post" />
+                            }
+
+                            @if ((!User.IsInRole(SD.CIOAdmin) && Model.OrderHeader.OrderStatus == SD.StatusForRating) || (User.IsInRole(SD.CorpCommAdmin) && Model.OrderHeader.OrderStatus == SD.StatusForRating))
+                            {
+                                <div class="row my-1">
+                                    <div class="col-12">
+                                        <label class=" ">
+                                            Choose a rating:
+                                        </label>
+                                        <select class="form-control" asp-for="OrderHeader.OrderRating">
+                                            <option value="5">5</option>
+                                            <option value="4">4</option>
+                                            <option value="3">3</option>
+                                            <option value="2">2</option>
+                                            <option value="1">1</option>
+                                        </select>
                                     </div>
+                                    <br /> <br />
+                                </div>
 
-                                    <input id="pointsChecker" value="Rate Now" class="btn btn-primary form-control" type="submit"
-                                           formaction="/CorpComm/Order/OrderRating" formmethod="post" />
-                                }
+                                <input id="pointsChecker" value="Rate Now" class="btn btn-primary form-control" type="submit"
+                                       formaction="/CorpComm/Order/OrderRating" formmethod="post" />
                             }
                         </div>
                     </div>
@@ -215,7 +253,6 @@
     @*<script src="~/wwwroot/js/CorpComm/collateral_details.js"></script>*@
 
     <script>
-
         function validateInput() {
             var shippingdate = document.getElementById('shippingDate').value;
             var pickuppoint = document.getElementById('pickupPoint').value;

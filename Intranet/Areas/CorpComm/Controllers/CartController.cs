@@ -42,7 +42,7 @@ namespace Intranet.Areas.CorpComm.Controllers
                 EventList = _unitOfWork.Event.GetAll().Select(i => new SelectListItem
                 {
                     Text = i.Name,
-                    Value = i.BudgetLimit.ToString(),
+                    Value = i.BudgetLimit.ToString()
                 })
             };
 
@@ -123,7 +123,7 @@ namespace Intranet.Areas.CorpComm.Controllers
         [HttpPost]
         [ActionName("Summary")]
         [ValidateAntiForgeryToken]
-        public IActionResult SummaryPost()
+        public IActionResult SummaryPost(ShoppingCartVM cartVM)
         {
 
             UserDetails();
@@ -153,7 +153,7 @@ namespace Intranet.Areas.CorpComm.Controllers
             {
                 ShoppingCartVM.ListCart = _unitOfWork.ShoppingCart.GetAll(c => c.LoginUser == loginUser);
 
-                ShoppingCartVM.OrderHeader.OrderStatus = SD.StatusRequestSent;
+                ShoppingCartVM.OrderHeader.OrderStatus = SD.StatusForApproval;
                 ShoppingCartVM.OrderHeader.LoginUser = ViewBag.DisplayName;
                 ShoppingCartVM.OrderHeader.OrderDate = DateTime.Now;
 
@@ -175,9 +175,21 @@ namespace Intranet.Areas.CorpComm.Controllers
 
                     ShoppingCartVM.OrderHeader.OrderTotal += orderDetails.Count * orderDetails.Price;
                     _unitOfWork.OrderDetails.Add(orderDetails);
-
-
                 }
+
+                #region get EventName
+
+                #endregion
+
+                #region Add EventName, StationEvent, EventDate
+
+                OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == ShoppingCartVM.OrderHeader.Id);
+                orderHeader.EventName = cartVM.SelectedEvent;
+                orderHeader.StationEvent = cartVM.OrderHeader.StationEvent;
+                orderHeader.EventDate = cartVM.OrderHeader.EventDate;
+
+                #endregion Add EventName, StationEvent, EventDate
+
                 _unitOfWork.ShoppingCart.RemoveRange(ShoppingCartVM.ListCart);
                 _unitOfWork.Save();
                 HttpContext.Session.SetInt32(SD.ssShoppingCart, 0);

@@ -13,5 +13,6 @@ namespace Intranet.Models.ViewModels.CorpComm
         public IEnumerable<SelectListItem> EventList { get; set; }
         public OrderHeader OrderHeader { get; set; }
         public Event Event { get; set; }
+        public string SelectedEvent { get; set; }
     }
 }

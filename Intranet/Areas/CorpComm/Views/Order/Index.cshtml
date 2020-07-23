@@ -4,32 +4,40 @@
     var status = Context.Request.Query["status"];
 
     var all = "bg-white";
-    var requestsent = "bg-white";
     var forapproval = "bg-white";
     var fordelivery = "bg-white";
-    var foracknowledge = "bg-white";
+    var foracknowledgement = "bg-white";
     var forrating = "bg-white";
     var rejected = "bg-white";
+    var completed = "bg-white";
+    var approved = "bg-white";
+    var canceled = "bg-white";
 
     switch (status)
     {
-        case "requestsent":
-            requestsent = "active bg-primary text-white";
-            break;
         case "forapproval":
             forapproval = "active bg-primary text-white";
             break;
         case "fordelivery":
             fordelivery = "active bg-primary text-white";
             break;
-        case "foracknowledge":
-            foracknowledge = "active bg-primary text-white";
+        case "foracknowledgement":
+            foracknowledgement = "active bg-primary text-white";
             break;
         case "forrating":
             forrating = "active bg-primary text-white";
             break;
         case "rejected":
             rejected = "active bg-primary text-white";
+            break;
+        case "completed":
+            completed = "active bg-primary text-white";
+            break;
+        case "approved":
+            approved = "active bg-primary text-white";
+            break;
+        case "canceled":
+            canceled = "active bg-primary text-white";
             break;
         default:
             all = "active bg-primary text-white";
@@ -46,31 +54,46 @@
         </div>
         <div class="p-2">
             <ul class="list-group list-group-horizontal-sm">
-                <a style="text-decoration:none;" class="btn border @requestsent" asp-controller="Order" 
-                   asp-action="Index" asp-route-status="requestsent">Request Sent</a>
-                <a style="text-decoration:none;" class="btn border @forapproval" asp-controller="Order" 
+
+                <a style="text-decoration:none;" class="btn border @forapproval" asp-controller="Order"
                    asp-action="Index" asp-route-status="forapproval">For Approval</a>
-                <a style="text-decoration:none;" class="btn border @fordelivery" asp-controller="Order" 
+
+                <a style="text-decoration:none;" class="btn border @fordelivery" asp-controller="Order"
                    asp-action="Index" asp-route-status="fordelivery">For Delivery</a>
-                <a style="text-decoration:none;" class="btn border @foracknowledge" asp-controller="Order" 
-                   asp-action="Index" asp-route-status="foracknowledge">For Acknowledgement</a>
-                <a style="text-decoration:none;" class="btn border @forrating" asp-controller="Order" 
+
+                <a style="text-decoration:none;" class="btn border @foracknowledgement" asp-controller="Order"
+                   asp-action="Index" asp-route-status="foracknowledgement">For Acknowledgement</a>
+
+                <a style="text-decoration:none;" class="btn border @forrating" asp-controller="Order"
                    asp-action="Index" asp-route-status="forrating">For Rating</a>
-                <a style="text-decoration:none;" class="btn border @rejected" asp-controller="Order" 
+
+                <a style="text-decoration:none;" class="btn border @rejected" asp-controller="Order"
                    asp-action="Index" asp-route-status="rejected">Rejected</a>
-                <a style="text-decoration:none;" class="btn border @all" asp-controller="Order" 
+
+                <a style="text-decoration:none;" class="btn border @canceled" asp-controller="Order"
+                   asp-action="Index" asp-route-status="canceled">Canceled</a>
+
+                <a style="text-decoration:none;" class="btn border @approved" asp-controller="Order"
+                   asp-action="Index" asp-route-status="approved">Approved</a>
+
+                <a style="text-decoration:none;" class="btn border @completed" asp-controller="Order"
+                   asp-action="Index" asp-route-status="completed">Completed</a>
+
+                <a style="text-decoration:none;" class="btn border @all" asp-controller="Order"
                    asp-action="Index" asp-route-status="all">All</a>
             </ul>
         </div>
     </div>
-
     <br /><br />
-
-    <table id="tblData" class="table table-striped table-bordered" style="width:100%">
+    <table id="tblData" class="table table-hover border" style="display: block; overflow-x: auto; white-space: nowrap; width:100%;">
         <thead class="thead-dark">
             <tr class="table-info">
-                <th>Id</th>
+                <th>Request Id</th>
+                <th>Request Date</th>
                 <th>Name</th>
+                <th>Event Type</th>
+                <th>Station Name / Event Name</th>
+                <th>Date of Event</th>
                 <th>Amount</th>
                 <th>Request Status</th>
                 <th>Rating</th>

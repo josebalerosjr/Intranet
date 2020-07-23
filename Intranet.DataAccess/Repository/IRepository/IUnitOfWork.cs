@@ -21,6 +21,7 @@ namespace Intranet.DataAccess.Repository.IRepository
         IShoppingCartRepository ShoppingCart { get; }
         IOrderDetailsRepository OrderDetails { get; }
         IOrderHeaderRepository OrderHeader { get; }
+        IHistoryRepository History { get; }
         ISP_Call SP_Call { get; }
 
         void Save();

@@ -19,16 +19,14 @@ namespace Intranet.Models.CorpComm
 
         [Required]
         public int OrderTotal { get; set; }
-        public string TrackingNumber { get; set; }
         public string RequestorEmail { get; set; }
         public string RequestType { get; set; }
         public string PickUpPoints { get; set; }
-        public bool? ItemReceipt { get; set; }
         public string OrderStatus { get; set; }
-        public string PaymentStatus { get; set; }
-        public DateTime PaymentDate { get; set; }
-        public DateTime PaymentDueDate { get; set; }
-        public string TransactionId { get; set; }
         public int OrderRating { get; set; }
+        public string EventName { get; set; }
+        public string StationEvent { get; set; }
+        public DateTime EventDate { get; set; }
+        public string? RejectReason { get; set; }
     }
 }

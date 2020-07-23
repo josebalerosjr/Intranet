@@ -44,12 +44,21 @@ function loadDataTable() {
                                 <a href="/CorpComm/Collateral/Upsert/${data}" class="text-success" style="cursor:pointer">
                                     <i class="fas fa-edit" title="Edit"></i>
                                 </a>
+
                                 <a onclick=Delete("/CorpComm/Collateral/Delete/${data}") class="text-danger" style="cursor:pointer">
                                     <i class="fas fa-trash-alt" title="Delete"></i>
                                 </a>
-                                <a href="/CorpComm/Collateral/Transfer/${data}" asp-route-id="${data}" 
-                                class="text-primary" style="cursor:pointer">
+
+                                <a href="/CorpComm/Collateral/Transfer/${data}" asp-route-id="${data}" class="text-primary" style="cursor:pointer">
                                     <i class="fa fa-exchange" aria-hidden="true" title="Transfer"></i>
+                                </a>
+
+                                <a href="/CorpComm/History/GetAllId/${data}" asp-route-id="${data}" class="text-info" style="cursor:pointer">
+                                    <i class="fas fa-history" aria-hidden="true" title="History"></i>
+                                </a>
+                                <a href="/CorpComm/History/GetAllIdAddHistory/${data}" asp-route-id="${data}" class="text-warning" style="cursor:pointer">
+                                    <i class="fas fa-balance-scale" aria-hidden="true" title="Adjust"></i>
+                                </a>
                             </div>
                            `;
                 }, "width": "10%"
