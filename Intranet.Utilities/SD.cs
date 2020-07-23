@@ -7,8 +7,8 @@ namespace Intranet.Utilities
         #region CorpComm
 
         // Connection String
-        public static string ConString = "Server=(LocalDb)\\MSSQLLocalDB;Database=CorpComm;User Id=sa;Password=mis@2019;MultipleActiveResultSets=True";
-        //public static string ConString = "Server=192.168.10.43;Database=CorpComm;User Id=sa;Password=mis@2019;MultipleActiveResultSets=True";
+        //public static string ConString = "Server=(LocalDb)\\MSSQLLocalDB;Database=CorpComm;User Id=sa;Password=mis@2019;MultipleActiveResultSets=True";
+        public static string ConString = "Server=192.168.10.43;Database=CorpComm;User Id=sa;Password=mis@2019;MultipleActiveResultSets=True";
 
         // Cart Session
         public const string ssShoppingCart = "Shopping Cart Session";
@@ -38,8 +38,8 @@ namespace Intranet.Utilities
         public static string histReconRemarks;
 
         // App URL
-        //public const string IntranetLink = "http://qas.intranet.pttphils.com/";
-        public const string IntranetLink = "http://localhost:44322/";
+        public const string IntranetLink = "http://qas.intranet.pttphils.com/";
+        //public const string IntranetLink = "http://localhost:44322/";
         //public const string IntranetLink = "http://intranet.pttphils.com/";
 
         // item value
@@ -59,7 +59,7 @@ namespace Intranet.Utilities
 
         #region MIS/ICT
 
-        public const string CIOAdmin = "1Office of the Chief Information Officer";
+        public const string CIOAdmin = "Office of the Chief Information Officer";
         public const string CIOAdminFake = "1Office of the Chief Information Officer";
         public const string ICTIntranet = "ICT Intranet";
         public const string MISIntranet = "MIS Intranet";

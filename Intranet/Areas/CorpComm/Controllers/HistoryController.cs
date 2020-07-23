@@ -3,6 +3,7 @@ using Intranet.DataAccess.Data;
 using Intranet.DataAccess.Repository.IRepository;
 using Intranet.Models.CorpComm;
 using Intranet.Utilities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System.DirectoryServices.AccountManagement;
@@ -12,6 +13,7 @@ namespace Intranet.Areas.CorpComm.Controllers
 {
     [Area("CorpComm")]
     [Route("CorpComm/[controller]/[Action]/{id?}")]
+    [Authorize(Roles = SD.CIOAdmin + ", " + SD.CorpCommAdmin)]
     public class HistoryController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

@@ -4,6 +4,7 @@ using Intranet.DataAccess.Repository.IRepository;
 using Intranet.Models.CorpComm;
 using Intranet.Models.ViewModels.CorpComm;
 using Intranet.Utilities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -41,6 +42,7 @@ namespace Intranet.Areas.CorpComm.Controllers
             return View();
         }
 
+        [Authorize(Roles = SD.CIOAdmin+", "+SD.CorpCommAdmin)]
         public IActionResult Upsert(int? id)
         {
             UserDetails();
@@ -86,6 +88,7 @@ namespace Intranet.Areas.CorpComm.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = SD.CIOAdmin + ", " + SD.CorpCommAdmin)]
         public IActionResult Upsert(CollateralVM collateralVM)
         {
             UserDetails();
@@ -233,6 +236,7 @@ namespace Intranet.Areas.CorpComm.Controllers
             }
         }
 
+        [Authorize(Roles = SD.CIOAdmin + ", " + SD.CorpCommAdmin)]
         public IActionResult Transfer(int? id)
         {
             UserDetails();
@@ -256,6 +260,7 @@ namespace Intranet.Areas.CorpComm.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = SD.CIOAdmin + ", " + SD.CorpCommAdmin)]
         public IActionResult Transfer(CollateralVM collateralVM, int qtyfrom)
         {
             Collateral objMinusItem = _unitOfWork.Collateral.Get(collateralVM.Collateral.Id);
