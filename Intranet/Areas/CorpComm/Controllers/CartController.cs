@@ -187,6 +187,7 @@ namespace Intranet.Areas.CorpComm.Controllers
                 orderHeader.EventName = cartVM.SelectedEvent;
                 orderHeader.StationEvent = cartVM.OrderHeader.StationEvent;
                 orderHeader.EventDate = cartVM.OrderHeader.EventDate;
+                orderHeader.EventName = cartVM.OrderHeader.EventName;
 
                 #endregion Add EventName, StationEvent, EventDate
 

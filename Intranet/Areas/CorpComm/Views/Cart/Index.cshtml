@@ -10,7 +10,7 @@
     {
         <div class="backgroundWhiteBorder">
             <div class="container">
-                <input type="hidden" id="eventType" value="" />
+                <input type="hidden" id="eventType" asp-for="OrderHeader.EventName" />
                 <div class="card">
                     <div class="card-header bg-dark text-light ml-0 row container">
                         <div class="col-6">
@@ -18,7 +18,7 @@
                             Shopping Cart
                         </div>
                         <div class="col-6 text-right">
-                            <a asp-area="CorpComm" asp-controller="Collateral" asp-action="Catalog" 
+                            <a asp-area="CorpComm" asp-controller="Collateral" asp-action="Catalog"
                                class="btn btn-outline-info btn-sm">Continue Shopping</a>
                         </div>
                     </div>
@@ -36,54 +36,68 @@
                                 </div>
                                 <div class="col-12 text-sm-center col-lg-5 text-lg-right row">
                                     <div class="col-4 text-md-right" style="padding-top:5px;">
-                                        <h6><strong>@item.Collateral.Price<span class="text-muted">x
-                                            </span>@item.Count</strong></h6>
+                                        <h6>
+                                            <strong>
+                                                @item.Collateral.Price<span class="text-muted">
+                                                x
+                                            </span>@item.Count
+                                        </strong>
+                                    </h6>
+                                </div>
+                                <div class="col-6 col-sm-4 col-lg-6">
+                                    <div class="float-right mx-1">
+                                        <a asp-action="plus" asp-route-cartId="@item.Id" class="btn btn-primary">
+                                            <i class="fas fa-plus"></i>
+                                        </a>
                                     </div>
-                                    <div class="col-6 col-sm-4 col-lg-6">
-                                        <div class="float-right mx-1">
-                                            <a asp-action="plus" asp-route-cartId="@item.Id" class="btn btn-primary">
-                                                <i class="fas fa-plus"></i>
-                                            </a>
-                                        </div>
-                                        <div class="float-right mx-1">
-                                            <a asp-action="minus" asp-route-cartId="@item.Id" class="btn btn-danger">
-                                                <i class="fas fa-minus"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="col-2 col-sm-4 col-lg-2 text-right">
-                                        <a asp-action="remove" asp-route-cartId="@item.Id" class="btn btn-outline-danger">
-                                            <i class="fas fa-trash"></i>
+                                    <div class="float-right mx-1">
+                                        <a asp-action="minus" asp-route-cartId="@item.Id" class="btn btn-danger">
+                                            <i class="fas fa-minus"></i>
                                         </a>
                                     </div>
                                 </div>
+                                <div class="col-2 col-sm-4 col-lg-2 text-right">
+                                    <a asp-action="remove" asp-route-cartId="@item.Id" class="btn btn-outline-danger">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
                             </div>
-                            <hr />
-                        }
+                        </div>
+                        <hr />
+                    }
 
                         <div class="row">
                             <div class="col-12 col-md-6 offset-md-6 col-lg-4 offset-lg-8 pr-4">
                                 <ul class="list-group">
+                                    <label class="form-check-label"><strong>Event Type</strong></label>
                                     @Html.DropDownListFor(m => m.Event.Name, Model.EventList,
                                             "-Select an Event",
-                                            new { @class = "form-control", @onchange = "singleSelectChangeValue()", 
-                                                @id = "singleSelectValueDDJS" })
+                                            new
+                                                 {
+                                                     @class = "form-control",
+                                                     @onchange = "singleSelectChangeValue()",
+                                                @id = "singleSelectValueDDJS"
+                                                 })
                                     @Html.HiddenFor(u => u.SelectedEvent)
                                     <br />
-                                        <input class="form-control" id="StationEvent" asp-for="OrderHeader.StationEvent" type="text" />
-                                        <br />
-                                        <input class="form-control" id="EventDate" asp-for="OrderHeader.EventDate" type="date" value="" />
-                                        <br />
+                                    <label class="form-check-label"><strong>Station Name/Event Name</strong></label>
+                                    <input class="form-control" id="StationEvent" asp-for="OrderHeader.StationEvent" type="text" />
+                                    <br />
+                                    <label class="form-check-label"><strong>Event Date</strong></label>
+                                    <input class="form-control" id="EventDate" asp-for="OrderHeader.EventDate" type="date" value="" />
+                                    <br />
                                     <li class="list-group-item d-flex justify-content-between bg-light">
                                         <span class="text-info"> Budget Limit</span>
                                         <strong class="text-info"><span id="textFieldValueJS">0</span></strong>
                                     </li>
                                     <li class="list-group-item d-flex justify-content-between bg-light">
                                         <span class="text-info"> Total (USD)</span>
-                                        <strong class="text-info"><span id="txtOrderTotal">
-                                            @Model.OrderHeader.OrderTotal</span></strong>
+                                        <strong class="text-info">
+                                            <span id="txtOrderTotal">
+                                                @Model.OrderHeader.OrderTotal
+                                            </span>
+                                        </strong>
                                     </li>
-                                    
                                 </ul>
                             </div>
                         </div>
@@ -91,8 +105,10 @@
                     <div class="card-footer">
                         <div class="card-footer row">
                             <div class="col-sm-12 col-lg-4 col-md-6 offset-lg-8 offset-md-6 ">
-                                <button disabled asp-area="CorpComm" asp-controller="Cart" asp-action="Summary" 
-                                        id="summaryButton" class="btn btn-success form-control">Request</button>
+                                <button disabled asp-area="CorpComm" onclick=" return eventnamedate()" asp-controller="Cart" asp-action="Summary"
+                                        id="summaryButton" class="btn btn-success form-control">
+                                    Request
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -115,12 +131,30 @@
             })
         });
     </script>
+    <script type="text/javascript">
+        function eventnamedate() {
+            var stationEvent = document.getElementById('StationEvent').value;
+            var eventDate = document.getElementById('EventDate').value;
+
+            if (eventDate.toString() == '') {
+                swal("Error", "Please select an event date");
+                return false;
+            } else {
+                if (stationEvent.toString() == '') {
+                    swal("Error", "Please add an Station Name / Event Name");
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        }
+    </script>
     @*<script>
-        $(function () {
-            $('#singleSelectValueDDJS').change(function () {
-                var dropdown = document.getElementById("textFieldValueJS").text;
-                $('#eventType').text(dropdown);
-            })
-        });
-    </script>*@
+            $(function () {
+                $('#singleSelectValueDDJS').change(function () {
+                    var dropdown = document.getElementById("textFieldValueJS").text;
+                    $('#eventType').text(dropdown);
+                })
+            });
+        </script>*@
 }
