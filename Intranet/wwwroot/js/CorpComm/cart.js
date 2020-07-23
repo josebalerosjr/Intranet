@@ -22,8 +22,6 @@ function compareVal() {
     var totalRequest = document.getElementById("txtOrderTotal").innerText;
     var totalRequest = document.getElementById("txtOrderTotal").innerText;
 
-
-
     if (parseInt(budgetLim) > parseInt(totalRequest)) {
         document.getElementById("summaryButton").disabled = false;
     } else {
