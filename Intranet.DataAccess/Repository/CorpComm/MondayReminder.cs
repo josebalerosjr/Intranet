@@ -1,12 +1,12 @@
 ﻿using Intranet.DataAccess.Repository.IRepository;
 using Intranet.DataAccess.Repository.IRepository.CorpComm;
+using Intranet.Models.ViewModels.CorpComm;
 using Intranet.Utilities;
 using MailKit.Net.Smtp;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using System;
-using Intranet.Models.ViewModels.CorpComm;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Intranet.DataAccess.Repository.CorpComm
 {
@@ -29,7 +29,9 @@ namespace Intranet.DataAccess.Repository.CorpComm
         [Obsolete]
         public void SendEmail()
         {
-            var orderHeader = _unitOfWork.OrderHeader.GetAll(c => c.OrderStatus == SD.StatusForAcknowledgement || c.OrderStatus == SD.StatusForRating);
+            var orderHeader = _unitOfWork.OrderHeader.GetAll(
+                c => c.OrderStatus == SD.StatusForAcknowledgement ||
+                c.OrderStatus == SD.StatusForRating);
 
             foreach (var order in orderHeader)
             {
@@ -47,8 +49,10 @@ namespace Intranet.DataAccess.Repository.CorpComm
 
                 OrderVM = new OrderDetailsVM()
                 {
-                    OrderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == orderId),
-                    OrderDetails = _unitOfWork.OrderDetails.GetAll(o => o.OrderId == orderId, includeProperties: "Collateral")
+                    OrderHeader = _unitOfWork.OrderHeader
+                    .GetFirstOrDefault(u => u.Id == orderId),
+                    OrderDetails = _unitOfWork.OrderDetails.GetAll(
+                        o => o.OrderId == orderId, includeProperties: "Collateral")
                 };
                 string itemlist = "";
                 var itemname = "";
@@ -142,8 +146,8 @@ namespace Intranet.DataAccess.Repository.CorpComm
                     "                               Please see request details below: <br /> <br />" +
                     "                               Request Number: <strong>" + orderId + "</strong> <br />" +
                     "                               Shipping Date: <strong>" + ShippingDate + "</strong> <br />" +
-                    "                               Drop-off location: <strong>" + PickUpPoints + "</strong> <br /> <br />" + 
-                                                    listfinal +  
+                    "                               Drop-off location: <strong>" + PickUpPoints + "</strong> <br /> <br />" +
+                                                    listfinal +
                     "                               <br />" +
                     "                               Thank you! <br /> <br />" +
                     "                               Best Regards, <br /><br />" +
@@ -191,6 +195,9 @@ namespace Intranet.DataAccess.Repository.CorpComm
 
                 #endregion HTML Body
 
+
+
+
                 string messageBody = string.Format(HtmlBody);
 
                 var message = new MimeMessage();
@@ -203,10 +210,12 @@ namespace Intranet.DataAccess.Repository.CorpComm
 
                 using (var client = new SmtpClient())
                 {
-                    client.Connect(_emailOptions.SMTPHostClient, _emailOptions.SMTPHostPort, _emailOptions.SMTPHostBool);
+                    client.Connect(_emailOptions.SMTPHostClient,
+                        _emailOptions.SMTPHostPort, _emailOptions.SMTPHostBool);
 
                     // Note: only needed if the SMTP server requires authentication
-                    client.Authenticate(_emailOptions.AuthEmail, _emailOptions.AuthPassword);
+                    client.Authenticate(_emailOptions.AuthEmail, 
+                        _emailOptions.AuthPassword);
                     client.Send(message);
                     client.Disconnect(true);
                 }

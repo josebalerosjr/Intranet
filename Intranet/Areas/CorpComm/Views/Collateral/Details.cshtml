@@ -1,14 +1,13 @@
 ﻿@model Intranet.Models.CorpComm.ShoppingCart
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
-
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 <form method="post">
     <input hidden asp-for="CollateralId" />
     <input type="hidden" asp-for="UserName" value="@ViewBag.DisplayName" />
-    <input type="hidden" asp-for="UserIP" value="@HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString()" />
+    <input type="hidden" asp-for="UserIP" 
+           value="@HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString()" />
     <input type="hidden" asp-for="UserDate" value="@DateTime.Now.ToString("MM/dd/yyyy")" />
     <div class="container backgroundWhite">
         <div class="card">
@@ -63,7 +62,8 @@
             <div class="card-footer">
                 <div class="row">
                     <div class="col-12 col-md-6 pb-1">
-                        <a asp-action="Catalog" class="btn btn-success form-control  btn-square btn-lg" style="height:50px;">
+                        <a asp-action="Catalog" class="btn btn-success form-control btn-square btn-lg" 
+                           style="height:50px;">
                         Back to Catalog</a>
                     </div>
                     <div class="col-12 col-md-6 pb-1">

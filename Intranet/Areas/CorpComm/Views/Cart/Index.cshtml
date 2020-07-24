@@ -1,9 +1,7 @@
 ﻿@model Intranet.Models.ViewModels.CorpComm.ShoppingCartVM
-
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 <form method="post">
     <br />
     @if (Model.ListCart.Count() > 0)
@@ -22,7 +20,6 @@
                                class="btn btn-outline-info btn-sm">Continue Shopping</a>
                         </div>
                     </div>
-
                     <div class="card-body">
                         @foreach (var item in Model.ListCart)
                         {
@@ -39,40 +36,38 @@
                                         <h6>
                                             <strong>
                                                 @item.Collateral.Price<span class="text-muted">
-                                                x
-                                            </span>@item.Count
-                                        </strong>
-                                    </h6>
-                                </div>
-                                <div class="col-6 col-sm-4 col-lg-6">
-                                    <div class="float-right mx-1">
-                                        <a asp-action="plus" asp-route-cartId="@item.Id" class="btn btn-primary">
-                                            <i class="fas fa-plus"></i>
+                                                    x
+                                                </span>@item.Count
+                                            </strong>
+                                        </h6>
+                                    </div>
+                                    <div class="col-6 col-sm-4 col-lg-6">
+                                        <div class="float-right mx-1">
+                                            <a asp-action="plus" asp-route-cartId="@item.Id" class="btn btn-primary">
+                                                <i class="fas fa-plus"></i>
+                                            </a>
+                                        </div>
+                                        <div class="float-right mx-1">
+                                            <a asp-action="minus" asp-route-cartId="@item.Id" class="btn btn-danger">
+                                                <i class="fas fa-minus"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 col-sm-4 col-lg-2 text-right">
+                                        <a asp-action="remove" asp-route-cartId="@item.Id" class="btn btn-outline-danger">
+                                            <i class="fas fa-trash"></i>
                                         </a>
                                     </div>
-                                    <div class="float-right mx-1">
-                                        <a asp-action="minus" asp-route-cartId="@item.Id" class="btn btn-danger">
-                                            <i class="fas fa-minus"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="col-2 col-sm-4 col-lg-2 text-right">
-                                    <a asp-action="remove" asp-route-cartId="@item.Id" class="btn btn-outline-danger">
-                                        <i class="fas fa-trash"></i>
-                                    </a>
                                 </div>
                             </div>
-                        </div>
-                        <hr />
-                    }
-
+                            <hr />
+                        }
                         <div class="row">
                             <div class="col-12 col-md-6 offset-md-6 col-lg-4 offset-lg-8 pr-4">
                                 <ul class="list-group">
                                     <label class="form-check-label"><strong>Event Type</strong></label>
                                     @Html.DropDownListFor(m => m.Event.Name, Model.EventList,
-                                            "-Select an Event",
-                                            new
+                                            "-Select an Event", new
                                                  {
                                                      @class = "form-control",
                                                      @onchange = "singleSelectChangeValue()",
@@ -105,7 +100,8 @@
                     <div class="card-footer">
                         <div class="card-footer row">
                             <div class="col-sm-12 col-lg-4 col-md-6 offset-lg-8 offset-md-6 ">
-                                <button disabled asp-area="CorpComm" onclick=" return eventnamedate()" asp-controller="Cart" asp-action="Summary"
+                                <button disabled asp-area="CorpComm" onclick=" return eventnamedate()" 
+                                        asp-controller="Cart" asp-action="Summary"
                                         id="summaryButton" class="btn btn-success form-control">
                                     Request
                                 </button>
@@ -149,12 +145,4 @@
             }
         }
     </script>
-    @*<script>
-            $(function () {
-                $('#singleSelectValueDDJS').change(function () {
-                    var dropdown = document.getElementById("textFieldValueJS").text;
-                    $('#eventType').text(dropdown);
-                })
-            });
-        </script>*@
 }

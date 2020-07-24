@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Intranet.Models.CorpComm
 {
@@ -9,6 +8,7 @@ namespace Intranet.Models.CorpComm
     {
         [Key]
         public int Id { get; set; }
+
         public int CollateralId { get; set; }
 
         [DisplayName("Request #")]
@@ -22,11 +22,13 @@ namespace Intranet.Models.CorpComm
 
         [DisplayName("Collateral Name")]
         public string CollateralName { get; set; }
+
         public string EventType { get; set; }
         public int Quantity { get; set; }
 
         [DisplayName("Station Name / Event Name")]
         public string StationEvent { get; set; }
+
         public DateTime EventDate { get; set; }
         public DateTime ShippingDate { get; set; }
         public string DropOffPoint { get; set; }

@@ -20,7 +20,9 @@ namespace Intranet.Areas.CorpComm.Controllers
         private readonly AppSettings _appSettings;
         private readonly CorpCommDbContext _context;
 
-        public HistoryController(IUnitOfWork unitOfWork, IOptions<AppSettings> appSettings, CorpCommDbContext context)
+        public HistoryController(IUnitOfWork unitOfWork,
+            IOptions<AppSettings> appSettings,
+            CorpCommDbContext context)
         {
             _unitOfWork = unitOfWork;
             _appSettings = appSettings.Value;
@@ -40,7 +42,8 @@ namespace Intranet.Areas.CorpComm.Controllers
             UserDetails();
             CartCount();
 
-            var ColDetails = _unitOfWork.Collateral.GetFirstOrDefault(u => u.Id == SD.historyid);
+            var ColDetails = _unitOfWork.Collateral
+                .GetFirstOrDefault(u => u.Id == SD.historyid);
 
             SD.histLoginName = ViewBag.DisplayName;
             SD.histColName = ColDetails.Name;
@@ -57,7 +60,8 @@ namespace Intranet.Areas.CorpComm.Controllers
             History hist = new History();
             if (SD.historyid != 0)
             {
-                var collateral = _unitOfWork.Collateral.GetFirstOrDefault(u => u.Id == SD.historyid);
+                var collateral = _unitOfWork.Collateral
+                    .GetFirstOrDefault(u => u.Id == SD.historyid);
 
                 hist.LoginUser = ViewBag.DisplayName;
                 hist.CollateralId = collateral.Id;
@@ -67,7 +71,8 @@ namespace Intranet.Areas.CorpComm.Controllers
                 hist.ReconRemarks = history.ReconRemarks;
                 _unitOfWork.History.Add(hist);
 
-                Collateral minuscollateral = _unitOfWork.Collateral.Get(SD.historyid);
+                Collateral minuscollateral = _unitOfWork
+                    .Collateral.Get(SD.historyid);
                 collateral.Count -= history.Quantity;
 
                 _unitOfWork.Save();
@@ -91,12 +96,21 @@ namespace Intranet.Areas.CorpComm.Controllers
             return RedirectToAction(nameof(GetAllItemHistory));
         }
 
+
+
+
+
+
+
+
+
         [HttpGet]
         public IActionResult GetAllItemHistory()
         {
             UserDetails();
             CartCount();
-            var allObj = _unitOfWork.History.GetAll(u => u.CollateralId == SD.historyid);
+            var allObj = _unitOfWork.History
+                .GetAll(u => u.CollateralId == SD.historyid);
 
             //return Json(new { data = allObj });
             return View(allObj);
@@ -116,9 +130,11 @@ namespace Intranet.Areas.CorpComm.Controllers
         {
             var username = User.Identity.Name;
             var domain = _appSettings.appDomain;
-            using (var context = new PrincipalContext(ContextType.Domain, domain))
+            using (var context = new PrincipalContext(
+                ContextType.Domain, domain))
             {
-                var user = UserPrincipal.FindByIdentity(context, username);
+                var user = UserPrincipal
+                    .FindByIdentity(context, username);
                 ViewBag.Department = user.GetDepartment();
                 ViewBag.DisplayName = user.GetDisplayname();
             }
@@ -129,7 +145,8 @@ namespace Intranet.Areas.CorpComm.Controllers
             string UserCart = ViewBag.DisplayName;
             if (UserCart != null)
             {
-                var count = _unitOfWork.ShoppingCart.GetAll(c => c.LoginUser == UserCart).ToList().Count();
+                var count = _unitOfWork.ShoppingCart
+                    .GetAll(c => c.LoginUser == UserCart).ToList().Count();
                 HttpContext.Session.SetObject(SD.ssShoppingCart, count);
                 ViewBag.ItemCount = count;
             }
@@ -138,3 +155,4 @@ namespace Intranet.Areas.CorpComm.Controllers
         #endregion UserDetails function
     }
 }
+

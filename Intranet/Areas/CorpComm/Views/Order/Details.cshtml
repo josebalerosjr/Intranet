@@ -181,46 +181,52 @@
                             </ul>
 
                             @*// FOR APPROVAL STATUS*@
-                            @if ((User.IsInRole(SD.CIOAdmin) && Model.OrderHeader.OrderStatus == SD.StatusForApproval) || (User.IsInRole(SD.CorpCommAdmin) && Model.OrderHeader.OrderStatus == SD.StatusForApproval))
+                            @if ((User.IsInRole(SD.CIOAdmin) && Model.OrderHeader.OrderStatus == SD.StatusForApproval) || 
+                                (User.IsInRole(SD.CorpCommAdmin) && Model.OrderHeader.OrderStatus == SD.StatusForApproval))
                             {
                                 <input value="Approve Request" class="btn btn-primary form-control" type="submit"
                                        formaction="/CorpComm/Order/ApproveRequest" formmethod="post" /><br /><br />
 
-                                <input value="Reject Request" class="btn btn-primary form-control" type="submit"
+                                <input value="Reject Request" onclick="return reasonforreject()" class="btn btn-primary form-control" type="submit"
                                        formaction="/CorpComm/Order/RejectRequest" formmethod="post" /> <br /><br />
 
                                 <label class="form-check-label"><strong>Reason for Rejection</strong></label>
-                                <textarea class="form-control" asp-for="OrderHeader.RejectReason"></textarea>
+                                <textarea id="reasontext" class="form-control" asp-for="OrderHeader.RejectReason"></textarea>
                             }
 
                             @*// CANCEL REQUEST*@
-                            @if ((!User.IsInRole(SD.CIOAdmin) && Model.OrderHeader.OrderStatus == SD.StatusForApproval) || (User.IsInRole(SD.CorpCommAdmin) && Model.OrderHeader.OrderStatus == SD.StatusForApproval))
+                            @if ((!User.IsInRole(SD.CIOAdmin) && Model.OrderHeader.OrderStatus == SD.StatusForApproval) || 
+                                (User.IsInRole(SD.CorpCommAdmin) && Model.OrderHeader.OrderStatus == SD.StatusForApproval))
                             {
                                 <input value="Cancel Request" class="btn btn-primary form-control" type="submit"
                                        formaction="/CorpComm/Order/CancelRequest" formmethod="post" />
                             }
 
                             @*// PREPARE ITEM*@
-                            @if ((User.IsInRole(SD.CIOAdmin) && Model.OrderHeader.OrderStatus == SD.StatusApproved) || (User.IsInRole(SD.CorpCommAdmin) && Model.OrderHeader.OrderStatus == SD.StatusApproved))
+                            @if ((User.IsInRole(SD.CIOAdmin) && Model.OrderHeader.OrderStatus == SD.StatusApproved) || 
+                                (User.IsInRole(SD.CorpCommAdmin) && Model.OrderHeader.OrderStatus == SD.StatusApproved))
                             {
                                 <input value="Prepare Item" onclick="return validateInput()" class="btn btn-primary form-control" type="submit"
                                        formaction="/CorpComm/Order/ForDeliveryRequest" formmethod="post" />
                             }
 
                             @*// FOR ACKNOWLEDGEMENT*@
-                            @if ((User.IsInRole(SD.CIOAdmin) && Model.OrderHeader.OrderStatus == SD.StatusForDelivery) || (User.IsInRole(SD.CorpCommAdmin) && Model.OrderHeader.OrderStatus == SD.StatusForDelivery))
+                            @if ((User.IsInRole(SD.CIOAdmin) && Model.OrderHeader.OrderStatus == SD.StatusForDelivery) || 
+                                (User.IsInRole(SD.CorpCommAdmin) && Model.OrderHeader.OrderStatus == SD.StatusForDelivery))
                             {
                                 <input value="Delivered" onclick="return validateInput()" class="btn btn-primary form-control" type="submit"
                                        formaction="/CorpComm/Order/ForAcknowledgementRequest" formmethod="post" />
                             }
 
-                            @if ((!User.IsInRole(SD.CIOAdmin) && Model.OrderHeader.OrderStatus == SD.StatusForAcknowledgement) || (User.IsInRole(SD.CorpCommAdmin) && Model.OrderHeader.OrderStatus == SD.StatusForAcknowledgement))
+                            @if ((!User.IsInRole(SD.CIOAdmin) && Model.OrderHeader.OrderStatus == SD.StatusForAcknowledgement) || 
+                                (User.IsInRole(SD.CorpCommAdmin) && Model.OrderHeader.OrderStatus == SD.StatusForAcknowledgement))
                             {
                                 <input value="Acknowledge Reciept" class="btn btn-primary form-control" type="submit"
                                        formaction="/CorpComm/Order/AcknowledgeReceipt" formmethod="post" />
                             }
 
-                            @if ((!User.IsInRole(SD.CIOAdmin) && Model.OrderHeader.OrderStatus == SD.StatusForRating) || (User.IsInRole(SD.CorpCommAdmin) && Model.OrderHeader.OrderStatus == SD.StatusForRating))
+                            @if ((!User.IsInRole(SD.CIOAdmin) && Model.OrderHeader.OrderStatus == SD.StatusForRating) ||
+                               (User.IsInRole(SD.CorpCommAdmin) && Model.OrderHeader.OrderStatus == SD.StatusForRating))
                             {
                                 <div class="row my-1">
                                     <div class="col-12">
@@ -237,7 +243,6 @@
                                     </div>
                                     <br /> <br />
                                 </div>
-
                                 <input id="pointsChecker" value="Rate Now" class="btn btn-primary form-control" type="submit"
                                        formaction="/CorpComm/Order/OrderRating" formmethod="post" />
                             }
@@ -249,9 +254,6 @@
     </div>
 </form>
 @section Scripts {
-
-    @*<script src="~/wwwroot/js/CorpComm/collateral_details.js"></script>*@
-
     <script>
         function validateInput() {
             var shippingdate = document.getElementById('shippingDate').value;
@@ -267,6 +269,16 @@
                 } else {
                     return true;
                 }
+            }
+        }
+
+        function reasonforreject() {
+            var reasonForReject = document.getElementById('reasontext').value;
+
+            if (reasonForReject == '') {
+                swal("Error", "Please type a reason for rejection")
+            } else {
+                return true;
             }
         }
 
