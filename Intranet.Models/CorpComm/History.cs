@@ -17,7 +17,7 @@ namespace Intranet.Models.CorpComm
         [DisplayName("Request Date")]
         public DateTime RequestDate { get; set; } = DateTime.Now;
 
-        [DisplayName("Requestor")]
+        [DisplayName("Admin")]
         public string LoginUser { get; set; }
 
         [DisplayName("Collateral Name")]

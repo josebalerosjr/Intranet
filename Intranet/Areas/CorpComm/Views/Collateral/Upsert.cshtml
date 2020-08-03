@@ -10,7 +10,7 @@
     <div class="row p-3 border">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <input type="hidden" asp-for="Collateral.UserName" value="@ViewBag.DisplayName" />
-        <input type="hidden" asp-for="Collateral.UserIP" 
+        <input type="hidden" asp-for="Collateral.UserIP"
                value="@HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString()" />
         <input type="hidden" asp-for="Collateral.UserDate" value="@DateTime.Now.ToString("MM/dd/yyyy")" />
         @if (Model.Collateral.Id != 0)
@@ -71,7 +71,7 @@
                 @if (Model.Collateral.Id != 0)
                 {
                     <div class="col-8">
-                        <input asp-for="Collateral.Count" disabled class="form-control" />
+                        <input asp-for="Collateral.Count" readonly class="form-control" />
                         <span asp-validation-for="Collateral.Count" class="text-danger"></span>
                     </div>
                 }
@@ -82,7 +82,6 @@
                         <span asp-validation-for="Collateral.Count" class="text-danger"></span>
                     </div>
                 }
-
             </div> <!--Count-->
             <div class="form-group row">
                 <div class="col-4"><label asp-for="Collateral.Price"></label></div>
@@ -125,7 +124,8 @@
         @if (Model.Collateral.Id != 0)
         {
             <div class="col-3 offset-1 pt-4">
-                <img src="@Model.Collateral.ImgUrl" width="100%" style="border-radius:5px; border:1px solid #bbb9b9" /></div>
+                <img src="@Model.Collateral.ImgUrl" width="100%" style="border-radius:5px; border:1px solid #bbb9b9" />
+            </div>
         }
     </div>
 </form>

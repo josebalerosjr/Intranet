@@ -57,27 +57,57 @@ namespace Intranet.Areas.CorpComm.Controllers
         {
             UserDetails();
             CartCount();
-            History hist = new History();
-            if (SD.historyid != 0)
+
+            var action = Request.Form["actionz"];
+
+            if (action == "Plus")
             {
-                var collateral = _unitOfWork.Collateral
-                    .GetFirstOrDefault(u => u.Id == SD.historyid);
+                History hist = new History();
+                if (SD.historyid != 0)
+                {
+                    var collateral = _unitOfWork.Collateral
+                        .GetFirstOrDefault(u => u.Id == SD.historyid);
 
-                hist.LoginUser = ViewBag.DisplayName;
-                hist.CollateralId = collateral.Id;
-                hist.CollateralName = collateral.Name;
-                hist.Quantity = history.Quantity;
-                hist.RequestDate = history.RequestDate;
-                hist.ReconRemarks = history.ReconRemarks;
-                _unitOfWork.History.Add(hist);
+                    hist.LoginUser = ViewBag.DisplayName;
+                    hist.CollateralId = collateral.Id;
+                    hist.CollateralName = collateral.Name;
+                    hist.Quantity = history.Quantity;
+                    hist.RequestDate = history.RequestDate;
+                    hist.ReconRemarks = history.ReconRemarks;
+                    _unitOfWork.History.Add(hist);
 
-                Collateral minuscollateral = _unitOfWork
-                    .Collateral.Get(SD.historyid);
-                collateral.Count -= history.Quantity;
+                    Collateral minuscollateral = _unitOfWork
+                        .Collateral.Get(SD.historyid);
+                    collateral.Count += history.Quantity;
 
-                _unitOfWork.Save();
+                    _unitOfWork.Save();
+                }
             }
-            return RedirectToAction(nameof(Index));
+
+            if (action == "Minus")
+            {
+                History hist = new History();
+                if (SD.historyid != 0)
+                {
+                    var collateral = _unitOfWork.Collateral
+                        .GetFirstOrDefault(u => u.Id == SD.historyid);
+
+                    hist.LoginUser = ViewBag.DisplayName;
+                    hist.CollateralId = collateral.Id;
+                    hist.CollateralName = collateral.Name;
+                    hist.Quantity = history.Quantity;
+                    hist.RequestDate = history.RequestDate;
+                    hist.ReconRemarks = history.ReconRemarks;
+                    _unitOfWork.History.Add(hist);
+
+                    Collateral minuscollateral = _unitOfWork
+                        .Collateral.Get(SD.historyid);
+                    collateral.Count -= history.Quantity;
+
+                    _unitOfWork.Save();
+                }
+            }
+            return RedirectToAction(nameof(GetAllItemHistory));
         }
 
         #region API CALLS
@@ -95,14 +125,6 @@ namespace Intranet.Areas.CorpComm.Controllers
             SD.historyid = id;
             return RedirectToAction(nameof(GetAllItemHistory));
         }
-
-
-
-
-
-
-
-
 
         [HttpGet]
         public IActionResult GetAllItemHistory()
@@ -155,4 +177,3 @@ namespace Intranet.Areas.CorpComm.Controllers
         #endregion UserDetails function
     }
 }
-

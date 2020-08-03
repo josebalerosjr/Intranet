@@ -14,11 +14,12 @@ function loadDataTable() {
         },
         "columns": [
             { "data": "requestId" },
+            { "data": "reconRemarks" },
             { "data": "requestDate" },
             { "data": "loginUser" },
             { "data": "collateralName" },
-            { "data": "eventType" },
             { "data": "quantity" },
+            { "data": "eventType" },
             { "data": "stationEvent" },
             { "data": "eventDate" },
             { "data": "shippingDate" },

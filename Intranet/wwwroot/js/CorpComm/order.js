@@ -47,7 +47,7 @@ function loadDataTable(url) {
         },
         "columns": [
             { "data": "id" },
-            { "data": "orderDate", },
+            { "data": "orderDate" },
             { "data": "loginUser" },
             { "data": "eventName" },
             { "data": "stationEvent" },

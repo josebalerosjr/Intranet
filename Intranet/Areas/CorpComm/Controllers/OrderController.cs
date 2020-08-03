@@ -29,6 +29,9 @@ namespace Intranet.Areas.CorpComm.Controllers
         [BindProperty]
         public OrderDetailsVM OrderVM { get; set; }
 
+        [BindProperty]
+        public OrderDetailsVM OrderVMEmail { get; set; }
+
         //[BindProperty]
         //public ShoppingCartVM ShoppingCartVM { get; set; }
 
@@ -72,58 +75,26 @@ namespace Intranet.Areas.CorpComm.Controllers
 
             // change the status from "For Approval" to "Approved"
             orderHeader.OrderStatus = SD.StatusApproved;
-            orderHeader.RequestType = OrderVM.OrderHeader.RequestType;
             _unitOfWork.Save();
-
-            var orderDetails = _unitOfWork.OrderDetails.GetAll(u => u.OrderId == OrderVM.OrderHeader.Id);
-
-            
-            foreach (var order in orderDetails)
-            {
-                OrderHeader orderHeader2 = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == OrderVM.OrderHeader.Id);
-
-                // taken the stocks after approval
-                Collateral collateral = _unitOfWork.Collateral.Get(order.CollateralId.Value);
-                collateral.Count -= order.Count;
-
-                // insert details to history
-                History history = new History();
-                history.RequestId = orderHeader.Id;
-                history.RequestDate = orderHeader.OrderDate;
-                history.LoginUser = orderHeader.LoginUser;
-                history.CollateralName = collateral.Name;
-                history.CollateralId = collateral.Id;
-                history.EventType = orderHeader.EventName;
-                history.Quantity = order.Count;
-                history.StationEvent = orderHeader.StationEvent;
-                history.EventDate = orderHeader.EventDate;
-                history.ShippingDate = orderHeader.ShippingDate;
-                history.DropOffPoint = orderHeader.PickUpPoints;
-                history.rating = orderHeader.OrderRating;
-                _unitOfWork.History.Add(history);
-                _unitOfWork.Save();
-            }
 
             return RedirectToAction(nameof(Index));
         }
-
-
 
         [Authorize(Roles = SD.CIOAdmin + "," + SD.CorpCommAdmin)]
         public IActionResult RejectRequest(int id)
         {
             OrderHeader orderHeader = _unitOfWork.OrderHeader
                 .GetFirstOrDefault(u => u.Id == OrderVM.OrderHeader.Id);
-            
+
             // set the status to "Rejected"
             orderHeader.OrderStatus = SD.StatusRejected;
             orderHeader.RejectReason = OrderVM.OrderHeader.RejectReason;
 
             // get the email template
             var PathToFile = _hostEnvironment.WebRootPath +
-                Path.DirectorySeparatorChar.ToString() + "Templates" + 
+                Path.DirectorySeparatorChar.ToString() + "Templates" +
                 Path.DirectorySeparatorChar.ToString() + "EmailTemplates"
-                + Path.DirectorySeparatorChar.ToString() + 
+                + Path.DirectorySeparatorChar.ToString() +
                 "Email_Notifications_ForRejection.html";
 
             var subject = "PTT COLLATERALS: Your request has been rejected!";
@@ -151,11 +122,11 @@ namespace Intranet.Areas.CorpComm.Controllers
             // [3] reason
             // [4] url
 
-            string messageBody = string.Format(HtmlBody, 
-                subject2, 
-                datetime, 
-                LoginUser, 
-                RejectReason, 
+            string messageBody = string.Format(HtmlBody,
+                subject2,
+                datetime,
+                LoginUser,
+                RejectReason,
                 clickhere);
 
             EmailSender(
@@ -187,17 +158,20 @@ namespace Intranet.Areas.CorpComm.Controllers
         {
             OrderHeader orderHeader = _unitOfWork.OrderHeader
                 .GetFirstOrDefault(u => u.Id == OrderVM.OrderHeader.Id);
-            
+
             // change status from "Approved" to "For Deliver"
             orderHeader.OrderStatus = SD.StatusForDelivery;
-
+            orderHeader.RequestType = OrderVM.OrderHeader.RequestType;
             orderHeader.ShippingDate = OrderVM.OrderHeader.ShippingDate;
             orderHeader.PickUpPoints = OrderVM.OrderHeader.PickUpPoints;
+            _unitOfWork.Save();
 
-            var PathToFile = _hostEnvironment.WebRootPath + 
+            #region Email Process
+
+            var PathToFile = _hostEnvironment.WebRootPath +
                 Path.DirectorySeparatorChar.ToString()
-                + "Templates" + Path.DirectorySeparatorChar.ToString() + 
-                "EmailTemplates" + Path.DirectorySeparatorChar.ToString() + 
+                + "Templates" + Path.DirectorySeparatorChar.ToString() +
+                "EmailTemplates" + Path.DirectorySeparatorChar.ToString() +
                 "Email_Notifications_ForDelivery.html";
 
             var subject = "PTT COLLATERALS: Your request is now for delivery!";
@@ -211,18 +185,17 @@ namespace Intranet.Areas.CorpComm.Controllers
 
             #region get order details for email
 
-            OrderVM = new OrderDetailsVM()
+            OrderVMEmail = new OrderDetailsVM()
             {
-                OrderHeader = _unitOfWork.OrderHeader
-                .GetFirstOrDefault(u => u.Id == OrderId),
-                OrderDetails = _unitOfWork.OrderDetails
-                .GetAll(o => o.OrderId == OrderId, includeProperties: "Collateral")
+                OrderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == OrderId),
+                OrderDetails = _unitOfWork.OrderDetails.GetAll(o => o.OrderId == OrderId, includeProperties: "Collateral")
             };
+
             string itemlist = "";
             var itemname = "";
             int itemcount;
 
-            foreach (var item in OrderVM.OrderDetails)
+            foreach (var item in OrderVMEmail.OrderDetails)
             {
                 itemname = item.Collateral.Name;
                 itemcount = item.Count;
@@ -259,6 +232,7 @@ namespace Intranet.Areas.CorpComm.Controllers
             {
                 HtmlBody = streamReader.ReadToEnd();
             }
+
             // [0] subject
             // [1] date
             // [2] request number
@@ -266,7 +240,8 @@ namespace Intranet.Areas.CorpComm.Controllers
             // [4] drop - off location
             // [5] requestor name
             // [6] item and count
-            string messageBody = string.Format(HtmlBody, subject2, datetime, 
+
+            string messageBody = string.Format(HtmlBody, subject2, datetime,
                 OrderId, ShippingDate, PickUpPoints, LoginUser, listfinal);
 
             EmailSender(
@@ -274,8 +249,42 @@ namespace Intranet.Areas.CorpComm.Controllers
                 subject,
                 messageBody
                 );
-
             _unitOfWork.Save();
+
+            #endregion
+
+            #region History Process 
+
+            var orderDetails = _unitOfWork.OrderDetails.GetAll(u => u.OrderId == OrderVM.OrderHeader.Id);
+
+            foreach (var order in orderDetails)
+            {
+                OrderHeader orderHeader2 = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == OrderVM.OrderHeader.Id);
+
+                // taken the stocks after approval
+                Collateral collateral = _unitOfWork.Collateral.Get(order.CollateralId.Value);
+                collateral.Count -= order.Count;
+
+                // insert details to history
+                History history = new History();
+                history.RequestId = orderHeader.Id;
+                history.RequestDate = orderHeader.OrderDate;
+                history.LoginUser = orderHeader.LoginUser;
+                history.CollateralName = collateral.Name;
+                history.CollateralId = collateral.Id;
+                history.EventType = orderHeader.EventName;
+                history.Quantity = order.Count;
+                history.StationEvent = orderHeader.StationEvent;
+                history.EventDate = orderHeader.EventDate;
+                history.ShippingDate = orderHeader.ShippingDate;
+                history.DropOffPoint = orderHeader.PickUpPoints;
+                history.rating = orderHeader.OrderRating;
+                _unitOfWork.History.Add(history);
+                _unitOfWork.Save();
+            }
+
+            #endregion
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -287,10 +296,10 @@ namespace Intranet.Areas.CorpComm.Controllers
                 .GetFirstOrDefault(u => u.Id == OrderVM.OrderHeader.Id);
             orderHeader.OrderStatus = SD.StatusForAcknowledgement;
 
-            var PathToFile = _hostEnvironment.WebRootPath + 
-                Path.DirectorySeparatorChar.ToString() + "Templates" + 
+            var PathToFile = _hostEnvironment.WebRootPath +
+                Path.DirectorySeparatorChar.ToString() + "Templates" +
                 Path.DirectorySeparatorChar.ToString() + "EmailTemplates"
-                + Path.DirectorySeparatorChar.ToString() + 
+                + Path.DirectorySeparatorChar.ToString() +
                 "Email_Notifications_ForAcknowledment.html";
 
             var subject = "PTT COLLATERALS: Your request is now for acknowledgement!";
@@ -359,7 +368,7 @@ namespace Intranet.Areas.CorpComm.Controllers
             // [6] item and count
             // [7] click here
 
-            string messageBody = string.Format(HtmlBody, subject2, datetime, 
+            string messageBody = string.Format(HtmlBody, subject2, datetime,
                 OrderId, ShippingDate, PickUpPoints, LoginUser, listfinal, clickhere);
 
             EmailSender(
@@ -401,10 +410,10 @@ namespace Intranet.Areas.CorpComm.Controllers
             // [2] requestor
             // [3] url
 
-            string messageBody = string.Format(HtmlBody, 
-                subject2, 
-                datetime, 
-                LoginUser, 
+            string messageBody = string.Format(HtmlBody,
+                subject2,
+                datetime,
+                LoginUser,
                 clickhere);
 
             EmailSender(
@@ -467,7 +476,7 @@ namespace Intranet.Areas.CorpComm.Controllers
 
             _unitOfWork.Save();
 
-            return RedirectToAction(nameof(Details), new { id = OrderVM.OrderHeader.Id});
+            return RedirectToAction(nameof(Details), new { id = OrderVM.OrderHeader.Id });
         }
 
         [HttpPost]

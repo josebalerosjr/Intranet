@@ -42,7 +42,7 @@ namespace Intranet.Areas.CorpComm.Controllers
             return View();
         }
 
-        [Authorize(Roles = SD.CIOAdmin+", "+SD.CorpCommAdmin)]
+        [Authorize(Roles = SD.CIOAdmin + ", " + SD.CorpCommAdmin)]
         public IActionResult Upsert(int? id)
         {
             UserDetails();
@@ -266,11 +266,26 @@ namespace Intranet.Areas.CorpComm.Controllers
             Collateral objMinusItem = _unitOfWork.Collateral.Get(collateralVM.Collateral.Id);
             objMinusItem.Count -= qtyfrom;
 
-            if (SD.collateralName == SD.DO_Edsa)
+            History histMinus = new History();
+            if (collateralVM.Collateral.Id != 0)
             {
-                Collateral collateral = _unitOfWork.Collateral.GetFirstOrDefault(c => c.Name == SD.collateralLoc && c.LocationId != SD.collateralLocId);
-                //collateral = _unitOfWork.Collateral.Get();
-                collateral.Count += qtyfrom;
+                histMinus.LoginUser = ViewBag.DisplayName;
+                histMinus.CollateralId = objMinusItem.Id;
+                histMinus.CollateralName = objMinusItem.Name;
+                histMinus.Quantity = qtyfrom;
+                histMinus.RequestDate = DateTime.Now; ;
+
+                if (SD.collateralName == SD.DO_Edsa)
+                {
+                    histMinus.ReconRemarks = "Transfered (" + qtyfrom + ") to " + SD.DO_LKG;
+                }
+
+                if (SD.collateralName == SD.DO_LKG)
+                {
+                    histMinus.ReconRemarks = "Transfered (" + qtyfrom + ") to " + SD.DO_Edsa;
+                }
+
+                _unitOfWork.History.Add(histMinus);
                 _unitOfWork.Save();
             }
 
@@ -278,6 +293,41 @@ namespace Intranet.Areas.CorpComm.Controllers
             {
                 Collateral collateral = _unitOfWork.Collateral.GetFirstOrDefault(c => c.Name == SD.collateralLoc && c.LocationId != SD.collateralLocId);
                 collateral.Count += qtyfrom;
+
+                History histPlusEdsa = new History();
+                if (collateralVM.Collateral.Id != 0)
+                {
+                    histPlusEdsa.LoginUser = ViewBag.DisplayName;
+                    histPlusEdsa.CollateralId = collateral.Id;
+                    histPlusEdsa.CollateralName = collateral.Name;
+                    histPlusEdsa.Quantity = qtyfrom;
+                    histPlusEdsa.RequestDate = DateTime.Now; ;
+                    histPlusEdsa.ReconRemarks = "Transfered (" + qtyfrom + ") from " + SD.DO_LKG;
+
+                    _unitOfWork.History.Add(histPlusEdsa);
+                    _unitOfWork.Save();
+                }
+            }
+
+            if (SD.collateralName == SD.DO_Edsa)
+            {
+                Collateral collateral = _unitOfWork.Collateral.GetFirstOrDefault(c => c.Name == SD.collateralLoc && c.LocationId != SD.collateralLocId);
+                collateral.Count += qtyfrom;
+
+                History histPlusLKG = new History();
+                if (collateralVM.Collateral.Id != 0)
+                {
+                    histPlusLKG.LoginUser = ViewBag.DisplayName;
+                    histPlusLKG.CollateralId = collateral.Id;
+                    histPlusLKG.CollateralName = collateral.Name;
+                    histPlusLKG.Quantity = qtyfrom;
+                    histPlusLKG.RequestDate = DateTime.Now; ;
+                    histPlusLKG.ReconRemarks = "Transfered (" + qtyfrom + ") from " + SD.DO_Edsa;
+                    _unitOfWork.History.Add(histPlusLKG);
+
+                    _unitOfWork.Save();
+                }
+
                 _unitOfWork.Save();
             }
 

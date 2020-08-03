@@ -18,11 +18,16 @@
             <tr>
                 <th>@Html.DisplayNameFor(model => model.RequestId)</th>
                 <th>@Html.DisplayNameFor(model => model.ReconRemarks)</th>
+                <th>@Html.DisplayNameFor(model => model.RequestDate)</th>
                 <th>@Html.DisplayNameFor(model => model.LoginUser)</th>
                 <th>@Html.DisplayNameFor(model => model.CollateralName)</th>
+                <th>Event Type</th>
                 <th>@Html.DisplayNameFor(model => model.Quantity)</th>
                 <th>@Html.DisplayNameFor(model => model.StationEvent)</th>
-                <th>@Html.DisplayNameFor(model => model.RequestDate)</th>
+                <th>Event Date</th>
+                <th>Shipping Date</th>
+                <th>Drop-off Point</th>
+                <th>Rating</th>
             </tr>
         </thead>
         <tbody>
@@ -31,11 +36,16 @@
                 <tr>
                     <td>@Html.DisplayFor(modelItem => item.RequestId)</td>
                     <td>@Html.DisplayFor(modelItem => item.ReconRemarks)</td>
+                    <td>@Html.DisplayFor(modelItem => item.RequestDate)</td>
                     <td>@Html.DisplayFor(modelItem => item.LoginUser)</td>
                     <td>@Html.DisplayFor(modelItem => item.CollateralName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.EventType)</td>
                     <td>@Html.DisplayFor(modelItem => item.Quantity)</td>
                     <td>@Html.DisplayFor(modelItem => item.StationEvent)</td>
-                    <td>@Html.DisplayFor(modelItem => item.RequestDate)</td>
+                    <td>@Html.DisplayFor(modelItem => item.EventDate)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ShippingDate)</td>
+                    <td>@Html.DisplayFor(modelItem => item.DropOffPoint)</td>
+                    <td>@Html.DisplayFor(modelItem => item.rating)</td>
                 </tr>
             }
         </tbody>

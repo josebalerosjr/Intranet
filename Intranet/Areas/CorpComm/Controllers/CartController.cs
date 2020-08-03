@@ -60,7 +60,6 @@ namespace Intranet.Areas.CorpComm.Controllers
         {
             var cart = _unitOfWork.ShoppingCart.GetFirstOrDefault(c => c.Id == cartId, includeProperties: "Collateral");
             cart.Count += 1;
-            //ShoppingCartVM.OrderHeader.OrderTotal += (list.Count * list.Collateral.Price);
             _unitOfWork.Save();
             return RedirectToAction(nameof(Index));
         }
@@ -78,7 +77,6 @@ namespace Intranet.Areas.CorpComm.Controllers
             else
             {
                 cart.Count -= 1;
-                //ShoppingCartVM.OrderHeader.OrderTotal += (list.Count * list.Collateral.Price);
                 _unitOfWork.Save();
             }
             return RedirectToAction(nameof(Index));
@@ -114,7 +112,8 @@ namespace Intranet.Areas.CorpComm.Controllers
             return View(ShoppingCartVM);
         }
 
-        public IActionResult PendingOrder() {
+        public IActionResult PendingOrder()
+        {
             UserDetails();
             CartCount();
             return View();
@@ -125,7 +124,6 @@ namespace Intranet.Areas.CorpComm.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult SummaryPost(ShoppingCartVM cartVM)
         {
-
             UserDetails();
             CartCount();
             string loginUser = ViewBag.DisplayName;
@@ -134,7 +132,7 @@ namespace Intranet.Areas.CorpComm.Controllers
             {
                 OrderHeader = new OrderHeader(),
                 ListCart = _unitOfWork.ShoppingCart.GetAll(c => c.LoginUser == loginUser, includeProperties: "Collateral,Event"),
-                ListOrderHeader = _unitOfWork.OrderHeader.GetAll(c => c.LoginUser == loginUser && 
+                ListOrderHeader = _unitOfWork.OrderHeader.GetAll(c => c.LoginUser == loginUser &&
                                     (c.OrderStatus.Contains(SD.StatusForAcknowledgement) || c.OrderStatus.Contains(SD.StatusForRating)))
             };
 
@@ -176,10 +174,6 @@ namespace Intranet.Areas.CorpComm.Controllers
                     ShoppingCartVM.OrderHeader.OrderTotal += orderDetails.Count * orderDetails.Price;
                     _unitOfWork.OrderDetails.Add(orderDetails);
                 }
-
-                #region get EventName
-
-                #endregion
 
                 #region Add EventName, StationEvent, EventDate
 

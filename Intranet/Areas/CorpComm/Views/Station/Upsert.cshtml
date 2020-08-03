@@ -10,7 +10,7 @@
     <div class="row p-3 border">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <input type="hidden" asp-for="Station.UserName" value="@ViewBag.DisplayName" />
-        <input type="hidden" asp-for="Station.UserIP" 
+        <input type="hidden" asp-for="Station.UserIP"
                value="@HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString()" />
         <input type="hidden" asp-for="Station.UserDate" value="@DateTime.Now.ToString("MM/dd/yyyy")" />
         @if (Model.Station.Id != 0)

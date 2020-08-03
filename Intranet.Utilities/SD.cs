@@ -39,8 +39,8 @@ namespace Intranet.Utilities
 
         // App URL
         public const string IntranetLink = "http://qas.intranet.pttphils.com/";
-        //public const string IntranetLink = "http://localhost:44322/";
-        //public const string IntranetLink = "http://intranet.pttphils.com/";
+        // public const string IntranetLink = "http://localhost:44322/";
+        // public const string IntranetLink = "http://intranet.pttphils.com/";
 
         // item value
         public static string collateralLoc;
