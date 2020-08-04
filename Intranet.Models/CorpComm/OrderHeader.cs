@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Intranet.Models.CorpComm
 {
@@ -19,6 +18,7 @@ namespace Intranet.Models.CorpComm
 
         [Required]
         public int OrderTotal { get; set; }
+
         public string RequestorEmail { get; set; }
         public string RequestType { get; set; }
         public string PickUpPoints { get; set; }

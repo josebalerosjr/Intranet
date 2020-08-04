@@ -53,22 +53,22 @@ namespace Intranet.Controllers
             if (ModelState.IsValid)
             {
                 if (imageCarousel.Id == 0)
-                    {
-                        _context.Add(imageCarousel);
-                        addToast(); // TODO: Triggers addToast
-                    }
-                    else
-                    {
-                        _context.Update(imageCarousel);
-                        editToast(); // TODO: Triggers editToast
-                    }
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
+                {
+                    _context.Add(imageCarousel);
+                    addToast(); // TODO: Triggers addToast
                 }
                 else
                 {
-                    warnToast();    // TODO: Triggers warnToast
+                    _context.Update(imageCarousel);
+                    editToast(); // TODO: Triggers editToast
                 }
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                warnToast();    // TODO: Triggers warnToast
+            }
             return View(imageCarousel);
         }
 

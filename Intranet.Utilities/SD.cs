@@ -15,6 +15,7 @@ namespace Intranet.Utilities
 
         // Request Status
         public const string StatusForApproval = "For Approval";
+
         public const string StatusApproved = "Approved";
         public const string StatusForDelivery = "For Delivery";
         public const string StatusForAcknowledgement = "For Acknowledgement";
@@ -26,10 +27,12 @@ namespace Intranet.Utilities
 
         // Drop-Off Location
         public const string DO_Edsa = "EDSA Vet";
+
         public const string DO_LKG = "LKG Makati";
 
         // history
         public static int historyid = 0;
+
         public static string histLoginName;
         public static string histColId;
         public static string histColName;
@@ -39,6 +42,7 @@ namespace Intranet.Utilities
 
         // App URL
         public const string IntranetLink = "http://qas.intranet.pttphils.com/";
+
         // public const string IntranetLink = "http://localhost:44322/";
         // public const string IntranetLink = "http://intranet.pttphils.com/";
 
@@ -50,6 +54,7 @@ namespace Intranet.Utilities
 
         // Request type
         public const string ReqUrgent = "Urgent";
+
         public const string ReqRegular = "Regular";
 
         // Autorization

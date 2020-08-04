@@ -77,7 +77,7 @@ namespace Intranet.DataAccess.Repository
             using (SqlConnection sqlCon = new SqlConnection(ConnectionString))
             {
                 sqlCon.Open();
-                return (T)Convert.ChangeType(sqlCon.ExecuteScalar<T>(procedureName, param, 
+                return (T)Convert.ChangeType(sqlCon.ExecuteScalar<T>(procedureName, param,
                     commandType: CommandType.StoredProcedure), typeof(T));
             }
         }

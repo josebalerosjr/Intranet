@@ -195,9 +195,6 @@ namespace Intranet.DataAccess.Repository.CorpComm
 
                 #endregion HTML Body
 
-
-
-
                 string messageBody = string.Format(HtmlBody);
 
                 var message = new MimeMessage();
@@ -214,7 +211,7 @@ namespace Intranet.DataAccess.Repository.CorpComm
                         _emailOptions.SMTPHostPort, _emailOptions.SMTPHostBool);
 
                     // Note: only needed if the SMTP server requires authentication
-                    client.Authenticate(_emailOptions.AuthEmail, 
+                    client.Authenticate(_emailOptions.AuthEmail,
                         _emailOptions.AuthPassword);
                     client.Send(message);
                     client.Disconnect(true);

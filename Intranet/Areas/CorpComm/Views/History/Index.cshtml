@@ -2,14 +2,18 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<br />
 <div class="row">
     <div class="col-6">
         <h2 class="text-primary">History</h2>
     </div>
+    <div class="col-6 text-right">
+        <a class="btn btn-primary" asp-area="CorpComm"
+           asp-controller="Collateral" asp-action="Index">
+            &nbsp; Back to Collaretal
+        </a>
+    </div>
 </div>
 
-<br />
 <div class="p-4 border rounded">
     <table id="tblData" class="table table-hover border"
            style="display: block; overflow-x: auto; white-space: nowrap; width:100%;">

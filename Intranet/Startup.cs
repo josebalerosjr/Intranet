@@ -232,7 +232,7 @@ namespace Intranet
 
             RecurringJob.AddOrUpdate<IMondayReminder>(
                 MondayReminder => MondayReminder.SendEmail(), Cron.Weekly
-            ); 
+            );
 
             app.UseRouting();
             app.UseSession();

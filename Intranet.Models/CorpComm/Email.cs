@@ -33,6 +33,6 @@ namespace Intranet.Models.CorpComm
         [Column(TypeName = "nvarchar(10)")]
         public string UserDate { get; set; }
 
-        #endregion
+        #endregion UserDetails
     }
 }

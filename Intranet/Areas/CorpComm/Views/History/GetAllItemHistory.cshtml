@@ -9,6 +9,9 @@
     <div class="col-6">
         <h2 class="text-primary">History</h2>
     </div>
+    <div class="col-6 text-right">
+        <a class="btn btn-primary" asp-area="CorpComm" asp-controller="Collateral" asp-action="Index"> &nbsp; Back to Collaretal</a>
+    </div>
 </div>
 <br />
 <div class="p-4 border rounded">
@@ -19,7 +22,7 @@
                 <th>@Html.DisplayNameFor(model => model.RequestId)</th>
                 <th>@Html.DisplayNameFor(model => model.ReconRemarks)</th>
                 <th>@Html.DisplayNameFor(model => model.RequestDate)</th>
-                <th>@Html.DisplayNameFor(model => model.LoginUser)</th>
+                <th>Requestor</th>
                 <th>@Html.DisplayNameFor(model => model.CollateralName)</th>
                 <th>Event Type</th>
                 <th>@Html.DisplayNameFor(model => model.Quantity)</th>

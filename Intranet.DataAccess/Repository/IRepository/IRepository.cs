@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 
 namespace Intranet.DataAccess.Repository.IRepository
 {
@@ -22,8 +21,11 @@ namespace Intranet.DataAccess.Repository.IRepository
         );
 
         void Add(T entity);
+
         void Remove(int id);
+
         void Remove(T id);
+
         void RemoveRange(IEnumerable<T> entity);
     }
 }

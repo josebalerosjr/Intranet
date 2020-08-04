@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Intranet.Utilities
+﻿namespace Intranet.Utilities
 {
     public class EmailOptions
     {

@@ -183,7 +183,7 @@
 
                             @*// FOR APPROVAL STATUS*@
                             @if ((User.IsInRole(SD.CIOAdmin) && Model.OrderHeader.OrderStatus == SD.StatusForApproval) ||
-                              (User.IsInRole(SD.CorpCommAdmin) && Model.OrderHeader.OrderStatus == SD.StatusForApproval))
+                             (User.IsInRole(SD.CorpCommAdmin) && Model.OrderHeader.OrderStatus == SD.StatusForApproval))
                             {
                                 <input value="Approve Request" class="btn btn-primary form-control" type="submit"
                                        formaction="/CorpComm/Order/ApproveRequest" formmethod="post" /><br /><br />
@@ -197,7 +197,7 @@
 
                             @*// CANCEL REQUEST*@
                             @if ((!User.IsInRole(SD.CIOAdmin) && Model.OrderHeader.OrderStatus == SD.StatusForApproval) ||
-                              (User.IsInRole(SD.CorpCommAdmin) && Model.OrderHeader.OrderStatus == SD.StatusForApproval))
+                             (User.IsInRole(SD.CorpCommAdmin) && Model.OrderHeader.OrderStatus == SD.StatusForApproval))
                             {
                                 <input value="Cancel Request" class="btn btn-primary form-control" type="submit"
                                        formaction="/CorpComm/Order/CancelRequest" formmethod="post" />
@@ -205,7 +205,7 @@
 
                             @*// PREPARE ITEM*@
                             @if ((User.IsInRole(SD.CIOAdmin) && Model.OrderHeader.OrderStatus == SD.StatusApproved) ||
-                              (User.IsInRole(SD.CorpCommAdmin) && Model.OrderHeader.OrderStatus == SD.StatusApproved))
+                             (User.IsInRole(SD.CorpCommAdmin) && Model.OrderHeader.OrderStatus == SD.StatusApproved))
                             {
                                 <input value="Prepare Item" onclick="return validateInput()" class="btn btn-primary form-control" type="submit"
                                        formaction="/CorpComm/Order/ForDeliveryRequest" formmethod="post" />
@@ -213,21 +213,21 @@
 
                             @*// FOR ACKNOWLEDGEMENT*@
                             @if ((User.IsInRole(SD.CIOAdmin) && Model.OrderHeader.OrderStatus == SD.StatusForDelivery) ||
-                              (User.IsInRole(SD.CorpCommAdmin) && Model.OrderHeader.OrderStatus == SD.StatusForDelivery))
+                             (User.IsInRole(SD.CorpCommAdmin) && Model.OrderHeader.OrderStatus == SD.StatusForDelivery))
                             {
                                 <input value="Delivered" onclick="return validateInput()" class="btn btn-primary form-control" type="submit"
                                        formaction="/CorpComm/Order/ForAcknowledgementRequest" formmethod="post" />
                             }
 
                             @if ((!User.IsInRole(SD.CIOAdmin) && Model.OrderHeader.OrderStatus == SD.StatusForAcknowledgement) ||
-                              (User.IsInRole(SD.CorpCommAdmin) && Model.OrderHeader.OrderStatus == SD.StatusForAcknowledgement))
+                             (User.IsInRole(SD.CorpCommAdmin) && Model.OrderHeader.OrderStatus == SD.StatusForAcknowledgement))
                             {
                                 <input value="Acknowledge Reciept" class="btn btn-primary form-control" type="submit"
                                        formaction="/CorpComm/Order/AcknowledgeReceipt" formmethod="post" />
                             }
 
                             @if ((!User.IsInRole(SD.CIOAdmin) && Model.OrderHeader.OrderStatus == SD.StatusForRating) ||
-                             (User.IsInRole(SD.CorpCommAdmin) && Model.OrderHeader.OrderStatus == SD.StatusForRating))
+                            (User.IsInRole(SD.CorpCommAdmin) && Model.OrderHeader.OrderStatus == SD.StatusForRating))
                             {
                                 <div class="row my-1">
                                     <div class="col-12">

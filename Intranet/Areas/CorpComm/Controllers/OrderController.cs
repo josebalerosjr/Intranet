@@ -251,9 +251,9 @@ namespace Intranet.Areas.CorpComm.Controllers
                 );
             _unitOfWork.Save();
 
-            #endregion
+            #endregion Email Process
 
-            #region History Process 
+            #region History Process
 
             var orderDetails = _unitOfWork.OrderDetails.GetAll(u => u.OrderId == OrderVM.OrderHeader.Id);
 
@@ -283,7 +283,7 @@ namespace Intranet.Areas.CorpComm.Controllers
                 _unitOfWork.Save();
             }
 
-            #endregion
+            #endregion History Process
 
             return RedirectToAction(nameof(Index));
         }

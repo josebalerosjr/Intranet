@@ -10,11 +10,13 @@ namespace Intranet.Models.CorpComm
 
         [Required]
         public int? OrderId { get; set; }
+
         [ForeignKey("OrderId")]
         public OrderHeader OrderHeader { get; set; }
 
         [Required]
         public int? CollateralId { get; set; }
+
         [ForeignKey("CollateralId")]
         public Collateral Collateral { get; set; }
 

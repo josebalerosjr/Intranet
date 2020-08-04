@@ -17,7 +17,7 @@ namespace Intranet.Models.CorpComm
 
         [Required]
         [DisplayName("Budget Limit")]
-        [Range(1,100000)]
+        [Range(1, 100000)]
         public int BudgetLimit { get; set; }
 
         #region UserDetails
@@ -37,6 +37,6 @@ namespace Intranet.Models.CorpComm
         [Column(TypeName = "nvarchar(10)")]
         public string UserDate { get; set; }
 
-        #endregion
+        #endregion UserDetails
     }
 }

@@ -20,31 +20,36 @@ namespace Intranet.Models.CorpComm
 
         [Required]
         public int SizeId { get; set; }
+
         [ForeignKey("SizeId")]
         public Size Size { get; set; }
 
         [Required]
         public int UnitId { get; set; }
+
         [ForeignKey("UnitId")]
         public Unit Unit { get; set; }
 
         [Required]
         public int BrandId { get; set; }
+
         [ForeignKey("BrandId")]
         public Brand Brand { get; set; }
 
         [Required]
         public int LocationId { get; set; }
+
         [ForeignKey("LocationId")]
         public Location Location { get; set; }
 
         [Required]
-        [Range(1,10000)]
+        [Range(1, 10000)]
         public int Count { get; set; }
 
         [Required]
         [Range(1, 1000000)]
         public int Price { get; set; }
+
         public string ImgUrl { get; set; }
 
         [Required]
@@ -68,6 +73,6 @@ namespace Intranet.Models.CorpComm
         [Column(TypeName = "nvarchar(10)")]
         public string UserDate { get; set; }
 
-        #endregion
+        #endregion UserDetails
     }
 }

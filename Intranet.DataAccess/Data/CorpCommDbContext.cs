@@ -1,8 +1,6 @@
 ﻿using Intranet.Models.CorpComm;
 using Intranet.Utilities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using System.Threading;
 
 namespace Intranet.DataAccess.Data
 {

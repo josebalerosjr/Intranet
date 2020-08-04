@@ -25,6 +25,7 @@ namespace Intranet.Classes
             _appSettings = appSettings.Value;
             _contextInvEmail = contextInvEmail;
         }
+
         public void SendMail()     // SendEmail function
         {
             var invemails = _contextInvEmail.invEmails;
@@ -68,7 +69,6 @@ namespace Intranet.Classes
                     {
                         msgFromDB += "<p>No Items for Calibratio</p>";
                     }
-                    
                 }
                 message.Subject = "Items to be calibrated";
                 builder.HtmlBody =

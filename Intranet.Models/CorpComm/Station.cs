@@ -16,6 +16,7 @@ namespace Intranet.Models.CorpComm
 
         [Required]
         public int StationTypeId { get; set; }
+
         [ForeignKey("StationTypeId")]
         public StationType StationType { get; set; }
 
@@ -36,6 +37,6 @@ namespace Intranet.Models.CorpComm
         [Column(TypeName = "nvarchar(10)")]
         public string UserDate { get; set; }
 
-        #endregion
+        #endregion UserDetails
     }
 }

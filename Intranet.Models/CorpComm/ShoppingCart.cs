@@ -17,10 +17,12 @@ namespace Intranet.Models.CorpComm
         public string LoginUser { get; set; }
 
         public int CollateralId { get; set; }
+
         [ForeignKey("CollateralId")]
         public Collateral Collateral { get; set; }
 
         public int? EventId { get; set; }
+
         [ForeignKey("EventId")]
         public Event Event { get; set; }
 

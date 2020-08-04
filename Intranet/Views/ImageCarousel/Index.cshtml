@@ -28,25 +28,25 @@
     <tbody id="myTable">
         @foreach (var item in Model)
         {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ImageName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ImageLink)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.isActive)
-            </td>
-            <td>
-                <a asp-action="AddOrEdit" asp-route-id="@item.Id"><i class="fa fa-marker fa-lg"></i></a>
-                <a asp-action="Delete" asp-route-id="@item.Id"
-                   class="text-danger ml-1"
-                   onclick="return confirm('Are you sure to delete this record?')">
-                    <i class="fa fa-trash-alt fa-lg"></i>
-                </a>
-            </td>
-        </tr>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ImageName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ImageLink)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.isActive)
+                </td>
+                <td>
+                    <a asp-action="AddOrEdit" asp-route-id="@item.Id"><i class="fa fa-marker fa-lg"></i></a>
+                    <a asp-action="Delete" asp-route-id="@item.Id"
+                       class="text-danger ml-1"
+                       onclick="return confirm('Are you sure to delete this record?')">
+                        <i class="fa fa-trash-alt fa-lg"></i>
+                    </a>
+                </td>
+            </tr>
         }
     </tbody>
 </table>

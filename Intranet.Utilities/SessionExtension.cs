@@ -1,9 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Text;
 
 namespace Intranet.Utilities
 {
@@ -13,6 +9,7 @@ namespace Intranet.Utilities
         {
             session.SetString(key, JsonConvert.SerializeObject(value));
         }
+
         public static T GetObject<T>(this ISession session, string key)
         {
             var value = session.GetString(key);
