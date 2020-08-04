@@ -18,15 +18,15 @@ namespace Intranet.Areas.CorpComm.Controllers
     public class CartController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly AppSettings _appSettings;
+        private readonly EmailOptions _emailOptions;
 
         [BindProperty]
         public ShoppingCartVM ShoppingCartVM { get; set; }
 
-        public CartController(IUnitOfWork unitOfWork, IOptions<AppSettings> appSettings)
+        public CartController(IUnitOfWork unitOfWork, IOptions<EmailOptions> emailOptions)
         {
             _unitOfWork = unitOfWork;
-            _appSettings = appSettings.Value;
+            _emailOptions = emailOptions.Value;
         }
 
         public IActionResult Index()
@@ -203,7 +203,7 @@ namespace Intranet.Areas.CorpComm.Controllers
         public void UserDetails()
         {
             var username = User.Identity.Name;
-            var domain = _appSettings.appDomain;
+            var domain = _emailOptions.AuthDomain;
             using (var context = new PrincipalContext(ContextType.Domain, domain))
             {
                 var user = UserPrincipal.FindByIdentity(context, username);

@@ -42,7 +42,7 @@ namespace Intranet
 
             #region variable declaration for appsettings and connections string
 
-            var appSettings = Configuration.GetSection("AppSettings");
+            //var appSettings = Configuration.GetSection("AppSettings");
             var bdoInfo = Configuration.GetSection("BdoInfo");
             var bpiInfo = Configuration.GetSection("BpiInfo");
             var sbcInfo = Configuration.GetSection("SbcInfo");
@@ -127,12 +127,12 @@ namespace Intranet
              *  this service gets the value from the appsettings.json file
              *  and put it in a array.
              */
-            services.Configure<AppSettings>(appSettings);
+            //services.Configure<AppSettings>(appSettings);
             services.Configure<BdoInfo>(bdoInfo);
             services.Configure<BpiInfo>(bpiInfo);
             services.Configure<SbcInfo>(sbcInfo);
             services.Configure<MtrInfo>(mtrInfo);
-            services.Configure<AppLinks>(appLinks);
+            //services.Configure<AppLinks>(appLinks);
             services.Configure<OnlineImageLinks>(onlineimagelinks);
 
             #endregion appsettings service
@@ -185,8 +185,10 @@ namespace Intranet
                     .AddNToastNotifyToastr()
                     .AddControllersAsServices();
 
-            services.AddScoped<IGenerateDailyCriticalItemReport, GenerateDailyCriticalItemReport>();
-            services.AddScoped<IGenerateCalibrationDate, GenerateCalibrationDate>();
+            services.AddScoped<IGenerateDailyCriticalItemReport,
+                GenerateDailyCriticalItemReport>();
+            services.AddScoped<IGenerateCalibrationDate,
+                GenerateCalibrationDate>();
             services.AddScoped<IMondayReminder, MondayReminder>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 

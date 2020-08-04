@@ -1,5 +1,6 @@
 ﻿using Intranet.Classes;
 using Intranet.Models;
+using Intranet.Utilities;
 using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,15 +18,15 @@ namespace Intranet.Controllers
     public class SuggestionController : Controller
     {
         private readonly SuggestionContext _context;
-        private readonly AppSettings _appSettings;
+        private readonly EmailOptions _emailOptions;
         private readonly EmailContext _email;
         private readonly IToastNotification _toastNotification;
         private string SenderName, SenderEmail, SenderSubject, SenderMessage, ReceiverName, ReceiverEmail; // variables for
 
-        public SuggestionController(SuggestionContext context, EmailContext email, IOptions<AppSettings> appSettings, IToastNotification toastNotification)
+        public SuggestionController(SuggestionContext context, EmailContext email, IOptions<EmailOptions> EmailOptions, IToastNotification toastNotification)
         {
             _context = context;
-            _appSettings = appSettings.Value;
+            _emailOptions = EmailOptions.Value;
             _email = email;
             _toastNotification = toastNotification;
         }
@@ -61,8 +62,8 @@ namespace Intranet.Controllers
             SenderSubject = suggestion.SuggSubject;
             SenderEmail = ViewBag.EmailAddress;
             SenderMessage = suggestion.SuggMessage;
-            ReceiverName = _appSettings.SenderName;
-            ReceiverEmail = _appSettings.AuthEmail;
+            //ReceiverName = _emailOptions.SenderName;
+            ReceiverEmail = _emailOptions.AuthEmailMain;
 
             //  calling SendEmail email function
             SendEmail(SenderName, SenderEmail, ReceiverName, SenderMessage, SenderSubject);
@@ -70,12 +71,12 @@ namespace Intranet.Controllers
             var message = new MimeMessage();
             var builder = new BodyBuilder();
 
-            // reference value from appsettings.json
-            string host = _appSettings.SmtpHostClient;
-            int port = _appSettings.SmtpHostPort;
-            bool boole = _appSettings.SmptHostBool;
-            string authEmail = _appSettings.AuthEmail;
-            string authPass = _appSettings.AuthPass;
+            // reference value from EmailOptions.json
+            string host = _emailOptions.SMTPHostClient;
+            int port = _emailOptions.SMTPHostPort;
+            bool boole = _emailOptions.SMTPHostBool;
+            string authEmail = _emailOptions.AuthEmailMain;
+            string authPass = _emailOptions.AuthPasswordMain;
 
             message.From.Add(new MailboxAddress(SenderName, SenderEmail));
 
@@ -102,7 +103,7 @@ namespace Intranet.Controllers
         public void UserDetails()
         {
             var username = User.Identity.Name;
-            var domain = _appSettings.appDomain;
+            var domain = _emailOptions.AuthDomain;
             using (var context = new PrincipalContext(ContextType.Domain, domain))
             {
                 var user = UserPrincipal.FindByIdentity(context, username);
@@ -134,12 +135,12 @@ namespace Intranet.Controllers
             var message = new MimeMessage();
             var builder = new BodyBuilder();
 
-            // reference value from appsettings.json
-            string host = _appSettings.SmtpHostClient;
-            int port = _appSettings.SmtpHostPort;
-            bool boole = _appSettings.SmptHostBool;
-            string authEmail = _appSettings.AuthEmail;
-            string authPass = _appSettings.AuthPass;
+            // reference value from EmailOptions.json
+            string host = _emailOptions.SMTPHostClient;
+            int port = _emailOptions.SMTPHostPort;
+            bool boole = _emailOptions.SMTPHostBool;
+            string authEmail = _emailOptions.AuthEmailMain;
+            string authPass = _emailOptions.AuthPasswordMain;
 
             message.From.Add(new MailboxAddress(FromName, FromEmail));
 

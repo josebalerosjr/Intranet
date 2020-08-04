@@ -1,5 +1,5 @@
-﻿using Intranet.Classes;
-using Intranet.Data;
+﻿using Intranet.Data;
+using Intranet.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -8,17 +8,17 @@ using System.Linq;
 
 namespace Intranet.Controllers
 {
-    [Authorize(Roles = "Office of the Chief Information Officer, SSHE Admin")]
+    [Authorize(Roles = SD.CIOAdmin + "," + SD.QSHESHEAdmin)]
     public class ReportSHEController : Controller
     {
         private readonly ItemRegSHEContext _context;
-        private readonly AppSettings _appSettings;
+        private readonly EmailOptions _emailOptions;
         //private readonly IHostingEnvironment _hostingEnvironment;
 
-        public ReportSHEController(ItemRegSHEContext context, IOptions<AppSettings> appSettings/*, IHostingEnvironment hostingEnvironment*/)
+        public ReportSHEController(ItemRegSHEContext context, IOptions<EmailOptions> EmailOptions/*, IHostingEnvironment hostingEnvironment*/)
         {
             _context = context;
-            _appSettings = appSettings.Value;
+            _emailOptions = EmailOptions.Value;
             //_hostingEnvironment = hostingEnvironment;
         }
 
@@ -52,7 +52,7 @@ namespace Intranet.Controllers
         public void UserDetails()
         {
             var username = User.Identity.Name;
-            var domain = _appSettings.appDomain;
+            var domain = _emailOptions.AuthDomain;
             using (var context = new PrincipalContext(ContextType.Domain, domain))
             {
                 var user = UserPrincipal.FindByIdentity(context, username);

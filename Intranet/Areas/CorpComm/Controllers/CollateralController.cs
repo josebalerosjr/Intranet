@@ -23,13 +23,13 @@ namespace Intranet.Areas.CorpComm.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IWebHostEnvironment _hostEnvironment;
-        private readonly AppSettings _appSettings;
+        private readonly EmailOptions _emailOptions;
         private readonly CorpCommDbContext _context;
 
-        public CollateralController(IUnitOfWork unitOfWork, IOptions<AppSettings> appSettings, IWebHostEnvironment hostEnvironment, CorpCommDbContext context)
+        public CollateralController(IUnitOfWork unitOfWork, IOptions<EmailOptions> emailOptions, IWebHostEnvironment hostEnvironment, CorpCommDbContext context)
         {
             _unitOfWork = unitOfWork;
-            _appSettings = appSettings.Value;
+            _emailOptions = emailOptions.Value;
             _hostEnvironment = hostEnvironment;
             _context = context;
         }
@@ -371,7 +371,7 @@ namespace Intranet.Areas.CorpComm.Controllers
         public void UserDetails()
         {
             var username = User.Identity.Name;
-            var domain = _appSettings.appDomain;
+            var domain = _emailOptions.AuthDomain;
             using (var context = new PrincipalContext(ContextType.Domain, domain))
             {
                 var user = UserPrincipal.FindByIdentity(context, username);

@@ -17,15 +17,15 @@ namespace Intranet.Areas.CorpComm.Controllers
     public class HistoryController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly AppSettings _appSettings;
+        private readonly EmailOptions _emailOptions;
         private readonly CorpCommDbContext _context;
 
         public HistoryController(IUnitOfWork unitOfWork,
-            IOptions<AppSettings> appSettings,
+            IOptions<EmailOptions> emailOptions,
             CorpCommDbContext context)
         {
             _unitOfWork = unitOfWork;
-            _appSettings = appSettings.Value;
+            _emailOptions = emailOptions.Value;
             _context = context;
         }
 
@@ -151,7 +151,7 @@ namespace Intranet.Areas.CorpComm.Controllers
         public void UserDetails()
         {
             var username = User.Identity.Name;
-            var domain = _appSettings.appDomain;
+            var domain = _emailOptions.AuthDomain;
             using (var context = new PrincipalContext(
                 ContextType.Domain, domain))
             {

@@ -199,7 +199,7 @@ namespace Intranet.DataAccess.Repository.CorpComm
 
                 var message = new MimeMessage();
                 var builder = new BodyBuilder();
-                message.From.Add(new MailboxAddress(_emailOptions.AuthEmail));
+                message.From.Add(new MailboxAddress(_emailOptions.AuthEmailCorpComm));
                 message.To.Add(new MailboxAddress(requestorEmail));
                 message.Subject = subject;
                 builder.HtmlBody = messageBody;
@@ -211,8 +211,8 @@ namespace Intranet.DataAccess.Repository.CorpComm
                         _emailOptions.SMTPHostPort, _emailOptions.SMTPHostBool);
 
                     // Note: only needed if the SMTP server requires authentication
-                    client.Authenticate(_emailOptions.AuthEmail,
-                        _emailOptions.AuthPassword);
+                    client.Authenticate(_emailOptions.AuthEmailCorpComm,
+                        _emailOptions.AuthPasswordCorpComm);
                     client.Send(message);
                     client.Disconnect(true);
                 }

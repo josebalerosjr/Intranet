@@ -1,6 +1,6 @@
-﻿using Intranet.Classes;
-using Intranet.Data;
+﻿using Intranet.Data;
 using Intranet.Models;
+using Intranet.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Intranet.Controllers
 {
-    [Authorize(Roles = "Office of the Chief Information Officer, SSHE Admin, SSHE User")]
+    [Authorize(Roles = SD.CIOAdmin + "," + SD.QSHESHEAdmin + "," + SD.QSHESHEUser)]
     public class ItemRegSHEController : Controller
     {
         private readonly ItemRegSHEContext _context;
@@ -22,7 +22,7 @@ namespace Intranet.Controllers
         private readonly InvLocationContext _contextLoc;
         private readonly InvTypeContext _contextType;
         private readonly InvUnitContext _contextUnit;
-        private readonly AppSettings _appSettings;
+        private readonly EmailOptions _emailOptions;
         private readonly IToastNotification _toastNotification;
         private readonly EmailContext _contextEmail;
 
@@ -33,7 +33,7 @@ namespace Intranet.Controllers
             InvTypeContext contextType,
             InvUnitContext contextUnit,
             EmailContext contextEmail,
-            IOptions<AppSettings> appSettings,
+            IOptions<EmailOptions> emailOptions,
             IToastNotification toastNotification)
         {
             _context = context;
@@ -42,7 +42,7 @@ namespace Intranet.Controllers
             _contextType = contextType;
             _contextUnit = contextUnit;
             _contextEmail = contextEmail;
-            _appSettings = appSettings.Value;
+            _emailOptions = emailOptions.Value;
             _toastNotification = toastNotification;
         }
 
@@ -352,7 +352,7 @@ namespace Intranet.Controllers
         public void UserDetails()
         {
             var username = User.Identity.Name;
-            var domain = _appSettings.appDomain;
+            var domain = _emailOptions.AuthDomain;
             using (var context = new PrincipalContext(ContextType.Domain, domain))
             {
                 var user = UserPrincipal.FindByIdentity(context, username);

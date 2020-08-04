@@ -22,8 +22,7 @@ namespace Intranet.Areas.CorpComm.Controllers
     public class OrderController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly AppSettings _appSettings;
-        public readonly EmailOptions _emailOptions;
+        private readonly EmailOptions _emailOptions;
         private readonly IWebHostEnvironment _hostEnvironment;
 
         [BindProperty]
@@ -37,13 +36,11 @@ namespace Intranet.Areas.CorpComm.Controllers
 
         public OrderController(
             IUnitOfWork unitOfWork,
-            IOptions<AppSettings> appSettings,
             IOptions<EmailOptions> emailOptions,
             IWebHostEnvironment hostEnvironment
         )
         {
             _unitOfWork = unitOfWork;
-            _appSettings = appSettings.Value;
             _emailOptions = emailOptions.Value;
             _hostEnvironment = hostEnvironment;
         }
@@ -561,7 +558,7 @@ namespace Intranet.Areas.CorpComm.Controllers
         public void UserDetails()
         {
             var username = User.Identity.Name;
-            var domain = _appSettings.appDomain;
+            var domain = _emailOptions.AuthDomain;
             using (var context = new PrincipalContext(ContextType.Domain, domain))
             {
                 var user = UserPrincipal.FindByIdentity(context, username);
@@ -586,6 +583,7 @@ namespace Intranet.Areas.CorpComm.Controllers
 
         #region EmailSender
 
+        [Obsolete]
         private void EmailSender(
             string RequestorEmail,
             string subject,
@@ -594,7 +592,7 @@ namespace Intranet.Areas.CorpComm.Controllers
         {
             var message = new MimeMessage();
             var builder = new BodyBuilder();
-            message.From.Add(new MailboxAddress(_emailOptions.AuthEmail));
+            message.From.Add(new MailboxAddress(_emailOptions.AuthEmailCorpComm));
             message.To.Add(new MailboxAddress(RequestorEmail));
             message.Subject = subject;
             builder.HtmlBody = messageBody;
@@ -604,7 +602,7 @@ namespace Intranet.Areas.CorpComm.Controllers
                 client.Connect(_emailOptions.SMTPHostClient, _emailOptions.SMTPHostPort, _emailOptions.SMTPHostBool);
 
                 // Note: only needed if the SMTP server requires authentication
-                client.Authenticate(_emailOptions.AuthEmail, _emailOptions.AuthPassword);
+                client.Authenticate(_emailOptions.AuthEmailCorpComm, _emailOptions.AuthPasswordCorpComm);
                 client.Send(message);
                 client.Disconnect(true);
             }

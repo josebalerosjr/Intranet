@@ -1,5 +1,6 @@
 ﻿using Intranet.Data;
 using Intranet.Models;
+using Intranet.Utilities;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Options;
 using MimeKit;
@@ -15,16 +16,17 @@ namespace Intranet.Classes
     public class GenerateDailyCriticalItemReport : IGenerateDailyCriticalItemReport
     {
         private ItemRegContext _context;
-        private readonly AppSettings _appSettings;
+        private readonly EmailOptions _emailOptions;
         private readonly InvEmailContext _contextInvEmail;
 
-        public GenerateDailyCriticalItemReport(ItemRegContext context, IOptions<AppSettings> appSettings, InvEmailContext contextInvEmail)
+        public GenerateDailyCriticalItemReport(ItemRegContext context, IOptions<EmailOptions> emailOptions, InvEmailContext contextInvEmail)
         {
             _context = context;
-            _appSettings = appSettings.Value;
+            _emailOptions = emailOptions.Value;
             _contextInvEmail = contextInvEmail;
         }
 
+        [Obsolete]
         public void SendEmail()     // SendEmail function
         {
             var invemails = _contextInvEmail.invEmails;     //  TODO: gets the list of emails in database and put in the invemails variable
@@ -36,7 +38,7 @@ namespace Intranet.Classes
                 var builder = new BodyBuilder();
                 string msgFromDB = string.Empty;
 
-                message.From.Add(new MailboxAddress(_appSettings.AuthEmail));
+                message.From.Add(new MailboxAddress(_emailOptions.AuthEmailQshe));
                 message.To.Add(new MailboxAddress(invemailadd));
 
                 var items = _context.ItemRegs;      //  TODO: gets the list of ItemRegs in database and put in the items variable
@@ -95,8 +97,13 @@ namespace Intranet.Classes
 
                 using (var client = new SmtpClient())
                 {
-                    client.Connect(_appSettings.SmtpHostClient, _appSettings.SmtpHostPort, _appSettings.SmptHostBool);
-                    client.Authenticate(_appSettings.AuthEmail, _appSettings.AuthPass);
+                    client.Connect(
+                        _emailOptions.SMTPHostClient, 
+                        _emailOptions.SMTPHostPort, 
+                        _emailOptions.SMTPHostBool);
+                    client.Authenticate(
+                        _emailOptions.AuthEmailQshe, 
+                        _emailOptions.AuthPasswordQshe);
                     client.Send(message);
                     client.Disconnect(true);
                 }

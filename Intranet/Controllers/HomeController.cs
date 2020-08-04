@@ -16,17 +16,15 @@ namespace Intranet.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly AppSettings _appSettings;
-        private readonly AppLinks _appLinks;
+        private readonly EmailOptions _emailOptions;
         private readonly OnlineImageLinks _onlineImageLinks;
         private readonly ImageCarouselContext _imagecarouselContext;
         private readonly IUnitOfWork _unitOfWork;
 
-        public HomeController(ImageCarouselContext imagecarouselContext, IOptions<AppSettings> appSettings, IOptions<AppLinks> appLinks, IOptions<OnlineImageLinks> onlineImageLinks, IUnitOfWork unitOfWork)
+        public HomeController(ImageCarouselContext imagecarouselContext, IOptions<EmailOptions> emailOptions, IOptions<OnlineImageLinks> onlineImageLinks, IUnitOfWork unitOfWork)
         {
             _imagecarouselContext = imagecarouselContext;
-            _appSettings = appSettings.Value;
-            _appLinks = appLinks.Value;
+            _emailOptions = emailOptions.Value;
             _onlineImageLinks = onlineImageLinks.Value;
             _unitOfWork = unitOfWork;
         }
@@ -34,7 +32,7 @@ namespace Intranet.Controllers
         public IActionResult Index()
         {
             UserDetails(); // TODO: calls UserDetails method
-            AppLinks();
+            //AppLinks();
             OnlineImageLink();
             string GetUser = ViewBag.DisplayName;
             int count = _unitOfWork.ShoppingCart.GetAll(u => u.LoginUser == GetUser).Count();
@@ -46,19 +44,19 @@ namespace Intranet.Controllers
 
         public IActionResult Policy()
         {
-            AppLinks();
+            //AppLinks();
             return View();
         }
 
         public IActionResult Privacy()
         {
-            AppLinks();
+            //AppLinks();
             return View();
         }
 
         public IActionResult CollateralRequest()
         {
-            AppLinks();
+            //AppLinks();
             return View();
         }
 
@@ -66,7 +64,7 @@ namespace Intranet.Controllers
 
         public void UserDetails() // TODO: Gets the user information
         {
-            var domain = _appSettings.appDomain;
+            var domain = _emailOptions.AuthDomain;
             var username = User.Identity.Name;
             using (var context = new PrincipalContext(ContextType.Domain, domain))
             {
@@ -102,28 +100,28 @@ namespace Intranet.Controllers
             }
 
             //ViewBag.SPEM = "http://192.168.10.42:9000/?id=" + SPEMid;
-            ViewBag.SPEM = _appSettings.SPEMLink + SPEMid;
+            ViewBag.SPEM = _emailOptions.SPEMLink + SPEMid;
         }
 
-        public void AppLinks()
-        {
-            ViewBag.ESS = _appLinks.ESS;
-            ViewBag.CollateralRequest = _appLinks.CollateralRequest;
-            ViewBag.JobOrder = _appLinks.JobOrder;
-            ViewBag.VendorEvaluation = _appLinks.VendorEvaluation;
-            ViewBag.DocumentMonitoring = _appLinks.DocumentMonitoring;
-            ViewBag.ChangeRequestLog = _appLinks.ChangeRequestLog;
-            ViewBag.Office365 = _appLinks.Office365;
-            ViewBag.DxCare = _appLinks.DxCare;
-            ViewBag.ManualDeliveryRequest = _appLinks.ManualDeliveryRequest;
-            ViewBag.MISTicketing = _appLinks.MISTicketing;
-            ViewBag.ICTTicketing = _appLinks.ICTTicketing;
-            ViewBag.PhoneRefresh = _appLinks.PhoneRefresh;
-            ViewBag.GoPro = _appLinks.GoPro;
-            ViewBag.CustomerInquiry = _appLinks.CustomerInquiry;
-            ViewBag.CustomerComplaints = _appLinks.CustomerComplaints;
-            ViewBag.UserTicketing = _appLinks.UserTicketing;
-        }
+        //public void AppLinks()
+        //{
+        //    ViewBag.ESS = _appLinks.ESS;
+        //    ViewBag.CollateralRequest = _appLinks.CollateralRequest;
+        //    ViewBag.JobOrder = _appLinks.JobOrder;
+        //    ViewBag.VendorEvaluation = _appLinks.VendorEvaluation;
+        //    ViewBag.DocumentMonitoring = _appLinks.DocumentMonitoring;
+        //    ViewBag.ChangeRequestLog = _appLinks.ChangeRequestLog;
+        //    ViewBag.Office365 = _appLinks.Office365;
+        //    ViewBag.DxCare = _appLinks.DxCare;
+        //    ViewBag.ManualDeliveryRequest = _appLinks.ManualDeliveryRequest;
+        //    ViewBag.MISTicketing = _appLinks.MISTicketing;
+        //    ViewBag.ICTTicketing = _appLinks.ICTTicketing;
+        //    ViewBag.PhoneRefresh = _appLinks.PhoneRefresh;
+        //    ViewBag.GoPro = _appLinks.GoPro;
+        //    ViewBag.CustomerInquiry = _appLinks.CustomerInquiry;
+        //    ViewBag.CustomerComplaints = _appLinks.CustomerComplaints;
+        //    ViewBag.UserTicketing = _appLinks.UserTicketing;
+        //}
 
         public void OnlineImageLink()
         {

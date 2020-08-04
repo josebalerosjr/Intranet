@@ -1,6 +1,7 @@
 ﻿using Intranet.Classes;
 using Intranet.DataAccess.Repository.IRepository;
 using Intranet.Models.CorpComm;
+using Intranet.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System.DirectoryServices.AccountManagement;
@@ -12,12 +13,12 @@ namespace Intranet.Areas.CorpComm.Controllers
     public class EventController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly AppSettings _appSettings;
+        private readonly EmailOptions _emailOptions;
 
-        public EventController(IUnitOfWork unitOfWork, IOptions<AppSettings> appSettings)
+        public EventController(IUnitOfWork unitOfWork, IOptions<EmailOptions> emailOptions)
         {
             _unitOfWork = unitOfWork;
-            _appSettings = appSettings.Value;
+            _emailOptions = emailOptions.Value;
         }
 
         public IActionResult Index()
@@ -95,7 +96,7 @@ namespace Intranet.Areas.CorpComm.Controllers
         public void UserDetails()
         {
             var username = User.Identity.Name;
-            var domain = _appSettings.appDomain;
+            var domain = _emailOptions.AuthDomain;
             using (var context = new PrincipalContext(ContextType.Domain, domain))
             {
                 var user = UserPrincipal.FindByIdentity(context, username);

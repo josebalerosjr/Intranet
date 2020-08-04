@@ -23,7 +23,6 @@ namespace Intranet.Utilities
         public const string StatusRejected = "Rejected";
         public const string StatusCompleted = "Completed";
         public const string StatusCancelled = "Canceled";
-        //public const string StatusDelivered = "Delivered";
 
         // Drop-Off Location
         public const string DO_Edsa = "EDSA Vet";
@@ -42,7 +41,6 @@ namespace Intranet.Utilities
 
         // App URL
         public const string IntranetLink = "http://qas.intranet.pttphils.com/";
-
         // public const string IntranetLink = "http://localhost:44322/";
         // public const string IntranetLink = "http://intranet.pttphils.com/";
 

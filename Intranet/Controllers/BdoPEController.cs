@@ -28,7 +28,7 @@ namespace Intranet.Controllers
     public class BdoPEController : Controller
     {
         private readonly BdoPEContext _context;
-        private readonly AppSettings _appSettings;
+        private readonly EmailOptions _emailOptions;
         private readonly BdoInfo _bdoInfo;
         private readonly BpiInfo _bpiInfo;
         private readonly SbcInfo _sbcInfo;
@@ -37,7 +37,7 @@ namespace Intranet.Controllers
 
         public BdoPEController(
             BdoPEContext context,
-            IOptions<AppSettings> appSettings,
+            IOptions<EmailOptions> emailOptions,
             IOptions<BdoInfo> bdoInfo,
             IOptions<BpiInfo> bpiInfo,
             IOptions<SbcInfo> sbcInfo,
@@ -46,7 +46,7 @@ namespace Intranet.Controllers
             )
         {
             _context = context;
-            _appSettings = appSettings.Value;
+            _emailOptions = emailOptions.Value;
             _bdoInfo = bdoInfo.Value;
             _bpiInfo = bpiInfo.Value;
             _sbcInfo = sbcInfo.Value;
@@ -910,7 +910,7 @@ namespace Intranet.Controllers
 
         #region raw SQL
 
-        //using (var sql2 = new SqlConnection(_appSettings.DevConnection))
+        //using (var sql2 = new SqlConnection(_emailOptions.DevConnection))
         //{
         //    using (var cmd = new SqlCommand()
         //    {
@@ -1290,12 +1290,12 @@ namespace Intranet.Controllers
                         }
                         else
                         {  // if it does not have assigned cnc,  assign the value of the DefaultCNC
-                            f_cncofclient = _appSettings.DefaultCNC;
+                            f_cncofclient = _emailOptions.DefaultCNC;
                         }
                     }
                     else
                     {   // if it does not have assigned cnc,  assign the value of the DefaultCNC
-                        f_cncofclient = _appSettings.DefaultCNC;
+                        f_cncofclient = _emailOptions.DefaultCNC;
                     }
                 }
             }
@@ -1574,7 +1574,7 @@ namespace Intranet.Controllers
         public void UserDetails()
         {
             var username = User.Identity.Name;
-            var domain = _appSettings.appDomain;
+            var domain = _emailOptions.AuthDomain;
             using (var context = new PrincipalContext(ContextType.Domain, domain))
             {
                 var user = UserPrincipal.FindByIdentity(context, username);

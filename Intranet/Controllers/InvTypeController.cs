@@ -1,6 +1,7 @@
 ﻿using Intranet.Classes;
 using Intranet.Data;
 using Intranet.Models;
+using Intranet.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,13 +16,13 @@ namespace Intranet.Controllers
     public class InvTypeController : Controller
     {
         private readonly InvTypeContext _context;
-        private readonly AppSettings _appSettings;
+        private readonly EmailOptions _emailOptions;
         private readonly IToastNotification _toastNotification;
 
-        public InvTypeController(InvTypeContext context, IOptions<AppSettings> appSettings, IToastNotification toastNotification)
+        public InvTypeController(InvTypeContext context, IOptions<EmailOptions> emailOptions, IToastNotification toastNotification)
         {
             _context = context;
-            _appSettings = appSettings.Value;
+            _emailOptions = emailOptions.Value;
             _toastNotification = toastNotification;
         }
 
@@ -98,7 +99,7 @@ namespace Intranet.Controllers
         public void UserDetails()
         {
             var username = User.Identity.Name;
-            var domain = _appSettings.appDomain;
+            var domain = _emailOptions.AuthDomain;
             using (var context = new PrincipalContext(ContextType.Domain, domain))
             {
                 var user = UserPrincipal.FindByIdentity(context, username);

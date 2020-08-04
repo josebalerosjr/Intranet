@@ -2,6 +2,7 @@
 using Intranet.DataAccess.Repository.IRepository;
 using Intranet.Models.CorpComm;
 using Intranet.Models.ViewModels.CorpComm;
+using Intranet.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
@@ -15,12 +16,12 @@ namespace Intranet.Areas.CorpComm.Controllers
     public class StationController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly AppSettings _appSettings;
+        private readonly EmailOptions _appSettings;
 
-        public StationController(IUnitOfWork unitOfWork, IOptions<AppSettings> appSettings)
+        public StationController(IUnitOfWork unitOfWork, IOptions<EmailOptions> emailOptions)
         {
             _unitOfWork = unitOfWork;
-            _appSettings = appSettings.Value;
+            _appSettings = emailOptions.Value;
         }
 
         public IActionResult Index()
@@ -106,7 +107,7 @@ namespace Intranet.Areas.CorpComm.Controllers
         public void UserDetails()
         {
             var username = User.Identity.Name;
-            var domain = _appSettings.appDomain;
+            var domain = _appSettings.AuthDomain;
             using (var context = new PrincipalContext(ContextType.Domain, domain))
             {
                 var user = UserPrincipal.FindByIdentity(context, username);

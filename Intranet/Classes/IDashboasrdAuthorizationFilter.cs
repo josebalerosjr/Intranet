@@ -1,4 +1,5 @@
 ﻿using Hangfire.Dashboard;
+using Intranet.Utilities;
 
 namespace Intranet.Classes
 {
@@ -14,7 +15,7 @@ namespace Intranet.Classes
             var httpContext = context.GetHttpContext();
 
             // allow all authenticated users to see the dashboard (potentially dangerous)
-            return httpContext.User.IsInRole("Office of the Chief Information Officer");
+            return httpContext.User.IsInRole(SD.CIOAdmin);
             //return true;
         }
     }
