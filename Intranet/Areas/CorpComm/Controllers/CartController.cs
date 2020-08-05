@@ -3,12 +3,16 @@ using Intranet.DataAccess.Repository.IRepository;
 using Intranet.Models.CorpComm;
 using Intranet.Models.ViewModels.CorpComm;
 using Intranet.Utilities;
+using MailKit.Net.Smtp;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
+using MimeKit;
 using System;
 using System.DirectoryServices.AccountManagement;
+using System.IO;
 using System.Linq;
 
 namespace Intranet.Areas.CorpComm.Controllers
@@ -19,14 +23,16 @@ namespace Intranet.Areas.CorpComm.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly EmailOptions _emailOptions;
+        private readonly IWebHostEnvironment _hostEnvironment;
 
         [BindProperty]
         public ShoppingCartVM ShoppingCartVM { get; set; }
 
-        public CartController(IUnitOfWork unitOfWork, IOptions<EmailOptions> emailOptions)
+        public CartController(IUnitOfWork unitOfWork, IOptions<EmailOptions> emailOptions, IWebHostEnvironment hostEnvironment)
         {
             _unitOfWork = unitOfWork;
             _emailOptions = emailOptions.Value;
+            _hostEnvironment = hostEnvironment;
         }
 
         public IActionResult Index()
@@ -193,8 +199,49 @@ namespace Intranet.Areas.CorpComm.Controllers
             }
         }
 
+        [Obsolete]
         public IActionResult OrderConfirmation(int id)
         {
+            #region New Request Notification
+
+            // get the email template
+            var PathToFile = _hostEnvironment.WebRootPath +
+                Path.DirectorySeparatorChar.ToString() + "Templates" +
+                Path.DirectorySeparatorChar.ToString() + "EmailTemplates"
+                + Path.DirectorySeparatorChar.ToString() +
+                "Email_Notifications_NewRequest.html";
+
+            var subject = "PTT COLLATERALS: New Collateral Request!";
+            var subject2 = "COLLATERAL REQUEST";
+            var datetime = String.Format(DateTime.Now.ToShortDateString());
+            var AdminEmail = SD.RenzEmail;
+            var clickhere = SD.IntranetLink + "CorpComm/Order/Details/" + id;
+
+            string HtmlBody = "";
+
+            using (StreamReader streamReader = System.IO
+                .File.OpenText(PathToFile))
+            {
+                HtmlBody = streamReader.ReadToEnd();
+            }
+
+            //  [0] - COLLATERAL REQUEST
+            //  [1] - Date and Time
+            //  [2] - Url
+
+            string messageBody = string.Format(HtmlBody,
+                subject2,
+                datetime,
+                clickhere);
+
+            EmailSender(
+                AdminEmail,
+                subject,
+                messageBody
+                );
+
+            #endregion
+
             return View(id);
         }
 
@@ -224,5 +271,35 @@ namespace Intranet.Areas.CorpComm.Controllers
         }
 
         #endregion UserDetails function
+
+        #region EmailSender
+
+        [Obsolete]
+        private void EmailSender(
+            string RequestorEmail,
+            string subject,
+            string messageBody
+        )
+        {
+            var message = new MimeMessage();
+            var builder = new BodyBuilder();
+            message.From.Add(new MailboxAddress(_emailOptions.AuthEmailCorpComm));
+            message.To.Add(new MailboxAddress(RequestorEmail));
+            message.Subject = subject;
+            builder.HtmlBody = messageBody;
+            message.Body = builder.ToMessageBody();
+            using (var client = new SmtpClient())
+            {
+                client.Connect(_emailOptions.SMTPHostClient, _emailOptions.SMTPHostPort, _emailOptions.SMTPHostBool);
+
+                // Note: only needed if the SMTP server requires authentication
+                client.Authenticate(_emailOptions.AuthEmailCorpComm, _emailOptions.AuthPasswordCorpComm);
+                client.Send(message);
+                client.Disconnect(true);
+            }
+        }
+
+        #endregion EmailSender
+
     }
 }

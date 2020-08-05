@@ -78,6 +78,7 @@ namespace Intranet.Areas.CorpComm.Controllers
         }
 
         [Authorize(Roles = SD.CIOAdmin + "," + SD.CorpCommAdmin)]
+        [Obsolete]
         public IActionResult RejectRequest(int id)
         {
             OrderHeader orderHeader = _unitOfWork.OrderHeader

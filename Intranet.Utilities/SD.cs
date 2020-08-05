@@ -12,6 +12,10 @@ namespace Intranet.Utilities
 
         // Cart Session
         public const string ssShoppingCart = "Shopping Cart Session";
+        
+
+        // Email of Admin
+        public const string RenzEmail = "renz.sunico@pttphils.com";
 
         // Request Status
         public const string StatusForApproval = "For Approval";

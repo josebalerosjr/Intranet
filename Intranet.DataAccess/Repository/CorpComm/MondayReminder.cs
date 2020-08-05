@@ -134,7 +134,7 @@ namespace Intranet.DataAccess.Repository.CorpComm
                     "                               <div style='font-size:14px;'>" +
                     "                               <!--<hr>-->" +
                     "                               <!--<b>-->" +
-                    "                               Dear, <strong>" + loginUser + "</strong> <br />" +
+                    "                               Dear, <strong>" + loginUser + "</strong> <br /><br /><br />" +
                     "                               <table align='center'>" +
                     "                                   <tr>" +
                     "                                       <td align='center'>" +
