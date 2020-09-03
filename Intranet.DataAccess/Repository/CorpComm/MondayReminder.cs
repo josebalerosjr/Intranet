@@ -132,28 +132,29 @@ namespace Intranet.DataAccess.Repository.CorpComm
                     "                               <div style='font-size:16px;'>" +
                     "                               </div>" +
                     "                               <div style='font-size:14px;'>" +
-                    "                               <!--<hr>-->" +
-                    "                               <!--<b>-->" +
-                    "                               Dear, <strong>" + loginUser + "</strong> <br /><br /><br />" +
-                    "                               <table align='center'>" +
-                    "                                   <tr>" +
-                    "                                       <td align='center'>" +
-                    "                                           <strong> You have a pending request " + order.OrderStatus.ToLower() + ", complete your request by clicking " +
+                    "                               <p>" +
+                    "                                   Dear <strong>" + loginUser + "</strong>," +
+                    "                               </p>" +
+                    "                               <p style='text-align:center'>" +
+                    "                                   <strong> You have a pending request " + order.OrderStatus.ToLower() + ", complete your request by clicking " +
                     "                                           <a href='" + SD.IntranetLink + "CorpComm/Order/Details/" + orderId + "'>here</a>.</strong>" +
-                    "                                       </td>" +
-                    "                                   </tr>" +
-                    "                               </table><br />" +
-                    "                               Please see request details below: <br /> <br />" +
-                    "                               Request Number: <strong>" + orderId + "</strong> <br />" +
-                    "                               Shipping Date: <strong>" + ShippingDate + "</strong> <br />" +
-                    "                               Drop-off location: <strong>" + PickUpPoints + "</strong> <br /> <br />" +
-                                                    listfinal +
-                    "                               <br />" +
-                    "                               Thank you! <br /> <br />" +
-                    "                               Best Regards, <br /><br />" +
-                    "                               <strong> CORPORATE COMMUNICATIONS DEPARTMENT</strong>" +
-                    "                               <!--</b> -->" +
-                    "                               <!--<hr> -->" +
+                    "                               </p>    " +
+                    "                               <p>" +
+                    "                                   Please see request details below:" +
+                    "                               </p>" +
+                    "                               <p>" +
+                    "                                   Request Number: <strong>" + orderId + "</strong> <br />" +
+                    "                                   Shipping Date: <strong>" + ShippingDate + "</strong> <br />" +
+                    "                                   Drop-off location: <strong>" + PickUpPoints + "</strong> <br />" +
+                    "                               </p>" +
+                    "                               <p>" + listfinal + "</p>" +
+                    "                               <p>" +
+                    "                                    Thank you!" +
+                    "                               </p>" +
+                    "                                    Best Regards," +
+                    "                               </p>" +
+                    "                                    <strong> CORPORATE COMMUNICATIONS DEPARTMENT</strong>" +
+                    "                               </p>" +
                     "                           </div>" +
                     "                       </td>" +
                     "                   </tr> " +

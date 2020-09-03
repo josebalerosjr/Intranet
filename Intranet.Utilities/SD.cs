@@ -9,6 +9,7 @@ namespace Intranet.Utilities
         // Connection String
         //public static string ConString = "Server=(LocalDb)\\MSSQLLocalDB;Database=CorpComm;User Id=sa;Password=mis@2019;MultipleActiveResultSets=True";
         public static string ConString = "Server=192.168.10.43;Database=CorpComm;User Id=sa;Password=mis@2019;MultipleActiveResultSets=True";
+        //public static string ConString = "Server=192.168.10.42;Database=CorpComm;User Id=sa;Password=mis@2019;MultipleActiveResultSets=True";
 
         // Cart Session
         public const string ssShoppingCart = "Shopping Cart Session";
@@ -16,6 +17,7 @@ namespace Intranet.Utilities
 
         // Email of Admin
         public const string RenzEmail = "renz.sunico@pttphils.com";
+        //public const string RenzEmail = "jose.baleros@pttphils.com";
 
         // Request Status
         public const string StatusForApproval = "For Approval";
@@ -44,9 +46,9 @@ namespace Intranet.Utilities
         public static string histReconRemarks;
 
         // App URL
-        public const string IntranetLink = "http://qas.intranet.pttphils.com/";
-        // public const string IntranetLink = "http://localhost:44322/";
-        // public const string IntranetLink = "http://intranet.pttphils.com/";
+        // public const string IntranetLink = "http://qas.intranet.pttphils.com/";
+         public const string IntranetLink = "http://localhost:44322/";
+        //public const string IntranetLink = "http://intranet.pttphils.com/";
 
         // item value
         public static string collateralLoc;
