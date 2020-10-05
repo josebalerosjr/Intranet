@@ -1,8 +1,7 @@
 ﻿using Intranet.Classes;
-using Intranet.Data.Admin;
+using Intranet.Data;
 using Intranet.DataAccess.Repository.IRepository;
-using Intranet.Models.ViewModels;
-using Intranet.Uti;
+using Intranet.Models;
 using Intranet.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;

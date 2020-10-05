@@ -1,4 +1,5 @@
 ﻿function singleSelectChangeValue() {
+
     //Getting Value
     var selObj = document.getElementById("singleSelectValueDDJS");
     var selValue = selObj.options[selObj.selectedIndex].value;

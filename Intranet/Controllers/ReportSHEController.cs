@@ -1,5 +1,4 @@
-﻿using Intranet.Data.QSHE;
-using Intranet.Uti;
+﻿using Intranet.Data;
 using Intranet.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

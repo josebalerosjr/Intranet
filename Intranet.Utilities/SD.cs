@@ -7,17 +7,16 @@ namespace Intranet.Utilities
         #region CorpComm
 
         // Connection String
-        //public static string ConString = "Server=(LocalDb)\\MSSQLLocalDB;Database=CorpComm;User Id=sa;Password=mis@2019;MultipleActiveResultSets=True";
-        public static string ConString = "Server=192.168.10.43;Database=CorpComm;User Id=sa;Password=mis@2019;MultipleActiveResultSets=True";
-
-        //public static string ConString = "Server=192.168.10.42;Database=CorpComm;User Id=sa;Password=mis@2019;MultipleActiveResultSets=True";
+        //public static string ConString = "Server=(LocalDb)\\MSSQLLocalDB;Database=CorpComm;User Id=sa;Password=;MultipleActiveResultSets=True";
+        //public static string ConString = "Server=192.168.10.43;Database=CorpComm;User Id=sa;Password=9;MultipleActiveResultSets=True";
+        public static string ConString = "Server=192.168.10.42;Database=CorpComm;User Id=sa;Password=;MultipleActiveResultSets=True";
 
         // Cart Session
         public const string ssShoppingCart = "Shopping Cart Session";
+        
 
         // Email of Admin
         public const string RenzEmail = "renz.sunico@pttphils.com";
-
         //public const string RenzEmail = "jose.baleros@pttphils.com";
 
         // Request Status
@@ -48,8 +47,7 @@ namespace Intranet.Utilities
 
         // App URL
         // public const string IntranetLink = "http://qas.intranet.pttphils.com/";
-        public const string IntranetLink = "http://localhost:44322/";
-
+         public const string IntranetLink = "http://localhost:44322/";
         //public const string IntranetLink = "http://intranet.pttphils.com/";
 
         // item value
@@ -160,6 +158,7 @@ namespace Intranet.Utilities
         public const string MISTicketing = "https://pttadmin.sharepoint.com/sites/mis-ict-ticket/Lists/MIS%20Ticket%202019/AllItems.aspx";
         public const string DxCare = "https://dxcare.pttdigital.com/";
         public const string Office365 = "https://www.office.com/";
+
 
         public const string LegalTicketing = "https://apps.powerapps.com/play/a77b0e16-86e4-435c-96b6-6526ac1f05c4?tenantId=78db0b1d-e5d5-4f05-af3c-cc72575b1ba3";
 

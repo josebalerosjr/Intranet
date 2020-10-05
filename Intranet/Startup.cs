@@ -2,17 +2,13 @@ using Hangfire;
 using Intranet.Classes;
 using Intranet.Controllers;
 using Intranet.Data;
-using Intranet.Data.Admin;
-using Intranet.Data.QSHE;
 using Intranet.DataAccess.Data;
 using Intranet.DataAccess.Repository;
 using Intranet.DataAccess.Repository.CorpComm;
 using Intranet.DataAccess.Repository.IRepository;
 using Intranet.DataAccess.Repository.IRepository.CorpComm;
-using Intranet.DataAccess.Repository.IRepository.QSHE;
-using Intranet.DataAccess.Repository.QSHE;
+using Intranet.Models;
 using Intranet.Utilities;
-using Intranet.Utilities.CNC;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -104,8 +100,8 @@ namespace Intranet
             services.AddDbContext<InvEmailContext>(options =>
             options.UseSqlServer(connection));
 
-            //services.AddDbContext<PaymentEntryContext>(options =>
-            //options.UseSqlServer(connection));
+            services.AddDbContext<PaymentEntryContext>(options =>
+            options.UseSqlServer(connection));
 
             services.AddDbContext<BdoPEContext>(options =>
             options.UseSqlServer(connection));
@@ -189,10 +185,10 @@ namespace Intranet
                     .AddNToastNotifyToastr()
                     .AddControllersAsServices();
 
-            services.AddScoped<IGenerateDailyCriticalItemReport, GenerateDailyCriticalItemReport>();
-
-            services.AddScoped<IGenerateCalibrationDate, GenerateCalibrationDate>();
-
+            services.AddScoped<IGenerateDailyCriticalItemReport,
+                GenerateDailyCriticalItemReport>();
+            services.AddScoped<IGenerateCalibrationDate,
+                GenerateCalibrationDate>();
             services.AddScoped<IMondayReminder, MondayReminder>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -232,12 +228,9 @@ namespace Intranet
                 critItem => critItem.SendEmail(), Cron.Daily
             );
 
-            //RecurringJob.AddOrUpdate<IGenerateCalibrationDate>(
-            //    CalDateItem => CalDateItem.SendMail(), Cron.Minutely
-            //);
-
-            RecurringJob.AddOrUpdate<IGenerateDailyCriticalItemReport>(critItem => critItem.SendEmail(), Cron.Daily);
-            RecurringJob.AddOrUpdate<IGenerateCalibrationDate>(CalDateItem => CalDateItem.SendEmail(), Cron.Daily);
+            RecurringJob.AddOrUpdate<IGenerateCalibrationDate>(
+                CalDateItem => CalDateItem.SendMail(), Cron.Daily
+            );
 
             RecurringJob.AddOrUpdate<IMondayReminder>(
                 MondayReminder => MondayReminder.SendEmail(), Cron.Weekly
