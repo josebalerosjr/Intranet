@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace CsvUploader.Helpers
+namespace Intranet.Utilities.Helpers
 {
     public static class StreamHelper
     {

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 
-namespace CsvUploader.Helpers
+namespace Intranet.Utilities.Helpers
 {
     public static class CsvParser
     {

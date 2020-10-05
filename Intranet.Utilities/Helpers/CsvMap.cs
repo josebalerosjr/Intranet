@@ -1,4 +1,4 @@
-﻿namespace CsvUploader.Helpers
+﻿namespace Intranet.Utilities.Helpers
 {
     public class CsvMap
     {
