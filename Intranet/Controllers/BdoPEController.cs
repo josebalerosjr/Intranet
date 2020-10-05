@@ -1,10 +1,11 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
 using CsvUploader.Helpers;
-using Intranet.Classes;
 using Intranet.Data;
 using Intranet.Models;
+using Intranet.Uti;
 using Intranet.Utilities;
+using Intranet.Utilities.CNC;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

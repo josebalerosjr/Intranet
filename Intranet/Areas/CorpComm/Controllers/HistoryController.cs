@@ -1,7 +1,7 @@
-﻿using Intranet.Classes;
-using Intranet.DataAccess.Data;
+﻿using Intranet.DataAccess.Data;
 using Intranet.DataAccess.Repository.IRepository;
 using Intranet.Models.CorpComm;
+using Intranet.Uti;
 using Intranet.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

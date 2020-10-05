@@ -1,6 +1,7 @@
-﻿using Intranet.Classes;
-using Intranet.Data;
-using Intranet.Models;
+﻿using Intranet.Data.Admin;
+using Intranet.Data.QSHE;
+using Intranet.Models.QSHE;
+using Intranet.Uti;
 using Intranet.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
