@@ -1,7 +1,7 @@
-﻿using Intranet.Classes;
-using Intranet.DataAccess.Repository.IRepository;
+﻿using Intranet.DataAccess.Repository.IRepository;
 using Intranet.Models.CorpComm;
 using Intranet.Models.ViewModels.CorpComm;
+using Intranet.Uti;
 using Intranet.Utilities;
 using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Hosting;
@@ -240,7 +240,7 @@ namespace Intranet.Areas.CorpComm.Controllers
                 messageBody
                 );
 
-            #endregion
+            #endregion New Request Notification
 
             return View(id);
         }
@@ -300,6 +300,5 @@ namespace Intranet.Areas.CorpComm.Controllers
         }
 
         #endregion EmailSender
-
     }
 }

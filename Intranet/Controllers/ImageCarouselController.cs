@@ -1,6 +1,6 @@
-﻿using Intranet.Classes;
-using Intranet.Data;
-using Intranet.Models;
+﻿using Intranet.Data.Admin;
+using Intranet.Models.Admin;
+using Intranet.Uti;
 using Intranet.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
