@@ -45,6 +45,8 @@
     <Compile Remove="Data\Migrations\CorpComm\20200707064314_RemoveUnusedColumnInOrderHeader.Designer.cs" />
     <Compile Remove="Data\Migrations\CorpComm\20200707064936_AddEventTypeStationEventDateToOrderHeader.cs" />
     <Compile Remove="Data\Migrations\CorpComm\20200707064936_AddEventTypeStationEventDateToOrderHeader.Designer.cs" />
+    <Compile Remove="Repository\QSHE\GenerateCalibrationDate - Copy.cs" />
+    <Compile Remove="Repository\QSHE\GenerateDailyCriticalItemReport - Copy.cs" />
   </ItemGroup>
 
   <ItemGroup>

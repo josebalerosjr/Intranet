@@ -228,20 +228,12 @@ namespace Intranet
             app.UseHangfireDashboard();
             app.UseHangfireServer();
 
-            RecurringJob.AddOrUpdate<IGenerateDailyCriticalItemReport>(
-                critItem => critItem.SendEmail(), Cron.Daily
-            );
-
-            //RecurringJob.AddOrUpdate<IGenerateCalibrationDate>(
-            //    CalDateItem => CalDateItem.SendMail(), Cron.Minutely
-            //);
-
+            // QSHE Inventory App
             RecurringJob.AddOrUpdate<IGenerateDailyCriticalItemReport>(critItem => critItem.SendEmail(), Cron.Daily);
-            RecurringJob.AddOrUpdate<IGenerateCalibrationDate>(CalDateItem => CalDateItem.SendEmail(), Cron.Daily);
+            RecurringJob.AddOrUpdate<IGenerateCalibrationDate>(CalDateItem => CalDateItem.SendEmail(), Cron.Minutely);
 
-            RecurringJob.AddOrUpdate<IMondayReminder>(
-                MondayReminder => MondayReminder.SendEmail(), Cron.Weekly
-            );
+            // Collateral Request App
+            RecurringJob.AddOrUpdate<IMondayReminder>(MondayReminder => MondayReminder.SendEmail(), Cron.Weekly);
 
             app.UseRouting();
             app.UseSession();
