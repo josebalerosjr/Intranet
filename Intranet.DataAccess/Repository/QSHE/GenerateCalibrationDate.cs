@@ -362,7 +362,6 @@ namespace Intranet.DataAccess.Repository.QSHE
                 //        "<br />");
                 message.Body = builder.ToMessageBody();
 
-
                 using (var client = new SmtpClient())
                 {
                     client.Connect(

@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -190,7 +191,6 @@ namespace Intranet
                     .AddControllersAsServices();
 
             services.AddScoped<IGenerateDailyCriticalItemReport, GenerateDailyCriticalItemReport>();
-
             services.AddScoped<IGenerateCalibrationDate, GenerateCalibrationDate>();
 
             services.AddScoped<IMondayReminder, MondayReminder>();
@@ -230,7 +230,7 @@ namespace Intranet
 
             // QSHE Inventory App
             RecurringJob.AddOrUpdate<IGenerateDailyCriticalItemReport>(critItem => critItem.SendEmail(), Cron.Daily);
-            RecurringJob.AddOrUpdate<IGenerateCalibrationDate>(CalDateItem => CalDateItem.SendEmail(), Cron.Minutely);
+            RecurringJob.AddOrUpdate<IGenerateCalibrationDate>(CalDateItem => CalDateItem.SendEmail(), Cron.Daily);
 
             // Collateral Request App
             RecurringJob.AddOrUpdate<IMondayReminder>(MondayReminder => MondayReminder.SendEmail(), Cron.Weekly);

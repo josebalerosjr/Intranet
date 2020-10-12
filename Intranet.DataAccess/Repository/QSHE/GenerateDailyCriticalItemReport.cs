@@ -33,13 +33,13 @@ namespace Intranet.DataAccess.Repository.QSHE
                 var message = new MimeMessage();
                 var builder = new BodyBuilder();
                 string msgFromDB = string.Empty;
-                int counter = 0;
+                int counter = 0;                            // TODO: This will 
 
                 message.From.Add(new MailboxAddress(_emailOptions.AuthEmailQshe));
                 message.To.Add(new MailboxAddress(invemailadd));
 
-                var items = _context.ItemRegs;      //  TODO: gets the list of ItemRegs in database and put in the items variable
-                foreach (ItemReg item in items)     //  TODO: for each loop of items send a list of criticall items from inventory database
+                var items = _context.ItemRegs;              //  TODO: gets the list of ItemRegs in database and put in the items variable
+                foreach (ItemReg item in items)             //  TODO: for each loop of items send a list of criticall items from inventory database
                 {
                     if (item.CritLevel >= item.Qty)
                     {
@@ -62,7 +62,7 @@ namespace Intranet.DataAccess.Repository.QSHE
                     }
                 }
 
-                message.Subject = "Critical Items";
+                message.Subject = "Critical Items"; // TODO: Sets Email Subject
 
                 if (counter == 0)
                 {

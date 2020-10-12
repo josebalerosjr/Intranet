@@ -1,5 +1,7 @@
-﻿using Intranet.Data.Admin;
+﻿using Hangfire;
+using Intranet.Data.Admin;
 using Intranet.Data.QSHE;
+using Intranet.DataAccess.Repository.IRepository.QSHE;
 using Intranet.Models.QSHE;
 using Intranet.Uti;
 using Intranet.Utilities;
@@ -280,6 +282,18 @@ namespace Intranet.Controllers
                 return View(new ItemReg());
             else
                 return View(_context.ItemRegs.Find(id));
+        }
+
+        public IActionResult TestTriggersCalibration()
+        {
+            RecurringJob.AddOrUpdate<IGenerateCalibrationDate>(CalDateItem => CalDateItem.SendEmail(), Cron.Weekly);
+            return View();
+        }
+
+        public IActionResult TestTriggersCritical()
+        {
+            RecurringJob.AddOrUpdate<IGenerateDailyCriticalItemReport>(critItem => critItem.SendEmail(), Cron.Weekly);
+            return View();
         }
 
         // POST: ItemReg/Create
