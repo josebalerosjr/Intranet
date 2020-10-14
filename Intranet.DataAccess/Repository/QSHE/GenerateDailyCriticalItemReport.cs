@@ -12,13 +12,11 @@ namespace Intranet.DataAccess.Repository.QSHE
     public class GenerateDailyCriticalItemReport : IGenerateDailyCriticalItemReport
     {
         private ItemRegContext _context;
-        private readonly EmailOptions _emailOptions;
         private readonly InvEmailContext _contextInvEmail;
 
-        public GenerateDailyCriticalItemReport(ItemRegContext context, IOptions<EmailOptions> emailOptions, InvEmailContext contextInvEmail)
+        public GenerateDailyCriticalItemReport(ItemRegContext context, InvEmailContext contextInvEmail)
         {
             _context = context;
-            _emailOptions = emailOptions.Value;
             _contextInvEmail = contextInvEmail;
         }
 
@@ -35,7 +33,7 @@ namespace Intranet.DataAccess.Repository.QSHE
                 string msgFromDB = string.Empty;
                 int counter = 0;                            // TODO: This will 
 
-                message.From.Add(new MailboxAddress(_emailOptions.AuthEmailQshe));
+                message.From.Add(new MailboxAddress(SD.AdminEmail));
                 message.To.Add(new MailboxAddress(invemailadd));
 
                 var items = _context.ItemRegs;              //  TODO: gets the list of ItemRegs in database and put in the items variable
@@ -332,12 +330,12 @@ namespace Intranet.DataAccess.Repository.QSHE
                 using (var client = new SmtpClient())
                 {
                     client.Connect(
-                        _emailOptions.SMTPHostClient,
-                        _emailOptions.SMTPHostPort,
-                        _emailOptions.SMTPHostBool);
+                        SD.SMTPClient,
+                        SD.SMTPPort,
+                        SD.SMTPBool);
                     client.Authenticate(
-                        _emailOptions.AuthEmailQshe,
-                        _emailOptions.AuthPasswordQshe);
+                        SD.AdminEmail,
+                        SD.AdminPass);
                     client.Send(message);
                     client.Disconnect(true);
                 }

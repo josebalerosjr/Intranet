@@ -7,7 +7,6 @@ using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using MimeKit;
 using System;
 using System.Collections.Generic;
@@ -22,8 +21,8 @@ namespace Intranet.Areas.CorpComm.Controllers
     public class OrderController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly EmailOptions _emailOptions;
         private readonly IWebHostEnvironment _hostEnvironment;
+        private readonly Emailer _emailer;
 
         [BindProperty]
         public OrderDetailsVM OrderVM { get; set; }
@@ -36,13 +35,13 @@ namespace Intranet.Areas.CorpComm.Controllers
 
         public OrderController(
             IUnitOfWork unitOfWork,
-            IOptions<EmailOptions> emailOptions,
-            IWebHostEnvironment hostEnvironment
+            IWebHostEnvironment hostEnvironment,
+            Emailer emailer
         )
         {
             _unitOfWork = unitOfWork;
-            _emailOptions = emailOptions.Value;
             _hostEnvironment = hostEnvironment;
+            _emailer = emailer;
         }
 
         public IActionResult Index()
@@ -127,10 +126,13 @@ namespace Intranet.Areas.CorpComm.Controllers
                 RejectReason,
                 clickhere);
 
-            EmailSender(
+            _emailer.SendMail(
+                SD.CormCommEmail,
                 RequestorEmail,
+                messageBody,
                 subject,
-                messageBody
+                SD.CormCommEmail,
+                SD.CormCommPass
                 );
 
             _unitOfWork.Save();
@@ -152,6 +154,7 @@ namespace Intranet.Areas.CorpComm.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = SD.CIOAdmin + "," + SD.CorpCommAdmin)]
+        [Obsolete]
         public IActionResult ForDeliveryRequest()
         {
             OrderHeader orderHeader = _unitOfWork.OrderHeader
@@ -242,11 +245,15 @@ namespace Intranet.Areas.CorpComm.Controllers
             string messageBody = string.Format(HtmlBody, subject2, datetime,
                 OrderId, ShippingDate, PickUpPoints, LoginUser, listfinal);
 
-            EmailSender(
+            _emailer.SendMail(
+                SD.CormCommEmail,
                 RequestorEmail,
+                messageBody,
                 subject,
-                messageBody
+                SD.CormCommEmail,
+                SD.CormCommPass
                 );
+
             _unitOfWork.Save();
 
             #endregion Email Process
@@ -288,6 +295,7 @@ namespace Intranet.Areas.CorpComm.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Obsolete]
         public IActionResult ForAcknowledgementRequest()
         {
             OrderHeader orderHeader = _unitOfWork.OrderHeader
@@ -369,16 +377,20 @@ namespace Intranet.Areas.CorpComm.Controllers
             string messageBody = string.Format(HtmlBody, subject2, datetime,
                 OrderId, ShippingDate, PickUpPoints, LoginUser, listfinal, clickhere);
 
-            EmailSender(
+            _emailer.SendMail(
+                SD.CormCommEmail,
                 RequestorEmail,
+                messageBody,
                 subject,
-                messageBody
-                );
+                SD.CormCommEmail,
+                SD.CormCommPass
+            );
 
             _unitOfWork.Save();
             return RedirectToAction(nameof(Index));
         }
 
+        [Obsolete]
         public IActionResult RequesDelivered(int id)
         {
             OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == id);
@@ -414,16 +426,21 @@ namespace Intranet.Areas.CorpComm.Controllers
                 LoginUser,
                 clickhere);
 
-            EmailSender(
+            _emailer.SendMail(
+                SD.CormCommEmail,
                 RequestorEmail,
+                messageBody,
                 subject,
-                messageBody
-                );
+                SD.CormCommEmail,
+                SD.CormCommPass
+            );
+
 
             _unitOfWork.Save();
             return RedirectToAction(nameof(Index));
         }
 
+        [Obsolete]
         public IActionResult AcknowledgeReceipt()
         {
             OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == OrderVM.OrderHeader.Id);
@@ -466,11 +483,14 @@ namespace Intranet.Areas.CorpComm.Controllers
             string messageBody = string.Format(HtmlBody, subject2, datetime,
                 LoginUser, clickhere);
 
-            EmailSender(
+            _emailer.SendMail(
+                SD.CormCommEmail,
                 RequestorEmail,
+                messageBody,
                 subject,
-                messageBody
-                );
+                SD.CormCommEmail,
+                SD.CormCommPass
+            );
 
             _unitOfWork.Save();
 
@@ -559,7 +579,7 @@ namespace Intranet.Areas.CorpComm.Controllers
         public void UserDetails()
         {
             var username = User.Identity.Name;
-            var domain = _emailOptions.AuthDomain;
+            var domain = SD.OfficeDomain;
             using (var context = new PrincipalContext(ContextType.Domain, domain))
             {
                 var user = UserPrincipal.FindByIdentity(context, username);
@@ -581,34 +601,5 @@ namespace Intranet.Areas.CorpComm.Controllers
         }
 
         #endregion UserDetails function
-
-        #region EmailSender
-
-        [Obsolete]
-        private void EmailSender(
-            string RequestorEmail,
-            string subject,
-            string messageBody
-        )
-        {
-            var message = new MimeMessage();
-            var builder = new BodyBuilder();
-            message.From.Add(new MailboxAddress(_emailOptions.AuthEmailCorpComm));
-            message.To.Add(new MailboxAddress(RequestorEmail));
-            message.Subject = subject;
-            builder.HtmlBody = messageBody;
-            message.Body = builder.ToMessageBody();
-            using (var client = new SmtpClient())
-            {
-                client.Connect(_emailOptions.SMTPHostClient, _emailOptions.SMTPHostPort, _emailOptions.SMTPHostBool);
-
-                // Note: only needed if the SMTP server requires authentication
-                client.Authenticate(_emailOptions.AuthEmailCorpComm, _emailOptions.AuthPasswordCorpComm);
-                client.Send(message);
-                client.Disconnect(true);
-            }
-        }
-
-        #endregion EmailSender
     }
 }

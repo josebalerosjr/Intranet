@@ -13,13 +13,11 @@ namespace Intranet.DataAccess.Repository.QSHE
     public class GenerateCalibrationDate : IGenerateCalibrationDate
     {
         private ItemRegContext _context;
-        private readonly EmailOptions _emailOptions;
         private readonly InvEmailContext _contextInvEmail;
 
-        public GenerateCalibrationDate(ItemRegContext context, IOptions<EmailOptions> emailOptions, InvEmailContext contextInvEmail)
+        public GenerateCalibrationDate(ItemRegContext context, InvEmailContext contextInvEmail)
         {
             _context = context;
-            _emailOptions = emailOptions.Value;
             _contextInvEmail = contextInvEmail;
         }
 
@@ -37,7 +35,7 @@ namespace Intranet.DataAccess.Repository.QSHE
                 string msgFromDB = string.Empty;
                 int counter = 0;
 
-                message.From.Add(new MailboxAddress(_emailOptions.AuthEmailQshe));
+                message.From.Add(new MailboxAddress(SD.AdminEmail));
                 message.To.Add(new MailboxAddress(invemailadd));
 
                 var items = _context.ItemRegs;      //  TODO: gets the list of ItemRegs in database and put in the items variable
@@ -335,42 +333,18 @@ namespace Intranet.DataAccess.Repository.QSHE
                     #endregion HTML Body
                 }
 
-                //#region mail body
 
-                //    string.Format(@"
-                //        <p> Items to be calibrated " +
-                //            DateTime.Now.ToString() + " </p>" +
-                //        "<table border='1'> " +
-                //        "<thead>" +
-                //        "        <tr> " +
-                //        "            <th> Name </th>" +
-                //        "            <th> Item Description </th>" +
-                //        "            <th> MFR </th>" +
-                //        "            <th> Asset/SN </th>" +
-                //        "            <th> P/N </th>" +
-                //        "            <th> Type </th>" +
-                //        "            <th> CAL Date </th>" +
-                //        "            <th> QTY </th>" +
-                //        "            <th> Unit </th>" +
-                //        "            <th> Remarks </th>" +
-                //        "            <th> Location </th>" +
-                //        "        </tr>" +
-                //        "    </thead>" +
-                //        "    <tbody>" + msgFromDB + "</tbody> " +
-                //        "</table>" +
-                //        "<br />" +
-                //        "<br />");
                 message.Body = builder.ToMessageBody();
 
                 using (var client = new SmtpClient())
                 {
                     client.Connect(
-                        _emailOptions.SMTPHostClient,
-                        _emailOptions.SMTPHostPort,
-                        _emailOptions.SMTPHostBool);
+                        SD.SMTPClient,
+                        SD.SMTPPort,
+                        SD.SMTPBool);
                     client.Authenticate(
-                        _emailOptions.AuthEmailQshe,
-                        _emailOptions.AuthPasswordQshe);
+                        SD.AdminEmail,
+                        SD.AdminPass);
                     client.Send(message);
                     client.Disconnect(true);
                 }

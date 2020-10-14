@@ -15,13 +15,11 @@ namespace Intranet.Controllers
     public class ImageCarouselController : Controller
     {
         private readonly ImageCarouselContext _context;
-        private readonly EmailOptions _emailOptions;
         private readonly IToastNotification _toastNotification;
 
-        public ImageCarouselController(ImageCarouselContext context, IOptions<EmailOptions> emailOptions, IToastNotification toastNotification)
+        public ImageCarouselController(ImageCarouselContext context, IToastNotification toastNotification)
         {
             _context = context;
-            _emailOptions = emailOptions.Value;
             _toastNotification = toastNotification;
         }
 
@@ -130,7 +128,7 @@ namespace Intranet.Controllers
         public void UserDetails()
         {
             var username = User.Identity.Name;
-            var domain = _emailOptions.AuthDomain;
+            var domain = SD.OfficeDomain;
             using (var context = new PrincipalContext(ContextType.Domain, domain))
             {
                 var user = UserPrincipal.FindByIdentity(context, username);

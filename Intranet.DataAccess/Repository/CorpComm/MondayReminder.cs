@@ -12,18 +12,18 @@ namespace Intranet.DataAccess.Repository.CorpComm
 {
     public class MondayReminder : IMondayReminder
     {
-        private readonly EmailOptions _emailOptions;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly Emailer _emailer;
 
         [BindProperty]
         public OrderDetailsVM OrderVM { get; set; }
 
         public MondayReminder(
-            IOptions<EmailOptions> emailOptions,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            Emailer emailer)
         {
             _unitOfWork = unitOfWork;
-            _emailOptions = emailOptions.Value;
+            _emailer = emailer;
         }
 
         [Obsolete]
@@ -198,25 +198,14 @@ namespace Intranet.DataAccess.Repository.CorpComm
 
                 string messageBody = string.Format(HtmlBody);
 
-                var message = new MimeMessage();
-                var builder = new BodyBuilder();
-                message.From.Add(new MailboxAddress(_emailOptions.AuthEmailCorpComm));
-                message.To.Add(new MailboxAddress(requestorEmail));
-                message.Subject = subject;
-                builder.HtmlBody = messageBody;
-                message.Body = builder.ToMessageBody();
-
-                using (var client = new SmtpClient())
-                {
-                    client.Connect(_emailOptions.SMTPHostClient,
-                        _emailOptions.SMTPHostPort, _emailOptions.SMTPHostBool);
-
-                    // Note: only needed if the SMTP server requires authentication
-                    client.Authenticate(_emailOptions.AuthEmailCorpComm,
-                        _emailOptions.AuthPasswordCorpComm);
-                    client.Send(message);
-                    client.Disconnect(true);
-                }
+                _emailer.SendMail(
+                    SD.CormCommEmail,
+                    requestorEmail,
+                    messageBody,
+                    subject,
+                    SD.CormCommEmail,
+                    SD.CormCommPass
+                );
             }
         }
     }

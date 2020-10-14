@@ -19,15 +19,13 @@ namespace Intranet.Controllers
     public class SuggestionController : Controller
     {
         private readonly SuggestionContext _context;
-        private readonly EmailOptions _emailOptions;
         private readonly EmailContext _email;
         private readonly IToastNotification _toastNotification;
         private string SenderName, SenderEmail, SenderSubject, SenderMessage, ReceiverName, ReceiverEmail; // variables for
 
-        public SuggestionController(SuggestionContext context, EmailContext email, IOptions<EmailOptions> EmailOptions, IToastNotification toastNotification)
+        public SuggestionController(SuggestionContext context, EmailContext email,  IToastNotification toastNotification)
         {
             _context = context;
-            _emailOptions = EmailOptions.Value;
             _email = email;
             _toastNotification = toastNotification;
         }
@@ -63,8 +61,7 @@ namespace Intranet.Controllers
             SenderSubject = suggestion.SuggSubject;
             SenderEmail = ViewBag.EmailAddress;
             SenderMessage = suggestion.SuggMessage;
-            //ReceiverName = _emailOptions.SenderName;
-            ReceiverEmail = _emailOptions.AuthEmailMain;
+            ReceiverEmail = SD.AdminEmail;
 
             //  calling SendEmail email function
             SendEmail(SenderName, SenderEmail, ReceiverName, SenderMessage, SenderSubject);
@@ -73,11 +70,11 @@ namespace Intranet.Controllers
             var builder = new BodyBuilder();
 
             // reference value from EmailOptions.json
-            string host = _emailOptions.SMTPHostClient;
-            int port = _emailOptions.SMTPHostPort;
-            bool boole = _emailOptions.SMTPHostBool;
-            string authEmail = _emailOptions.AuthEmailMain;
-            string authPass = _emailOptions.AuthPasswordMain;
+            //string host = SD.SMTPClient;
+            //int port = SD.SMTPPort;
+            //bool boole = SD.SMTPBool;
+            //string authEmail = SD.AdminEmail;
+            //string authPass = SD.AdminPass;
 
             message.From.Add(new MailboxAddress(SenderName, SenderEmail));
 
@@ -104,7 +101,7 @@ namespace Intranet.Controllers
         public void UserDetails()
         {
             var username = User.Identity.Name;
-            var domain = _emailOptions.AuthDomain;
+            var domain = SD.OfficeDomain;
             using (var context = new PrincipalContext(ContextType.Domain, domain))
             {
                 var user = UserPrincipal.FindByIdentity(context, username);
@@ -137,11 +134,11 @@ namespace Intranet.Controllers
             var builder = new BodyBuilder();
 
             // reference value from EmailOptions.json
-            string host = _emailOptions.SMTPHostClient;
-            int port = _emailOptions.SMTPHostPort;
-            bool boole = _emailOptions.SMTPHostBool;
-            string authEmail = _emailOptions.AuthEmailMain;
-            string authPass = _emailOptions.AuthPasswordMain;
+            string host = SD.SMTPClient;
+            int port = SD.SMTPPort;
+            bool boole = SD.SMTPBool;
+            string authEmail = SD.AdminEmail;
+            string authPass = SD.AdminPass;
 
             message.From.Add(new MailboxAddress(FromName, FromEmail));
 

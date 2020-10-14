@@ -16,12 +16,10 @@ namespace Intranet.Areas.CorpComm.Controllers
     public class StationController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly EmailOptions _appSettings;
 
-        public StationController(IUnitOfWork unitOfWork, IOptions<EmailOptions> emailOptions)
+        public StationController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            _appSettings = emailOptions.Value;
         }
 
         public IActionResult Index()
@@ -107,7 +105,7 @@ namespace Intranet.Areas.CorpComm.Controllers
         public void UserDetails()
         {
             var username = User.Identity.Name;
-            var domain = _appSettings.AuthDomain;
+            var domain = SD.OfficeDomain;
             using (var context = new PrincipalContext(ContextType.Domain, domain))
             {
                 var user = UserPrincipal.FindByIdentity(context, username);

@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.DirectoryServices.AccountManagement;
@@ -23,15 +22,15 @@ namespace Intranet.Areas.CorpComm.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IWebHostEnvironment _hostEnvironment;
-        private readonly EmailOptions _emailOptions;
         private readonly CorpCommDbContext _context;
+        private readonly Emailer _emailer;
 
-        public CollateralController(IUnitOfWork unitOfWork, IOptions<EmailOptions> emailOptions, IWebHostEnvironment hostEnvironment, CorpCommDbContext context)
+        public CollateralController(IUnitOfWork unitOfWork, IWebHostEnvironment hostEnvironment, CorpCommDbContext context, Emailer emailer)
         {
             _unitOfWork = unitOfWork;
-            _emailOptions = emailOptions.Value;
             _hostEnvironment = hostEnvironment;
             _context = context;
+            _emailer = emailer;
         }
 
         public IActionResult Index()
@@ -371,7 +370,7 @@ namespace Intranet.Areas.CorpComm.Controllers
         public void UserDetails()
         {
             var username = User.Identity.Name;
-            var domain = _emailOptions.AuthDomain;
+            var domain = SD.OfficeDomain;
             using (var context = new PrincipalContext(ContextType.Domain, domain))
             {
                 var user = UserPrincipal.FindByIdentity(context, username);

@@ -1,5 +1,4 @@
-﻿using Intranet.Classes;
-using Intranet.Data.Admin;
+﻿using Intranet.Data.Admin;
 using Intranet.DataAccess.Repository.IRepository;
 using Intranet.Models.ViewModels;
 using Intranet.Uti;
@@ -17,16 +16,12 @@ namespace Intranet.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly EmailOptions _emailOptions;
-        private readonly OnlineImageLinks _onlineImageLinks;
         private readonly ImageCarouselContext _imagecarouselContext;
         private readonly IUnitOfWork _unitOfWork;
 
-        public HomeController(ImageCarouselContext imagecarouselContext, IOptions<EmailOptions> emailOptions, IOptions<OnlineImageLinks> onlineImageLinks, IUnitOfWork unitOfWork)
+        public HomeController(ImageCarouselContext imagecarouselContext, IUnitOfWork unitOfWork)
         {
             _imagecarouselContext = imagecarouselContext;
-            _emailOptions = emailOptions.Value;
-            _onlineImageLinks = onlineImageLinks.Value;
             _unitOfWork = unitOfWork;
         }
 
@@ -65,7 +60,7 @@ namespace Intranet.Controllers
 
         public void UserDetails() // TODO: Gets the user information
         {
-            var domain = _emailOptions.AuthDomain;
+            var domain = SD.OfficeDomain;
             var username = User.Identity.Name;
             using (var context = new PrincipalContext(ContextType.Domain, domain))
             {
@@ -101,7 +96,7 @@ namespace Intranet.Controllers
             }
 
             //ViewBag.SPEM = "http://192.168.10.42:9000/?id=" + SPEMid;
-            ViewBag.SPEM = _emailOptions.SPEMLink + SPEMid;
+            ViewBag.SPEM = SD.SPEMLink + SPEMid;
         }
 
         //public void AppLinks()
@@ -126,9 +121,6 @@ namespace Intranet.Controllers
 
         public void OnlineImageLink()
         {
-            ViewBag.vision = _onlineImageLinks.vision;
-            ViewBag.goal = _onlineImageLinks.goal;
-            ViewBag.mission = _onlineImageLinks.mission;
         }
 
         #endregion userDetails Function

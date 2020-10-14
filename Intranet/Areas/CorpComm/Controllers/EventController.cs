@@ -13,12 +13,12 @@ namespace Intranet.Areas.CorpComm.Controllers
     public class EventController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly EmailOptions _emailOptions;
+        private readonly Emailer _emailer;
 
-        public EventController(IUnitOfWork unitOfWork, IOptions<EmailOptions> emailOptions)
+        public EventController(IUnitOfWork unitOfWork, Emailer emailer)
         {
             _unitOfWork = unitOfWork;
-            _emailOptions = emailOptions.Value;
+            _emailer = emailer;
         }
 
         public IActionResult Index()
@@ -96,7 +96,7 @@ namespace Intranet.Areas.CorpComm.Controllers
         public void UserDetails()
         {
             var username = User.Identity.Name;
-            var domain = _emailOptions.AuthDomain;
+            var domain = SD.OfficeDomain;
             using (var context = new PrincipalContext(ContextType.Domain, domain))
             {
                 var user = UserPrincipal.FindByIdentity(context, username);

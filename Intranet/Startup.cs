@@ -1,5 +1,4 @@
 using Hangfire;
-using Intranet.Classes;
 using Intranet.Controllers;
 using Intranet.Data;
 using Intranet.Data.Admin;
@@ -12,7 +11,6 @@ using Intranet.DataAccess.Repository.IRepository.CorpComm;
 using Intranet.DataAccess.Repository.IRepository.QSHE;
 using Intranet.DataAccess.Repository.QSHE;
 using Intranet.Utilities;
-using Intranet.Utilities.CNC;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -132,13 +130,6 @@ namespace Intranet
              *  this service gets the value from the appsettings.json file
              *  and put it in a array.
              */
-            //services.Configure<AppSettings>(appSettings);
-            services.Configure<BdoInfo>(bdoInfo);
-            services.Configure<BpiInfo>(bpiInfo);
-            services.Configure<SbcInfo>(sbcInfo);
-            services.Configure<MtrInfo>(mtrInfo);
-            //services.Configure<AppLinks>(appLinks);
-            services.Configure<OnlineImageLinks>(onlineimagelinks);
 
             #endregion appsettings service
 
@@ -195,9 +186,6 @@ namespace Intranet
 
             services.AddScoped<IMondayReminder, MondayReminder>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-            //services.AddSingleton<EmailSender>();
-            services.Configure<EmailOptions>(Configuration);
 
             services.AddSession(options =>
             {

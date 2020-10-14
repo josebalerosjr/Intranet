@@ -13,14 +13,11 @@ namespace Intranet.Controllers
     public class ReportController : Controller
     {
         private readonly ItemRegContext _context;
-        private readonly EmailOptions _emailOptions;
         //private readonly IHostingEnvironment _hostingEnvironment;
 
-        public ReportController(ItemRegContext context, IOptions<EmailOptions> EmailOptions/*, IHostingEnvironment hostingEnvironment*/)
+        public ReportController(ItemRegContext context)
         {
             _context = context;
-            _emailOptions = EmailOptions.Value;
-            //_hostingEnvironment = hostingEnvironment;
         }
 
         public IActionResult Index(string searchColumn)
@@ -52,7 +49,7 @@ namespace Intranet.Controllers
         public void UserDetails()
         {
             var username = User.Identity.Name;
-            var domain = _emailOptions.AuthDomain;
+            var domain = SD.OfficeDomain;
             using (var context = new PrincipalContext(ContextType.Domain, domain))
             {
                 var user = UserPrincipal.FindByIdentity(context, username);

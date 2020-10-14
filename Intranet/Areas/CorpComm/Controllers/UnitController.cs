@@ -1,4 +1,5 @@
-﻿using Intranet.DataAccess.Repository.IRepository;
+﻿
+using Intranet.DataAccess.Repository.IRepository;
 using Intranet.Models.CorpComm;
 using Intranet.Uti;
 using Intranet.Utilities;
@@ -13,12 +14,10 @@ namespace Intranet.Areas.CorpComm.Controllers
     public class UnitController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly EmailOptions _emailOptions;
 
-        public UnitController(IUnitOfWork unitOfWork, IOptions<EmailOptions> emailOptions)
+        public UnitController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            _emailOptions = emailOptions.Value;
         }
 
         public IActionResult Index()
@@ -96,7 +95,7 @@ namespace Intranet.Areas.CorpComm.Controllers
         public void UserDetails()
         {
             var username = User.Identity.Name;
-            var domain = _emailOptions.AuthDomain;
+            var domain = SD.OfficeDomain;
             using (var context = new PrincipalContext(ContextType.Domain, domain))
             {
                 var user = UserPrincipal.FindByIdentity(context, username);

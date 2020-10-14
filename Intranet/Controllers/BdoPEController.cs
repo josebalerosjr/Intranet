@@ -5,7 +5,6 @@ using Intranet.Data;
 using Intranet.Models;
 using Intranet.Uti;
 using Intranet.Utilities;
-using Intranet.Utilities.CNC;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -29,29 +28,14 @@ namespace Intranet.Controllers
     public class BdoPEController : Controller
     {
         private readonly BdoPEContext _context;
-        private readonly EmailOptions _emailOptions;
-        private readonly BdoInfo _bdoInfo;
-        private readonly BpiInfo _bpiInfo;
-        private readonly SbcInfo _sbcInfo;
-        private readonly MtrInfo _mtrInfo;
         private readonly IToastNotification _toastNotification;
 
         public BdoPEController(
             BdoPEContext context,
-            IOptions<EmailOptions> emailOptions,
-            IOptions<BdoInfo> bdoInfo,
-            IOptions<BpiInfo> bpiInfo,
-            IOptions<SbcInfo> sbcInfo,
-            IOptions<MtrInfo> mtrInfo,
             IToastNotification toastNotification
             )
         {
             _context = context;
-            _emailOptions = emailOptions.Value;
-            _bdoInfo = bdoInfo.Value;
-            _bpiInfo = bpiInfo.Value;
-            _sbcInfo = sbcInfo.Value;
-            _mtrInfo = mtrInfo.Value;
             _toastNotification = toastNotification;
         }
 
@@ -257,11 +241,11 @@ namespace Intranet.Controllers
                 string typeOfPayment = users[i].TypeOfPayment;
                 string amount = users[i].TransactionAmount.ToString();
                 string customername = users[i].CustomerName;
-                string bankname = _bdoInfo.BankName;
-                string glaccount = _bdoInfo.GL;
-                string currency = _bdoInfo.Currency;
-                string postkey = _bdoInfo.PostKey;
-                string postkey2 = _bdoInfo.PostKey2;
+                string bankname = SD.CNC_BDO;
+                string glaccount = SD.BDO_GL;
+                string currency = SD.CNC_Currency;
+                string postkey = SD.CNC_PostKey;
+                string postkey2 = SD.CNC_PostKey2;
                 string username = ViewBag.DisplayName;
                 string ipadd = HttpContext.Connection.RemoteIpAddress.ToString();
                 string userdate = DateTime.Now.ToString("MM/dd/yyyy");
@@ -403,11 +387,11 @@ namespace Intranet.Controllers
                 string transactiondate = users[i].PaymentDetails.Substring(0, 2).Trim() +
                                    "/" + users[i].PaymentDetails.Substring(2, 2).Trim() +
                                    "/" + users[i].PaymentDetails.Substring(4, 4).Trim();
-                string glaccount = _sbcInfo.GL;
-                string currency = _sbcInfo.Currency;
-                string bankname = _sbcInfo.BankName;
-                string postingkey = _sbcInfo.PostKey;
-                string postingkey2 = _sbcInfo.PostKey2;
+                string glaccount = SD.SBC_GL;
+                string currency = SD.CNC_Currency;
+                string bankname = SD.CNC_SBC;
+                string postingkey = SD.CNC_PostKey;
+                string postingkey2 = SD.CNC_PostKey2;
                 string amount = users[i].PaymentDetails.Substring(49, 13);
                 string fiscalperiod = users[i].PaymentDetails.Substring(0, 2);
                 string reference = users[i].PaymentDetails.Substring(8, 1);
@@ -560,11 +544,11 @@ namespace Intranet.Controllers
                     string transactiondate = users[i].PaymentDetails.Substring(13, 2).Trim() +
                                        "/" + users[i].PaymentDetails.Substring(15, 2).Trim() +
                                        "/" + users[i].PaymentDetails.Substring(9, 4).Trim();
-                    string glaccount = _bpiInfo.GL;
-                    string currency = _bpiInfo.Currency;
-                    string bankname = _bpiInfo.BankName;
-                    string postkey = _bpiInfo.PostKey;
-                    string postkey2 = _bpiInfo.PostKey2;
+                    string glaccount = SD.BPI_GL;
+                    string currency = SD.CNC_Currency;
+                    string bankname = SD.CNC_BPI;
+                    string postkey = SD.CNC_PostKey;
+                    string postkey2 = SD.CNC_PostKey2;
                     string amount = users[i].PaymentDetails.Substring(124, 13);
                     string fiscalperiod = users[i].PaymentDetails.Substring(13, 2);
                     string customernumber = users[i].PaymentDetails.Substring(37, 20);
@@ -709,11 +693,11 @@ namespace Intranet.Controllers
                 string transactiondate = users[i].PaymentDetails.Substring(135, 2).Trim() +
                             "/" + users[i].PaymentDetails.Substring(137, 2).Trim() +
                             "/20" + users[i].PaymentDetails.Substring(139, 2).Trim();
-                string glaccount = _mtrInfo.GL;
-                string currency = _mtrInfo.Currency;
-                string bankname = _mtrInfo.BankName;
-                string postkey = _mtrInfo.PostKey;
-                string postkey2 = _mtrInfo.PostKey2;
+                string glaccount = SD.MBTC_GL;
+                string currency = SD.CNC_Currency;
+                string bankname = SD.CNC_MBTC;
+                string postkey = SD.CNC_PostKey;
+                string postkey2 = SD.CNC_PostKey2;
                 string amount = users[i].PaymentDetails.Substring(101, 11);
                 string customernumber = users[i].PaymentDetails.Substring(41, 30);
                 string fiscalperiod = users[i].PaymentDetails.Substring(135, 2);
@@ -1291,12 +1275,12 @@ namespace Intranet.Controllers
                         }
                         else
                         {  // if it does not have assigned cnc,  assign the value of the DefaultCNC
-                            f_cncofclient = _emailOptions.DefaultCNC;
+                            f_cncofclient = SD.DEfaultCNC;
                         }
                     }
                     else
                     {   // if it does not have assigned cnc,  assign the value of the DefaultCNC
-                        f_cncofclient = _emailOptions.DefaultCNC;
+                        f_cncofclient = SD.DEfaultCNC;
                     }
                 }
             }
@@ -1575,7 +1559,7 @@ namespace Intranet.Controllers
         public void UserDetails()
         {
             var username = User.Identity.Name;
-            var domain = _emailOptions.AuthDomain;
+            var domain = SD.OfficeDomain;
             using (var context = new PrincipalContext(ContextType.Domain, domain))
             {
                 var user = UserPrincipal.FindByIdentity(context, username);
