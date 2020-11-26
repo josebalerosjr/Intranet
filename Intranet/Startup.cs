@@ -197,7 +197,7 @@ namespace Intranet
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             //services.AddSingleton<EmailSender>();
-            services.Configure<EmailOptions>(Configuration);
+            //services.Configure<EmailOptions>(Configuration);
 
             services.AddSession(options =>
             {
@@ -233,7 +233,7 @@ namespace Intranet
             RecurringJob.AddOrUpdate<IGenerateCalibrationDate>(CalDateItem => CalDateItem.SendEmail(), Cron.Daily);
 
             // Collateral Request App
-            RecurringJob.AddOrUpdate<IMondayReminder>(MondayReminder => MondayReminder.SendEmail(), Cron.Weekly);
+            //RecurringJob.AddOrUpdate<IMondayReminder>(MondayReminder => MondayReminder.SendEmail(), Cron.Weekly);
 
             app.UseRouting();
             app.UseSession();

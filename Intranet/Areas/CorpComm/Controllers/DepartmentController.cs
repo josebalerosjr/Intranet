@@ -13,12 +13,10 @@ namespace Intranet.Areas.CorpComm.Controllers
     public class DepartmentController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly EmailOptions _emailOptions;
 
-        public DepartmentController(IUnitOfWork unitOfWork, IOptions<EmailOptions> emailOptions)
+        public DepartmentController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            _emailOptions = emailOptions.Value;
         }
 
         public IActionResult Index()
@@ -96,8 +94,7 @@ namespace Intranet.Areas.CorpComm.Controllers
         public void UserDetails()
         {
             var username = User.Identity.Name;
-            var domain = _emailOptions.AuthDomain;
-            using (var context = new PrincipalContext(ContextType.Domain, domain))
+            using (var context = new PrincipalContext(ContextType.Domain, SD.OfficeDomain))
             {
                 var user = UserPrincipal.FindByIdentity(context, username);
                 ViewBag.Department = user.GetDepartment();

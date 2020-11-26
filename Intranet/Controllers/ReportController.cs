@@ -13,13 +13,11 @@ namespace Intranet.Controllers
     public class ReportController : Controller
     {
         private readonly ItemRegContext _context;
-        private readonly EmailOptions _emailOptions;
         //private readonly IHostingEnvironment _hostingEnvironment;
 
-        public ReportController(ItemRegContext context, IOptions<EmailOptions> EmailOptions/*, IHostingEnvironment hostingEnvironment*/)
+        public ReportController(ItemRegContext context /*, IHostingEnvironment hostingEnvironment*/)
         {
             _context = context;
-            _emailOptions = EmailOptions.Value;
             //_hostingEnvironment = hostingEnvironment;
         }
 
@@ -52,8 +50,7 @@ namespace Intranet.Controllers
         public void UserDetails()
         {
             var username = User.Identity.Name;
-            var domain = _emailOptions.AuthDomain;
-            using (var context = new PrincipalContext(ContextType.Domain, domain))
+            using (var context = new PrincipalContext(ContextType.Domain, SD.OfficeDomain))
             {
                 var user = UserPrincipal.FindByIdentity(context, username);
                 ViewBag.Department = user.GetDepartment();

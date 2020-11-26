@@ -29,7 +29,6 @@ namespace Intranet.Controllers
     public class BdoPEController : Controller
     {
         private readonly BdoPEContext _context;
-        private readonly EmailOptions _emailOptions;
         private readonly BdoInfo _bdoInfo;
         private readonly BpiInfo _bpiInfo;
         private readonly SbcInfo _sbcInfo;
@@ -38,7 +37,6 @@ namespace Intranet.Controllers
 
         public BdoPEController(
             BdoPEContext context,
-            IOptions<EmailOptions> emailOptions,
             IOptions<BdoInfo> bdoInfo,
             IOptions<BpiInfo> bpiInfo,
             IOptions<SbcInfo> sbcInfo,
@@ -47,7 +45,6 @@ namespace Intranet.Controllers
             )
         {
             _context = context;
-            _emailOptions = emailOptions.Value;
             _bdoInfo = bdoInfo.Value;
             _bpiInfo = bpiInfo.Value;
             _sbcInfo = sbcInfo.Value;
@@ -1291,12 +1288,12 @@ namespace Intranet.Controllers
                         }
                         else
                         {  // if it does not have assigned cnc,  assign the value of the DefaultCNC
-                            f_cncofclient = _emailOptions.DefaultCNC;
+                            f_cncofclient = SD.DefaultCNC;
                         }
                     }
                     else
                     {   // if it does not have assigned cnc,  assign the value of the DefaultCNC
-                        f_cncofclient = _emailOptions.DefaultCNC;
+                        f_cncofclient = SD.DefaultCNC;
                     }
                 }
             }
@@ -1575,8 +1572,7 @@ namespace Intranet.Controllers
         public void UserDetails()
         {
             var username = User.Identity.Name;
-            var domain = _emailOptions.AuthDomain;
-            using (var context = new PrincipalContext(ContextType.Domain, domain))
+            using (var context = new PrincipalContext(ContextType.Domain, SD.OfficeDomain))
             {
                 var user = UserPrincipal.FindByIdentity(context, username);
                 ViewBag.Department = user.GetDepartment();

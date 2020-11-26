@@ -24,7 +24,6 @@ namespace Intranet.Controllers
         private readonly InvLocationContext _contextLoc;
         private readonly InvTypeContext _contextType;
         private readonly InvUnitContext _contextUnit;
-        private readonly EmailOptions _emailOptions;
         private readonly IToastNotification _toastNotification;
         private readonly EmailContext _contextEmail;
 
@@ -35,7 +34,6 @@ namespace Intranet.Controllers
             InvTypeContext contextType,
             InvUnitContext contextUnit,
             EmailContext contextEmail,
-            IOptions<EmailOptions> emailOptions,
             IToastNotification toastNotification)
         {
             _context = context;
@@ -44,7 +42,6 @@ namespace Intranet.Controllers
             _contextType = contextType;
             _contextUnit = contextUnit;
             _contextEmail = contextEmail;
-            _emailOptions = emailOptions.Value;
             _toastNotification = toastNotification;
         }
 
@@ -354,8 +351,7 @@ namespace Intranet.Controllers
         public void UserDetails()
         {
             var username = User.Identity.Name;
-            var domain = _emailOptions.AuthDomain;
-            using (var context = new PrincipalContext(ContextType.Domain, domain))
+            using (var context = new PrincipalContext(ContextType.Domain, SD.OfficeDomain))
             {
                 var user = UserPrincipal.FindByIdentity(context, username);
                 ViewBag.Department = user.GetDepartment();

@@ -22,7 +22,6 @@ namespace Intranet.Areas.CorpComm.Controllers
     public class OrderController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly EmailOptions _emailOptions;
         private readonly IWebHostEnvironment _hostEnvironment;
 
         [BindProperty]
@@ -36,12 +35,10 @@ namespace Intranet.Areas.CorpComm.Controllers
 
         public OrderController(
             IUnitOfWork unitOfWork,
-            IOptions<EmailOptions> emailOptions,
             IWebHostEnvironment hostEnvironment
         )
         {
             _unitOfWork = unitOfWork;
-            _emailOptions = emailOptions.Value;
             _hostEnvironment = hostEnvironment;
         }
 
@@ -424,6 +421,7 @@ namespace Intranet.Areas.CorpComm.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Obsolete]
         public IActionResult AcknowledgeReceipt()
         {
             OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == OrderVM.OrderHeader.Id);
@@ -559,8 +557,7 @@ namespace Intranet.Areas.CorpComm.Controllers
         public void UserDetails()
         {
             var username = User.Identity.Name;
-            var domain = _emailOptions.AuthDomain;
-            using (var context = new PrincipalContext(ContextType.Domain, domain))
+            using (var context = new PrincipalContext(ContextType.Domain, SD.OfficeDomain))
             {
                 var user = UserPrincipal.FindByIdentity(context, username);
                 ViewBag.Department = user.GetDepartment();
@@ -593,17 +590,17 @@ namespace Intranet.Areas.CorpComm.Controllers
         {
             var message = new MimeMessage();
             var builder = new BodyBuilder();
-            message.From.Add(new MailboxAddress(_emailOptions.AuthEmailCorpComm));
+            message.From.Add(new MailboxAddress(SD.CorpCommEmailName));
             message.To.Add(new MailboxAddress(RequestorEmail));
             message.Subject = subject;
             builder.HtmlBody = messageBody;
             message.Body = builder.ToMessageBody();
             using (var client = new SmtpClient())
             {
-                client.Connect(_emailOptions.SMTPHostClient, _emailOptions.SMTPHostPort, _emailOptions.SMTPHostBool);
+                client.Connect(SD.SMTPClient, SD.SMTPPort, SD.SMTPBool);
 
                 // Note: only needed if the SMTP server requires authentication
-                client.Authenticate(_emailOptions.AuthEmailCorpComm, _emailOptions.AuthPasswordCorpComm);
+                client.Authenticate(SD.CorpCommEmailName, SD.CorpCommPassword);
                 client.Send(message);
                 client.Disconnect(true);
             }

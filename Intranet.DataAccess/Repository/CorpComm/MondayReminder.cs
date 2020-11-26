@@ -12,18 +12,15 @@ namespace Intranet.DataAccess.Repository.CorpComm
 {
     public class MondayReminder : IMondayReminder
     {
-        private readonly EmailOptions _emailOptions;
         private readonly IUnitOfWork _unitOfWork;
 
         [BindProperty]
         public OrderDetailsVM OrderVM { get; set; }
 
         public MondayReminder(
-            IOptions<EmailOptions> emailOptions,
             IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            _emailOptions = emailOptions.Value;
         }
 
         [Obsolete]
@@ -200,7 +197,7 @@ namespace Intranet.DataAccess.Repository.CorpComm
 
                 var message = new MimeMessage();
                 var builder = new BodyBuilder();
-                message.From.Add(new MailboxAddress(_emailOptions.AuthEmailCorpComm));
+                message.From.Add(new MailboxAddress(SD.CorpCommEmailName));
                 message.To.Add(new MailboxAddress(requestorEmail));
                 message.Subject = subject;
                 builder.HtmlBody = messageBody;
@@ -208,12 +205,8 @@ namespace Intranet.DataAccess.Repository.CorpComm
 
                 using (var client = new SmtpClient())
                 {
-                    client.Connect(_emailOptions.SMTPHostClient,
-                        _emailOptions.SMTPHostPort, _emailOptions.SMTPHostBool);
-
-                    // Note: only needed if the SMTP server requires authentication
-                    client.Authenticate(_emailOptions.AuthEmailCorpComm,
-                        _emailOptions.AuthPasswordCorpComm);
+                    client.Connect(SD.SMTPClient,SD.SMTPPort, SD.SMTPBool);
+                    client.Authenticate(SD.CorpCommEmailName,SD.CorpCommPassword);
                     client.Send(message);
                     client.Disconnect(true);
                 }

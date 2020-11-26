@@ -4,21 +4,33 @@ namespace Intranet.Utilities
 {
     public static class SD
     {
+        #region Admin Details
+
+        public const string OfficeDomain = "pttphils.com";
+        public const string SMTPClient = "smtp.office365.com";
+        public const int SMTPPort = 587;
+        public const bool SMTPBool = false;
+
+        // Email Details
+        public const string ServiceUserEmailName = "mail@pttphils.com";
+        public const string ServiceUserPassword = "jgfpbqbfpbyvdbnt";
+
+        #endregion Admin Details
+
         #region CorpComm
 
-        // Connection String
+        //Connection String
         //public static string ConString = "Server=(LocalDb)\\MSSQLLocalDB;Database=CorpComm;User Id=sa;Password=mis@2019;MultipleActiveResultSets=True";
-        public static string ConString = "Server=192.168.10.43;Database=CorpComm;User Id=sa;Password=mis@2019;MultipleActiveResultSets=True";
-
-        //public static string ConString = "Server=192.168.10.42;Database=CorpComm;User Id=sa;Password=mis@2019;MultipleActiveResultSets=True";
+        //public static string ConString = "Server=192.168.10.43;Database=CorpComm;User Id=sa;Password=mis@2019;MultipleActiveResultSets=True";
+        public static string ConString = "Server=192.168.10.42;Database=CorpComm;User Id=sa;Password=mis@2019;MultipleActiveResultSets=True";
 
         // Cart Session
         public const string ssShoppingCart = "Shopping Cart Session";
 
         // Email of Admin
         public const string RenzEmail = "renz.sunico@pttphils.com";
-
-        //public const string RenzEmail = "jose.baleros@pttphils.com";
+        public const string CorpCommEmailName = "corpcomm@pttphils.com";
+        public const string CorpCommPassword = "pcbclvplgzwznhlk";
 
         // Request Status
         public const string StatusForApproval = "For Approval";
@@ -47,10 +59,9 @@ namespace Intranet.Utilities
         public static string histReconRemarks;
 
         // App URL
-        // public const string IntranetLink = "http://qas.intranet.pttphils.com/";
-        public const string IntranetLink = "http://localhost:44322/";
-
-        //public const string IntranetLink = "http://intranet.pttphils.com/";
+        //public const string IntranetLink = "http://qas.intranet.pttphils.com/";
+        //public const string IntranetLink = "http://localhost:44322/";
+       public const string IntranetLink = "http://intranet.pttphils.com/";
 
         // item value
         public static string collateralLoc;
@@ -92,12 +103,36 @@ namespace Intranet.Utilities
 
         public const string CNCAdmin = "CNC Admin";
         public const string CNCUser = "CNC User";
+        public const string DefaultCNC = "Nodea Valle";
+
+        // Start of Bank Info
+        public const string BDO_GL = "11231041";
+
+        public const string BPI_GL = "11231021";
+        public const string SBC_GL = "11231151";
+        public const string MBTC_GL = "11231061";
+
+        public const string CNC_BDO = "BDO";
+        public const string CNC_BPI = "BPI";
+        public const string CNC_SBC = "SBC";
+        public const string CNC_MBTC = "MBTC";
+
+        public const string CNC_Currency = "PHP";
+        public const string CNC_PostKey = "40";
+        public const string CNC_PostKey2 = "15";
+        // End of Bank Info
 
         #endregion CNC
 
         #region SPEM
 
         public const string SPEMIntranet = "SPEM Intranet";
+
+        // PROD SPEM
+        public const string SPEMLink = "http://192.168.10.42:9000/?id=";
+
+        // QAS SPEM
+        //public const string SPEMLink = "http://192.168.10.43:9000/?id=";
 
         #endregion SPEM
 
