@@ -23,6 +23,7 @@ namespace Intranet.Areas.CorpComm.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IWebHostEnvironment _hostEnvironment;
+        private readonly Emailer _emailer;
 
         [BindProperty]
         public ShoppingCartVM ShoppingCartVM { get; set; }
@@ -31,6 +32,7 @@ namespace Intranet.Areas.CorpComm.Controllers
         {
             _unitOfWork = unitOfWork;
             _hostEnvironment = hostEnvironment;
+            _emailer = emailer;
         }
 
         public IActionResult Index()
@@ -232,11 +234,16 @@ namespace Intranet.Areas.CorpComm.Controllers
                 datetime,
                 clickhere);
 
-            EmailSender(
+            var sendmail = new Emailer();
+
+            _emailer.SendMail(
+                SD.CormCommEmail,
                 AdminEmail,
+                messageBody,
                 subject,
-                messageBody
-                );
+                SD.CorpCommAdmin,
+                SD.CormCommPass
+            );
 
             #endregion New Request Notification
 
@@ -248,7 +255,8 @@ namespace Intranet.Areas.CorpComm.Controllers
         public void UserDetails()
         {
             var username = User.Identity.Name;
-            using (var context = new PrincipalContext(ContextType.Domain, SD.OfficeDomain))
+            var domain = _emailOptions.AuthDomain;
+            using (var context = new PrincipalContext(ContextType.Domain, domain))
             {
                 var user = UserPrincipal.FindByIdentity(context, username);
                 ViewBag.Department = user.GetDepartment();
@@ -280,15 +288,17 @@ namespace Intranet.Areas.CorpComm.Controllers
         {
             var message = new MimeMessage();
             var builder = new BodyBuilder();
-            message.From.Add(new MailboxAddress(SD.CorpCommEmailName));
+            message.From.Add(new MailboxAddress(_emailOptions.AuthEmailCorpComm));
             message.To.Add(new MailboxAddress(RequestorEmail));
             message.Subject = subject;
             builder.HtmlBody = messageBody;
             message.Body = builder.ToMessageBody();
             using (var client = new SmtpClient())
             {
-                client.Connect(SD.SMTPClient, SD.SMTPPort, SD.SMTPBool);
-                client.Authenticate(SD.CorpCommEmailName, SD.CorpCommPassword);
+                client.Connect(_emailOptions.SMTPHostClient, _emailOptions.SMTPHostPort, _emailOptions.SMTPHostBool);
+
+                // Note: only needed if the SMTP server requires authentication
+                client.Authenticate(_emailOptions.AuthEmailCorpComm, _emailOptions.AuthPasswordCorpComm);
                 client.Send(message);
                 client.Disconnect(true);
             }
