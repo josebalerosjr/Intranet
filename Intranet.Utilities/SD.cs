@@ -13,7 +13,7 @@ namespace Intranet.Utilities
 
         // Email Details
         public const string ServiceUserEmailName = "mail@pttphils.com";
-        public const string ServiceUserPassword = "jgfpbqbfpbyvdbnt";
+        public const string ServiceUserPassword = "";
 
         #endregion Admin Details
 
@@ -30,7 +30,7 @@ namespace Intranet.Utilities
         // Email of Admin
         public const string RenzEmail = "renz.sunico@pttphils.com";
         public const string CorpCommEmailName = "corpcomm@pttphils.com";
-        public const string CorpCommPassword = "pcbclvplgzwznhlk";
+        public const string CorpCommPassword = "";
 
         // Request Status
         public const string StatusForApproval = "For Approval";
