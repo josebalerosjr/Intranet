@@ -7,7 +7,6 @@
   <ItemGroup>
     <Compile Remove="EmailOptions.cs" />
     <Compile Remove="EmailSender.cs" />
-    <Compile Remove="SD.cs" />
   </ItemGroup>
 
   <ItemGroup>
