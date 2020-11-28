@@ -21,8 +21,8 @@ namespace Intranet.Utilities
 
         //Connection String
         //public static string ConString = "Server=(LocalDb)\\MSSQLLocalDB;Database=CorpComm;User Id=sa;Password=mis@2019;MultipleActiveResultSets=True";
-        //public static string ConString = "Server=192.168.10.43;Database=CorpComm;User Id=sa;Password=mis@2019;MultipleActiveResultSets=True";
-        public static string ConString = "Server=192.168.10.42;Database=CorpComm;User Id=sa;Password=mis@2019;MultipleActiveResultSets=True";
+        public static string ConString = "Server=192.168.10.43;Database=CorpComm;User Id=sa;Password=mis@2019;MultipleActiveResultSets=True";
+        //public static string ConString = "Server=192.168.10.42;Database=CorpComm;User Id=sa;Password=mis@2019;MultipleActiveResultSets=True";
 
         // Cart Session
         public const string ssShoppingCart = "Shopping Cart Session";
@@ -60,8 +60,8 @@ namespace Intranet.Utilities
 
         // App URL
         //public const string IntranetLink = "http://qas.intranet.pttphils.com/";
-        //public const string IntranetLink = "http://localhost:44322/";
-       public const string IntranetLink = "http://intranet.pttphils.com/";
+        public const string IntranetLink = "http://localhost:44322/";
+        //public const string IntranetLink = "http://intranet.pttphils.com/";
 
         // item value
         public static string collateralLoc;
@@ -129,10 +129,10 @@ namespace Intranet.Utilities
         public const string SPEMIntranet = "SPEM Intranet";
 
         // PROD SPEM
-        public const string SPEMLink = "http://192.168.10.42:9000/?id=";
+        //public const string SPEMLink = "http://192.168.10.42:9000/?id=";
 
         // QAS SPEM
-        //public const string SPEMLink = "http://192.168.10.43:9000/?id=";
+        public const string SPEMLink = "http://192.168.10.43:9000/?id=";
 
         #endregion SPEM
 

@@ -228,11 +228,11 @@ namespace Intranet
             app.UseHangfireDashboard();
             app.UseHangfireServer();
 
-            // QSHE Inventory App
+            // QSHE Inventory App Email Notification
             RecurringJob.AddOrUpdate<IGenerateDailyCriticalItemReport>(critItem => critItem.SendEmail(), Cron.Daily);
             RecurringJob.AddOrUpdate<IGenerateCalibrationDate>(CalDateItem => CalDateItem.SendEmail(), Cron.Daily);
 
-            // Collateral Request App
+            // Collateral Request App Email Notifaction
             //RecurringJob.AddOrUpdate<IMondayReminder>(MondayReminder => MondayReminder.SendEmail(), Cron.Weekly);
 
             app.UseRouting();
