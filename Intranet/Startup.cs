@@ -233,7 +233,7 @@ namespace Intranet
             RecurringJob.AddOrUpdate<IGenerateCalibrationDate>(CalDateItem => CalDateItem.SendEmail(), Cron.Daily);
 
             // Collateral Request App Email Notifaction
-            //RecurringJob.AddOrUpdate<IMondayReminder>(MondayReminder => MondayReminder.SendEmail(), Cron.Weekly);
+            //RecurringJob.AddOrUpdate<IMondayReminder>(MondayReminder => MondayReminder.SendEmail(), Cron.Minutely);
 
             app.UseRouting();
             app.UseSession();
