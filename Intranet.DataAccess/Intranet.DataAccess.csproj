@@ -45,14 +45,15 @@
     <Compile Remove="Data\Migrations\CorpComm\20200707064314_RemoveUnusedColumnInOrderHeader.Designer.cs" />
     <Compile Remove="Data\Migrations\CorpComm\20200707064936_AddEventTypeStationEventDateToOrderHeader.cs" />
     <Compile Remove="Data\Migrations\CorpComm\20200707064936_AddEventTypeStationEventDateToOrderHeader.Designer.cs" />
-    <Compile Remove="Repository\QSHE\GenerateCalibrationDate - Copy.cs" />
-    <Compile Remove="Repository\QSHE\GenerateDailyCriticalItemReport - Copy.cs" />
+    <Compile Remove="Data\Migrations\SOA\20210118082526_InitialSOACreate.cs" />
+    <Compile Remove="Data\Migrations\SOA\20210118082526_InitialSOACreate.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.35" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.5" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.5" />
     <PackageReference Include="System.DirectoryServices" Version="4.7.0" />
     <PackageReference Include="System.DirectoryServices.AccountManagement" Version="4.7.0" />
   </ItemGroup>

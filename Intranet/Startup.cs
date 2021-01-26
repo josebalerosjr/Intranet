@@ -9,8 +9,8 @@ using Intranet.DataAccess.Repository;
 using Intranet.DataAccess.Repository.CorpComm;
 using Intranet.DataAccess.Repository.IRepository;
 using Intranet.DataAccess.Repository.IRepository.CorpComm;
-using Intranet.DataAccess.Repository.IRepository.QSHE;
-using Intranet.DataAccess.Repository.QSHE;
+//using Intranet.DataAccess.Repository.IRepository.QSHE;
+//using Intranet.DataAccess.Repository.QSHE;
 using Intranet.Utilities;
 using Intranet.Utilities.CNC;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -190,11 +190,12 @@ namespace Intranet
                     .AddNToastNotifyToastr()
                     .AddControllersAsServices();
 
-            services.AddScoped<IGenerateDailyCriticalItemReport, GenerateDailyCriticalItemReport>();
-            services.AddScoped<IGenerateCalibrationDate, GenerateCalibrationDate>();
+            //services.AddScoped<IGenerateDailyCriticalItemReport, GenerateDailyCriticalItemReport>();
+            //services.AddScoped<IGenerateCalibrationDate, GenerateCalibrationDate>();
 
-            services.AddScoped<IMondayReminder, MondayReminder>();
+            //services.AddScoped<IMondayReminder, MondayReminder>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IUnitOfWorkSOA, UnitOfWorkSOA>();
 
             //services.AddSingleton<EmailSender>();
             //services.Configure<EmailOptions>(Configuration);
@@ -228,13 +229,6 @@ namespace Intranet
             app.UseHangfireDashboard();
             app.UseHangfireServer();
 
-            // QSHE Inventory App Email Notification
-            RecurringJob.AddOrUpdate<IGenerateDailyCriticalItemReport>(critItem => critItem.SendEmail(), Cron.Daily);
-            RecurringJob.AddOrUpdate<IGenerateCalibrationDate>(CalDateItem => CalDateItem.SendEmail(), Cron.Daily);
-
-            // Collateral Request App Email Notifaction
-            //RecurringJob.AddOrUpdate<IMondayReminder>(MondayReminder => MondayReminder.SendEmail(), Cron.Minutely);
-
             app.UseRouting();
             app.UseSession();
             app.UseAuthentication();
@@ -248,6 +242,10 @@ namespace Intranet
 
                 endpoints.MapControllerRoute(
                     name: "CorpComm",
+                    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+                endpoints.MapControllerRoute(
+                    name: "SOA",
                     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
                 endpoints.MapRazorPages();

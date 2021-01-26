@@ -9,11 +9,15 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using MimeKit;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.DirectoryServices.AccountManagement;
 using System.IO;
 using System.Linq;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
+using System.Net.Http;
 
 namespace Intranet.Areas.CorpComm.Controllers
 {
@@ -49,6 +53,11 @@ namespace Intranet.Areas.CorpComm.Controllers
             return View();
         }
 
+        public IActionResult Failed()
+        {
+            return View();
+        }
+
         public IActionResult Details(int id)
         {
             OrderVM = new OrderDetailsVM()
@@ -66,14 +75,13 @@ namespace Intranet.Areas.CorpComm.Controllers
         public IActionResult ApproveRequest()
         {
             OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == OrderVM.OrderHeader.Id);
-
-            // change the status from "For Approval" to "Approved"
             orderHeader.OrderStatus = SD.StatusApproved;
             _unitOfWork.Save();
 
             return RedirectToAction(nameof(Index));
         }
 
+        // Done Reject
         [Authorize(Roles = SD.CIOAdmin + "," + SD.CorpCommAdmin)]
         [Obsolete]
         public IActionResult RejectRequest(int id)
@@ -92,46 +100,36 @@ namespace Intranet.Areas.CorpComm.Controllers
                 + Path.DirectorySeparatorChar.ToString() +
                 "Email_Notifications_ForRejection.html";
 
-            var subject = "PTT COLLATERALS: Your request has been rejected!";
-            var subject2 = "REQUEST REJECTED";
-            var datetime = String.Format(DateTime.Now.ToShortDateString());
-            var OrderId = OrderVM.OrderHeader.Id;
-            var ShippingDate = OrderVM.OrderHeader.ShippingDate.ToShortDateString();
-            var PickUpPoints = OrderVM.OrderHeader.PickUpPoints;
-            var LoginUser = OrderVM.OrderHeader.LoginUser;
-            var RequestorEmail = OrderVM.OrderHeader.RequestorEmail;
-            var RejectReason = OrderVM.OrderHeader.RejectReason;
-            var clickhere = SD.IntranetLink + "CorpComm/Collateral/Catalog";
+            string hereurl;
 
-            string HtmlBody = "";
+            SD.Template = null;
+            SD.Subject = null;
+            SD.Subject2 = null;
+            SD.OrderId = null;
+            SD.ShippingDate = null;
+            SD.PickUpPoints = null;
+            SD.LoginUser = null;
+            SD.RequestorEmail = null;
+            SD.RejectReason = null;
+            SD.clickhere = null;
+            SD.items = null;
 
-            using (StreamReader streamReader = System.IO
-                .File.OpenText(PathToFile))
-            {
-                HtmlBody = streamReader.ReadToEnd();
-            }
 
-            // [0] subject
-            // [1] date
-            // [2] requestor
-            // [3] reason
-            // [4] url
-
-            string messageBody = string.Format(HtmlBody,
-                subject2,
-                datetime,
-                LoginUser,
-                RejectReason,
-                clickhere);
-
-            EmailSender(
-                RequestorEmail,
-                subject,
-                messageBody
-                );
+            SD.Template = "4";
+            SD.Subject = "PTT COLLATERALS: Your request has been rejected!";
+            SD.Subject2 = "REQUEST REJECTED";
+            SD.OrderId = OrderVM.OrderHeader.Id.ToString();
+            SD.ShippingDate = "";
+            SD.PickUpPoints = "";
+            SD.LoginUser = OrderVM.OrderHeader.LoginUser;
+            SD.RequestorEmail = OrderVM.OrderHeader.RequestorEmail;
+            SD.RejectReason = OrderVM.OrderHeader.RejectReason;
+            hereurl = SD.IntranetLink + "CorpComm/Collateral/Catalog";
+            SD.clickhere = "You can send another request by clicking <a href='" + hereurl + "'>here</a>";
+            SD.items = "";
 
             _unitOfWork.Save();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(SendEmail));
         }
 
         public IActionResult CancelRequest(int id)
@@ -139,13 +137,13 @@ namespace Intranet.Areas.CorpComm.Controllers
             OrderHeader orderHeader = _unitOfWork.OrderHeader
                 .GetFirstOrDefault(u => u.Id == OrderVM.OrderHeader.Id);
 
-            // change the status from "For Approval" to "Canceled"
             orderHeader.OrderStatus = SD.StatusCancelled;
 
             _unitOfWork.Save();
             return RedirectToAction(nameof(Index));
         }
 
+        // Step 02
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = SD.CIOAdmin + "," + SD.CorpCommAdmin)]
@@ -163,20 +161,7 @@ namespace Intranet.Areas.CorpComm.Controllers
 
             #region Email Process
 
-            var PathToFile = _hostEnvironment.WebRootPath +
-                Path.DirectorySeparatorChar.ToString()
-                + "Templates" + Path.DirectorySeparatorChar.ToString() +
-                "EmailTemplates" + Path.DirectorySeparatorChar.ToString() +
-                "Email_Notifications_ForDelivery.html";
-
-            var subject = "PTT COLLATERALS: Your request is now for delivery!";
-            var subject2 = "FOR DELIVERY";
-            var datetime = String.Format(DateTime.Now.ToShortDateString());
             var OrderId = OrderVM.OrderHeader.Id;
-            var ShippingDate = OrderVM.OrderHeader.ShippingDate.ToShortDateString();
-            var PickUpPoints = OrderVM.OrderHeader.PickUpPoints;
-            var LoginUser = OrderVM.OrderHeader.LoginUser;
-            var RequestorEmail = OrderVM.OrderHeader.RequestorEmail;
 
             #region get order details for email
 
@@ -201,49 +186,8 @@ namespace Intranet.Areas.CorpComm.Controllers
                     "</tr>";
             }
 
-            string listfinal =
-            "   <table align='center' border='1' width='100%'>" +
-            "       <tr>" +
-            "           <td colspan='2' align='center'>" +
-            "               <strong> COLLATERALS </strong>" +
-            "           </td>" +
-            "       </tr>" +
-            "       <tr>" +
-            "           <td align='center'> " +
-            "                <strong>ITEM</strong>        " +
-            "           </td>               " +
-            "           <td align='center'> " +
-            "               <strong>QUANTITY</strong>     " +
-            "           </td>               " +
-            "       </tr>                   " +
-                    itemlist +
-            "   </table> ";
-
             #endregion get order details for email
 
-            string HtmlBody = "";
-            using (StreamReader streamReader = System.IO.File
-                .OpenText(PathToFile))
-            {
-                HtmlBody = streamReader.ReadToEnd();
-            }
-
-            // [0] subject
-            // [1] date
-            // [2] request number
-            // [3] shipping date
-            // [4] drop - off location
-            // [5] requestor name
-            // [6] item and count
-
-            string messageBody = string.Format(HtmlBody, subject2, datetime,
-                OrderId, ShippingDate, PickUpPoints, LoginUser, listfinal);
-
-            EmailSender(
-                RequestorEmail,
-                subject,
-                messageBody
-                );
             _unitOfWork.Save();
 
             #endregion Email Process
@@ -280,7 +224,34 @@ namespace Intranet.Areas.CorpComm.Controllers
 
             #endregion History Process
 
-            return RedirectToAction(nameof(Index));
+            //string hereurl;
+
+            SD.Template = null;
+            SD.Subject = null;
+            SD.Subject2 = null;
+            SD.OrderId = null;
+            SD.ShippingDate = null;
+            SD.PickUpPoints = null;
+            SD.LoginUser = null;
+            SD.RequestorEmail = null;
+            SD.RejectReason = null;
+            SD.clickhere = null;
+            SD.items = null;
+
+            SD.Template = "2";
+            SD.Subject = "PTT COLLATERALS: Your request is now for delivery!";
+            SD.Subject2 = "FOR DELIVERY";
+            SD.OrderId = OrderId.ToString();
+            SD.ShippingDate = OrderVM.OrderHeader.ShippingDate.ToShortDateString();
+            SD.PickUpPoints = OrderVM.OrderHeader.PickUpPoints;
+            SD.LoginUser = OrderVM.OrderHeader.LoginUser;
+            SD.RequestorEmail = OrderVM.OrderHeader.RequestorEmail;
+            SD.RejectReason = "";
+            //hereurl = SD.IntranetLink + "CorpComm/Collateral/Catalog";
+            SD.clickhere = "Your request has been approved and is now for delivery.";
+            SD.items = itemlist;
+
+            return RedirectToAction(nameof(SendEmail));
         }
 
         [HttpPost]
@@ -291,21 +262,7 @@ namespace Intranet.Areas.CorpComm.Controllers
                 .GetFirstOrDefault(u => u.Id == OrderVM.OrderHeader.Id);
             orderHeader.OrderStatus = SD.StatusForAcknowledgement;
 
-            var PathToFile = _hostEnvironment.WebRootPath +
-                Path.DirectorySeparatorChar.ToString() + "Templates" +
-                Path.DirectorySeparatorChar.ToString() + "EmailTemplates"
-                + Path.DirectorySeparatorChar.ToString() +
-                "Email_Notifications_ForAcknowledment.html";
-
-            var subject = "PTT COLLATERALS: Your request is now for acknowledgement!";
-            var subject2 = "FOR ACKNOWLEDGEMENT";
-            var datetime = String.Format(DateTime.Now.ToShortDateString());
             var OrderId = OrderVM.OrderHeader.Id;
-            var LoginUser = OrderVM.OrderHeader.LoginUser;
-            var RequestorEmail = OrderVM.OrderHeader.RequestorEmail;
-            var ShippingDate = orderHeader.ShippingDate.ToShortDateString();
-            var PickUpPoints = OrderVM.OrderHeader.PickUpPoints;
-            var clickhere = SD.IntranetLink + "CorpComm/Order/Details/" + OrderId;
 
             #region get order details for email
 
@@ -329,97 +286,84 @@ namespace Intranet.Areas.CorpComm.Controllers
                     "</tr>";
             }
 
-            string listfinal =
-            "   <table align='center' border='1' width='100%'>" +
-            "       <tr>" +
-            "           <td colspan='2' align='center'><strong> COLLATERALS </strong></td>" +
-            "       </tr>" +
-            "       <tr>" +
-            "           <td align='center'> " +
-            "                <strong>ITEM</strong>        " +
-            "           </td>               " +
-            "           <td align='center'> " +
-            "               <strong>QUANTITY</strong>     " +
-            "           </td>               " +
-            "       </tr>                   " +
-                    itemlist +
-            "   </table> ";
-
             #endregion get order details for email
 
-            string HtmlBody = "";
-
-            using (StreamReader streamReader = System.IO.File.OpenText(PathToFile))
-            {
-                HtmlBody = streamReader.ReadToEnd();
-            }
-
-            // [0] subject
-            // [1] date
-            // [2] request number
-            // [3] shipping date
-            // [4] drop - off location
-            // [5] requestor name
-            // [6] item and count
-            // [7] click here
-
-            string messageBody = string.Format(HtmlBody, subject2, datetime,
-                OrderId, ShippingDate, PickUpPoints, LoginUser, listfinal, clickhere);
-
-            EmailSender(
-                RequestorEmail,
-                subject,
-                messageBody
-                );
-
             _unitOfWork.Save();
-            return RedirectToAction(nameof(Index));
+
+            string hereurl;
+
+            SD.Template = null;
+            SD.Subject = null;
+            SD.Subject2 = null;
+            SD.OrderId = null;
+            SD.ShippingDate = null;
+            SD.PickUpPoints = null;
+            SD.LoginUser = null;
+            SD.RequestorEmail = null;
+            SD.RejectReason = null;
+            SD.clickhere = null;
+            SD.items = null;
+
+            SD.Template = "2";
+            SD.Subject = "PTT COLLATERALS: Your request is now for acknowledgement!";
+            SD.Subject2 = "FOR ACKNOWLEDGEMENT";
+            SD.OrderId = OrderVM.OrderHeader.Id.ToString();
+            SD.ShippingDate = orderHeader.ShippingDate.ToShortDateString();
+            SD.PickUpPoints = OrderVM.OrderHeader.PickUpPoints;
+            SD.LoginUser = OrderVM.OrderHeader.LoginUser;
+            SD.RequestorEmail = OrderVM.OrderHeader.RequestorEmail;
+            SD.RejectReason = "";
+            hereurl = SD.IntranetLink + "CorpComm/Order/Details/" + OrderId;
+            SD.clickhere = "Kindly acknowledge receipt of your collaterals by clicking <a href=" + hereurl + ">here</a>";
+            SD.items = itemlist;
+
+            return RedirectToAction(nameof(SendEmail));
         }
 
-        public IActionResult RequesDelivered(int id)
-        {
-            OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == id);
-            orderHeader.OrderStatus = SD.StatusForRating;
+        //public IActionResult RequesDelivered(int id)
+        //{
+        //    OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == id);
+        //    orderHeader.OrderStatus = SD.StatusForRating;
 
-            var PathToFile = _hostEnvironment.WebRootPath + Path.DirectorySeparatorChar.ToString()
-                + "Templates" + Path.DirectorySeparatorChar.ToString() + "EmailTemplates"
-                + Path.DirectorySeparatorChar.ToString() + "Email_Notifications_ForRating.html";
+        //    var PathToFile = _hostEnvironment.WebRootPath + Path.DirectorySeparatorChar.ToString()
+        //        + "Templates" + Path.DirectorySeparatorChar.ToString() + "EmailTemplates"
+        //        + Path.DirectorySeparatorChar.ToString() + "Email_Notifications_ForRating.html";
 
-            var subject = "PTT COLLATERALS: Your request is now for rating!";
-            var subject2 = "FOR RATING";
-            var datetime = String.Format(DateTime.Now.ToShortDateString());
-            var OrderId = orderHeader.Id;
-            var LoginUser = orderHeader.LoginUser;
-            var RequestorEmail = orderHeader.RequestorEmail;
-            var clickhere = SD.IntranetLink + "CorpComm/Order/Details/" + OrderId;
+        //    var subject = "PTT COLLATERALS: Your request is now for rating!";
+        //    var subject2 = "FOR RATING";
+        //    var datetime = String.Format(DateTime.Now.ToShortDateString());
+        //    var OrderId = orderHeader.Id;
+        //    var LoginUser = orderHeader.LoginUser;
+        //    var RequestorEmail = orderHeader.RequestorEmail;
+        //    var clickhere = SD.IntranetLink + "CorpComm/Order/Details/" + OrderId;
 
-            string HtmlBody = "";
+        //    string HtmlBody = "";
 
-            using (StreamReader streamReader = System.IO.File.OpenText(PathToFile))
-            {
-                HtmlBody = streamReader.ReadToEnd();
-            }
+        //    using (StreamReader streamReader = System.IO.File.OpenText(PathToFile))
+        //    {
+        //        HtmlBody = streamReader.ReadToEnd();
+        //    }
 
-            // [0] subject
-            // [1] date
-            // [2] requestor
-            // [3] url
+        //    // [0] subject
+        //    // [1] date
+        //    // [2] requestor
+        //    // [3] url
 
-            string messageBody = string.Format(HtmlBody,
-                subject2,
-                datetime,
-                LoginUser,
-                clickhere);
+        //    string messageBody = string.Format(HtmlBody,
+        //        subject2,
+        //        datetime,
+        //        LoginUser,
+        //        clickhere);
 
-            EmailSender(
-                RequestorEmail,
-                subject,
-                messageBody
-                );
+        //    EmailSender(
+        //        RequestorEmail,
+        //        subject,
+        //        messageBody
+        //        );
 
-            _unitOfWork.Save();
-            return RedirectToAction(nameof(Index));
-        }
+        //    _unitOfWork.Save();
+        //    return RedirectToAction(nameof(Index));
+        //}
 
         [Obsolete]
         public IActionResult AcknowledgeReceipt()
@@ -429,48 +373,38 @@ namespace Intranet.Areas.CorpComm.Controllers
             // change the status from "For Acknowledgement " to "For Rating"
             orderHeader.OrderStatus = SD.StatusForRating;
 
-            var PathToFile = _hostEnvironment.WebRootPath +
-                Path.DirectorySeparatorChar.ToString() + "Templates" +
-                Path.DirectorySeparatorChar.ToString() + "EmailTemplates"
-                + Path.DirectorySeparatorChar.ToString() +
-                "Email_Notifications_ForRating.html";
-
-            var subject = "PTT COLLATERALS: Your request is now for rating!";
-            var subject2 = "FOR RATING";
-            var datetime = String.Format(DateTime.Now.ToShortDateString());
             var OrderId = OrderVM.OrderHeader.Id;
-            var LoginUser = OrderVM.OrderHeader.LoginUser;
-            var RequestorEmail = OrderVM.OrderHeader.RequestorEmail;
-            var ShippingDate = orderHeader.ShippingDate.ToShortDateString();
-            var PickUpPoints = OrderVM.OrderHeader.PickUpPoints;
-            var clickhere = SD.IntranetLink + "CorpComm/Order/Details/" + OrderId;
-
-            string HtmlBody = "";
-
-            using (StreamReader streamReader = System.IO.File.OpenText(PathToFile))
-            {
-                HtmlBody = streamReader.ReadToEnd();
-            }
-
-            // [0] subject
-            // [1] date
-            // [2] request number
-            // [3] shipping date
-            // [4] drop - off location
-            // [5] requestor name
-            // [6] item and count LoginUser
-            // [7] click here
-
-            string messageBody = string.Format(HtmlBody, subject2, datetime,
-                LoginUser, clickhere);
-
-            EmailSender(
-                RequestorEmail,
-                subject,
-                messageBody
-                );
 
             _unitOfWork.Save();
+
+            string hereurl;
+
+            SD.Template = null;
+            SD.Subject = null;
+            SD.Subject2 = null;
+            SD.OrderId = null;
+            SD.ShippingDate = null;
+            SD.PickUpPoints = null;
+            SD.LoginUser = null;
+            SD.RequestorEmail = null;
+            SD.RejectReason = null;
+            SD.clickhere = null;
+            SD.items = null;
+
+            SD.Template = "3";
+            SD.Subject = "PTT COLLATERALS: Your request is now for rating!";
+            SD.Subject2 = "FOR RATING";
+            SD.OrderId = OrderVM.OrderHeader.Id.ToString();
+            SD.ShippingDate = orderHeader.ShippingDate.ToShortDateString();
+            SD.PickUpPoints = OrderVM.OrderHeader.PickUpPoints;
+            SD.LoginUser = OrderVM.OrderHeader.LoginUser;
+            SD.RequestorEmail = OrderVM.OrderHeader.RequestorEmail;
+            SD.RejectReason = "";
+            hereurl = SD.IntranetLink + "CorpComm/Order/Details/" + OrderId;
+            SD.clickhere = "You can send another request by clicking <a href='" + hereurl + "'>here</a>";
+            SD.items = "Kindly rate the service rendered to you by clicking <a href='" + hereurl + "' target='_blank'>here</a>. <br/> We look forward to serving you again.";
+
+            SendEmail();
 
             return RedirectToAction(nameof(Details), new { id = OrderVM.OrderHeader.Id });
         }
@@ -482,12 +416,51 @@ namespace Intranet.Areas.CorpComm.Controllers
             OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == OrderVM.OrderHeader.Id);
             orderHeader.OrderStatus = SD.StatusCompleted;
 
-            //string strRate = OrderVM.OrderHeader.OrderRating;
-
             orderHeader.OrderRating = OrderVM.OrderHeader.OrderRating;
 
             _unitOfWork.Save();
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> SendEmail()
+        {
+
+            using (var client = new HttpClient())
+            {
+                // Create new instance of Person
+                EmailSend emailSend = new EmailSend
+                {
+                    Template = SD.Template,
+                    Subject = SD.Subject,
+                    Subject2 = SD.Subject2,
+                    OrderId = SD.OrderId,
+                    ShippingDate = SD.ShippingDate,
+                    PickUpPoints = SD.PickUpPoints,
+                    LoginUser = SD.LoginUser,
+                    RequestorEmail = SD.RequestorEmail,
+                    RejectReason = SD.RejectReason,
+                    clickhere = SD.clickhere,
+                    items = SD.items
+
+                };
+
+                var emailSendJSON = JsonConvert.SerializeObject(emailSend);   // convert string array to JSON string
+                var buffer = System.Text.Encoding.UTF8.GetBytes(emailSendJSON);    // convert string array to byte
+                var byteContent = new ByteArrayContent(buffer); // create new instance of byte array context
+                byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json"); // sets a header to 'application/json'
+
+                client.BaseAddress = new Uri(SD.ApiUri);    // create new instance of Uri and set the HttpClient
+                var response = await client.PostAsync(SD.ApiUri, byteContent);  // send a post request to the specified Uri
+
+                if (response.IsSuccessStatusCode)   // condition for response status
+                {
+                    return RedirectToAction(nameof(Index), Json(response)); // if 'success' the return response to HTTP Request, redirect to success page
+                }
+                else
+                {
+                    return RedirectToAction(nameof(Failed), Json(response)); // if 'failed' the return response to HTTP Request, redirect to failed page
+                }
+            }
         }
 
         #region API CALLS
@@ -578,34 +551,5 @@ namespace Intranet.Areas.CorpComm.Controllers
         }
 
         #endregion UserDetails function
-
-        #region EmailSender
-
-        [Obsolete]
-        private void EmailSender(
-            string RequestorEmail,
-            string subject,
-            string messageBody
-        )
-        {
-            var message = new MimeMessage();
-            var builder = new BodyBuilder();
-            message.From.Add(new MailboxAddress(SD.CorpCommEmailName));
-            message.To.Add(new MailboxAddress(RequestorEmail));
-            message.Subject = subject;
-            builder.HtmlBody = messageBody;
-            message.Body = builder.ToMessageBody();
-            using (var client = new SmtpClient())
-            {
-                client.Connect(SD.SMTPClient, SD.SMTPPort, SD.SMTPBool);
-
-                // Note: only needed if the SMTP server requires authentication
-                client.Authenticate(SD.CorpCommEmailName, SD.CorpCommPassword);
-                client.Send(message);
-                client.Disconnect(true);
-            }
-        }
-
-        #endregion EmailSender
     }
 }

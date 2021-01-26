@@ -7,15 +7,16 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Text;
 
 namespace Intranet.DataAccess.Repository
 {
-    public class SP_Call : ISP_Call
+    public class SP_CallSOA : ISP_CallSOA
     {
-        private readonly CorpCommDbContext _db;
+        private readonly SOADbContext _db;
         private static string ConnectionString = "";
 
-        public SP_Call(CorpCommDbContext db)
+        public SP_CallSOA(SOADbContext db)
         {
             _db = db;
             ConnectionString = db.Database.GetDbConnection().ConnectionString;

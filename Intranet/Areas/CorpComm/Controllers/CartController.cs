@@ -10,10 +10,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
 using MimeKit;
+using Newtonsoft.Json;
 using System;
 using System.DirectoryServices.AccountManagement;
 using System.IO;
 using System.Linq;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
+using System.Net.Http;
 
 namespace Intranet.Areas.CorpComm.Controllers
 {
@@ -31,6 +35,11 @@ namespace Intranet.Areas.CorpComm.Controllers
         {
             _unitOfWork = unitOfWork;
             _hostEnvironment = hostEnvironment;
+        }
+
+        public IActionResult Failed()
+        {
+            return View();
         }
 
         public IActionResult Index()
@@ -62,6 +71,7 @@ namespace Intranet.Areas.CorpComm.Controllers
 
         public IActionResult Plus(int cartId)
         {
+            UserDetails();
             var cart = _unitOfWork.ShoppingCart.GetFirstOrDefault(c => c.Id == cartId, includeProperties: "Collateral");
             cart.Count += 1;
             _unitOfWork.Save();
@@ -70,6 +80,7 @@ namespace Intranet.Areas.CorpComm.Controllers
 
         public IActionResult Minus(int cartId)
         {
+            UserDetails();
             var cart = _unitOfWork.ShoppingCart.GetFirstOrDefault(c => c.Id == cartId, includeProperties: "Collateral");
 
             if (cart.Count == 1)
@@ -88,6 +99,7 @@ namespace Intranet.Areas.CorpComm.Controllers
 
         public IActionResult Remove(int cartId)
         {
+            UserDetails();
             var cart = _unitOfWork.ShoppingCart.GetFirstOrDefault(c => c.Id == cartId, includeProperties: "Collateral");
             _unitOfWork.ShoppingCart.Remove(cart);
             _unitOfWork.Save();
@@ -200,6 +212,7 @@ namespace Intranet.Areas.CorpComm.Controllers
         [Obsolete]
         public IActionResult OrderConfirmation(int id)
         {
+            UserDetails();
             #region New Request Notification
 
             // get the email template
@@ -209,38 +222,40 @@ namespace Intranet.Areas.CorpComm.Controllers
                 + Path.DirectorySeparatorChar.ToString() +
                 "Email_Notifications_NewRequest.html";
 
-            var subject = "PTT COLLATERALS: New Collateral Request!";
-            var subject2 = "COLLATERAL REQUEST";
-            var datetime = String.Format(DateTime.Now.ToShortDateString());
             var AdminEmail = SD.RenzEmail;
-            var clickhere = SD.IntranetLink + "CorpComm/Order/Details/" + id;
-
-            string HtmlBody = "";
-
-            using (StreamReader streamReader = System.IO
-                .File.OpenText(PathToFile))
-            {
-                HtmlBody = streamReader.ReadToEnd();
-            }
-
-            //  [0] - COLLATERAL REQUEST
-            //  [1] - Date and Time
-            //  [2] - Url
-
-            string messageBody = string.Format(HtmlBody,
-                subject2,
-                datetime,
-                clickhere);
-
-            EmailSender(
-                AdminEmail,
-                subject,
-                messageBody
-                );
 
             #endregion New Request Notification
 
+            string hereurl;
+
+            SD.Template = null;
+            SD.Subject = null;
+            SD.Subject2 = null;
+            SD.OrderId = null;
+            SD.PickUpPoints = null;
+            SD.LoginUser = null;
+            SD.RequestorEmail = null;
+            SD.RejectReason = null;
+            SD.clickhere = null;
+            SD.items = null;
+
+            SD.Template = "1";
+            SD.Subject = "PTT COLLATERALS: New Collateral Request!";
+            SD.Subject2 = "COLLATERAL REQUEST";
+            SD.OrderId = "";
+            SD.ShippingDate = "";
+            SD.PickUpPoints = "";
+            SD.LoginUser = ViewBag.DisplayName;
+            SD.RequestorEmail = SD.RenzEmail;
+            SD.RejectReason = "";
+            hereurl = SD.IntranetLink + "CorpComm/Order/Details/" + id;
+            SD.clickhere = "There's a new collateral request. Click <a href='" + hereurl + "'>here</a> to view the request.";
+            SD.items = "";
+
+            SD.NewOrderId = id;
+            SendEmail();
             return View(id);
+            //return RedirectToAction(nameof(SendEmail));
         }
 
         #region UserDetails function
@@ -269,31 +284,47 @@ namespace Intranet.Areas.CorpComm.Controllers
 
         #endregion UserDetails function
 
-        #region EmailSender
-
-        [Obsolete]
-        private void EmailSender(
-            string RequestorEmail,
-            string subject,
-            string messageBody
-        )
+        public async Task<IActionResult> SendEmail()
         {
-            var message = new MimeMessage();
-            var builder = new BodyBuilder();
-            message.From.Add(new MailboxAddress(SD.CorpCommEmailName));
-            message.To.Add(new MailboxAddress(RequestorEmail));
-            message.Subject = subject;
-            builder.HtmlBody = messageBody;
-            message.Body = builder.ToMessageBody();
-            using (var client = new SmtpClient())
+
+            using (var client = new HttpClient())
             {
-                client.Connect(SD.SMTPClient, SD.SMTPPort, SD.SMTPBool);
-                client.Authenticate(SD.CorpCommEmailName, SD.CorpCommPassword);
-                client.Send(message);
-                client.Disconnect(true);
+                // Create new instance of Person
+                EmailSend emailSend = new EmailSend
+                {
+                    Template = SD.Template,
+                    Subject = SD.Subject,
+                    Subject2 = SD.Subject2,
+                    OrderId = SD.OrderId,
+                    ShippingDate = SD.ShippingDate,
+                    PickUpPoints = SD.PickUpPoints,
+                    LoginUser = SD.LoginUser,
+                    RequestorEmail = SD.RequestorEmail,
+                    RejectReason = SD.RejectReason,
+                    clickhere = SD.clickhere,
+                    items = SD.items
+
+                };
+
+                var emailSendJSON = JsonConvert.SerializeObject(emailSend);   // convert string array to JSON string
+                var buffer = System.Text.Encoding.UTF8.GetBytes(emailSendJSON);    // convert string array to byte
+                var byteContent = new ByteArrayContent(buffer); // create new instance of byte array context
+                byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json"); // sets a header to 'application/json'
+
+                client.BaseAddress = new Uri(SD.ApiUri);    // create new instance of Uri and set the HttpClient
+                var response = await client.PostAsync(SD.ApiUri, byteContent);  // send a post request to the specified Uri
+
+                if (response.IsSuccessStatusCode)   // condition for response status
+                {
+                    return Json(response);
+                    //return Redirect(SD.IntranetLink + "CorpComm/Cart/OrderConfirmation/" + SD.NewOrderId); // if 'success' the return response to HTTP Request, redirect to success page
+                    //return RedirectToAction("OrderConfirmation", new { id = SD.NewOrderId }); // if 'success' the return response to HTTP Request, redirect to success page
+                }
+                else
+                {
+                    return RedirectToAction(nameof(Failed), Json(response)); // if 'failed' the return response to HTTP Request, redirect to failed page
+                }
             }
         }
-
-        #endregion EmailSender
     }
 }

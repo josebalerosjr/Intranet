@@ -1,10 +1,11 @@
 ﻿using Dapper;
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Intranet.DataAccess.Repository.IRepository
 {
-    public interface ISP_Call : IDisposable
+    public interface ISP_CallSOA : IDisposable
     {
         T Single<T>(string procedureName, DynamicParameters param = null);
 

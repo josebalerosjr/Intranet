@@ -2,6 +2,8 @@
 using Intranet.DataAccess.Repository.CorpComm;
 using Intranet.DataAccess.Repository.IRepository;
 using Intranet.DataAccess.Repository.IRepository.CorpComm;
+using Intranet.DataAccess.Repository.IRepository.SOA;
+using Intranet.DataAccess.Repository.SOA;
 
 namespace Intranet.DataAccess.Repository
 {
@@ -46,6 +48,7 @@ namespace Intranet.DataAccess.Repository
         public IShoppingCartRepository ShoppingCart { get; private set; }
         public IHistoryRepository History { get; private set; }
         public ISP_Call SP_Call { get; private set; }
+
 
         public void Dispose()
         {
