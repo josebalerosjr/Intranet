@@ -150,19 +150,129 @@
                                             </a>
 
                                             <!--
-                                            <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item small float-md-left" asp-controller="ItemReg" asp-action="Index">Quality</a></li>
-                                            </ul>
-                                            -->
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item small float-md-left" asp-controller="ItemReg" asp-action="Index">Quality</a></li>
+                </ul>
+                -->
                                         </li>
                                     </ul>
                                 </li>
 
-                                <!--MIS/ICT Tab-->
+                                <!--Self-Service Tab-->
                                 @{
                                     /**
                                      * ********************************************************************************
-                                     * *                            START OF MIS/ICT                               *
+                                     * *                            START OF SELF-SERVICE                             *
+                                     * ********************************************************************************
+                                     * START OF SUGGESTION LINK
+                                     * This link is open to all users
+                                     */
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Self-Service
+                                        </a>
+                                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                            <li class="dropdown-submenu small">
+                                                <a class="dropdown-item" target="_blank" href="@ViewBag.ChangeRequestLog">
+                                                    HR <i class="fas fa-chevron-circle-right float-right"></i>
+                                                </a>
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <a class="dropdown-item small float-md-left" href="@SD.ReturnToOffice">
+                                                            Request for Office Reporting
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item small float-md-left" href="@SD.HrDeliveryReport">
+                                                            Delivery Report
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+
+                                            <li class="dropdown-submenu small">
+                                                <a class="dropdown-item" href="#">
+                                                    CorpComm <i class="fas fa-chevron-circle-right float-right"></i>
+                                                </a>
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <a class="dropdown-item small float-md-left" href="@SD.CorpCommJobOrder">
+                                                            Job Order
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    /**
+                                     * ********************************************************************************
+                                     * *                            END OF SELF-SERVICE                               *
+                                     * ********************************************************************************
+                                     */
+                                }
+
+                                <!--HR Tab-->
+                                @{
+                                    /**
+                                     * ********************************************************************************
+                                     * *                            START OF HUMAN RESOURCE                           *
+                                     * ********************************************************************************
+                                     * START OF SUGGESTION LINK
+                                     * This link is open to all users
+                                     */
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            HR
+                                        </a>
+                                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                            <li class="dropdown-submenu small">
+                                                <a class="dropdown-item" target="_blank" href="#">
+                                                    PTTPC <i class="fas fa-chevron-circle-right float-right"></i>
+                                                </a>
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <a class="dropdown-item small float-md-left" href="@SD.PttpcProcedureManual">
+                                                            Procedure Manual
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item small float-md-left" href="@SD.PttpcCodeOfDicipline">
+                                                            Code of Dicipline
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+
+                                            <li class="dropdown-submenu small">
+                                                <a class="dropdown-item" target="_blank" href="#">
+                                                    PTTTC <i class="fas fa-chevron-circle-right float-right"></i>
+                                                </a>
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <a class="dropdown-item small float-md-left" href="@SD.PtttcProcedureManual">
+                                                            Procedure Manual
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item small float-md-left" href="@SD.PtttcCodeOfDicipline">
+                                                            Code of Dicipline
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    /**
+                                     * ********************************************************************************
+                                     * *                            END OF HUMAN RESOURCE                             *
+                                     * ********************************************************************************
+                                     */
+                                }
+
+                                @{
+                                    /**
+                                     * ********************************************************************************
+                                     * *                            START OF MIS/ICT                                  *
                                      * ********************************************************************************
                                      * START OF SUGGESTION LINK
                                      * This link is open to all users

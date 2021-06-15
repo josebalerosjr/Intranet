@@ -195,7 +195,6 @@ namespace Intranet
 
             //services.AddScoped<IMondayReminder, MondayReminder>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddScoped<IUnitOfWorkSOA, UnitOfWorkSOA>();
 
             //services.AddSingleton<EmailSender>();
             //services.Configure<EmailOptions>(Configuration);
